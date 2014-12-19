@@ -23,8 +23,12 @@ class Model{
         if(false !== ($iPos = strrpos($sCalledClassName, '\\'))){
             $sCalledNS = substr($sCalledClassName, 0, $iPos);
         }
-        $this->sItemClassName = $sCalledNS . '\\Item_' . $sModelName;
-
+        #Item class
+        $this->sItemClassName = sprintf('%s%s%s',
+            $sCalledNS,
+            '\\',
+            Arr::get($aConfig, 'item_class', 'Item_'.$sModelName)
+        );
         #table
         $sTable = Arr::get($aConfig, 'table', strtolower($sModelName));
         $this->CURD->table($sTable);
@@ -41,12 +45,12 @@ class Model{
         return empty($aItem) ? null : new $this->sItemClassName(array_shift($aItem), $this);
     }
 
-    public function findCustom($mWhere)
+    public function findCustom($mWhere=null)
     {
         return $this->CURD->querySmarty($mWhere);
     }
 
-    public function findMulti($mWhere=array())
+    public function findMulti($mWhere=null)
     {
         $aItems = $this->CURD->forceSelectPK()->querySmarty($mWhere);
         $aGroup = array();

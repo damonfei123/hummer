@@ -55,10 +55,8 @@ $User = RDB()->getUser()->explain(1);
 var_export($User);
 */
 //RDB()->getUser()->save(array('name' => 'save'));
-/*
-$User = RDB()->getUser()->find(1);
-var_export($User);
-*/
+//$User = RDB()->getUser()->find(1);
+//var_export($User);
 /*
 $User = RDB()->getUser()
     ->select('id,name')
@@ -76,5 +74,20 @@ foreach ($User as $id => $Data) {
 //$User->update();
 //$User = RDB()->getUser()->data(array('name' => 'wwwi'))->update(1);
 //$User = RDB()->getUser()->exec('insert into user(name) values (?)', array('xxx'));
+//$User = RDB()->getUser()->find();
 //$User = RDB()->getUser()->find(1);
-//var_export($User);
+//RDB()->getUser()->findCount();
+//echo ($User);
+//echo RDB()->getUser()->findCount();
+/*事务*/
+/*
+$PDO = RDB()->getUser()->begin();
+RDB()->getUser()->data(array('name' => 'rollback'))->update(3);
+$PDO->exec('update user set name="rollback" where id = 2');
+RDB()->getUser()->save(array('name' => 'save_trx'));
+$PDO->rollBack();
+*/
+/*
+$User = RDB()->getUser2()->find(88992);
+echo ($User);
+*/

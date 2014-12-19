@@ -14,7 +14,7 @@ class Factory {
 
     public function __construct(
         array $aDBConfig,     //DB config
-        $aModelConfig,        //Model config
+        array $aModelConfig,  //Model config
         $sAppModelNS        = '',
         $sDefaultModelClass = 'Hummer\\Component\\RDS\\Model\\Model',
         $aAopCallBack
@@ -36,7 +36,6 @@ class Factory {
 
     private static $aCURD;
     private static $_aModel;
-
     public function get($sModelName, $aArgs=null)
     {
         if (!isset(self::$_aModel[$sModelName])) {
@@ -75,7 +74,6 @@ class Factory {
                 self::$aDBConfig[$sModelDB]['option'],
                 self::$aAopCallBack
             );
-            $PDO->getInstance();
             self::$aCURD[$sModelDB] = $PDO;
         }
         return self::$aCURD[$sModelDB];

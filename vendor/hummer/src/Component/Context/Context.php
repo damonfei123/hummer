@@ -37,6 +37,7 @@ class Context{
     private static $_aAllCFG = null;
 
     private $__aModuleConf__;
+
     public function __get($sVarName)
     {
         if (!$this->isRegister('Config')) {
@@ -70,6 +71,7 @@ class Context{
             $Ref = new \ReflectionClass($aModuleConfig['class']);
             $Obj = $Ref->newInstanceArgs($aModuleConfig['params']);
         }
+
         if (isset($aModuleConfig['packer'])) {
             $Obj = new Packer($Obj, $aModuleConfig['packer']);
         }

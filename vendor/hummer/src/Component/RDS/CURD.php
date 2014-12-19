@@ -2,6 +2,7 @@
 namespace Hummer\Component\RDS;
 
 use Hummer\Component\Helper\Packer;
+use Hummer\Component\Helper\Arr;
 
 class CURD {
 
@@ -11,16 +12,16 @@ class CURD {
 
     public $bTmpSelectPK = false;
 
-    public $sPrimaryKey = 'id';
+    public $sPrimaryKey  = 'id';
 
     public $sTable;
     public $aWhere     = array();
-    public $sJoinTable = '';
     public $aData      = array();
-    public $sOrder;
     public $sSelect    = null;
+    public $sJoinTable = '';
     public $sLimit;
     public $sGroupBy;
+    public $sOrder;
     public $aAopCallBack;
 
     public function __construct(
@@ -35,6 +36,7 @@ class CURD {
         $this->sPassword    = $sPassword;
         $this->aOption      = $aOption;
         $this->aAopCallBack = $aAopCallBack;
+        $this->Instance     = $this->getInstance();
     }
 
     public function getInstance()
@@ -48,15 +50,6 @@ class CURD {
             ),$this->aAopCallBack);
         }
         return $this->Instance;
-    }
-
-    /**
-     *  事务
-     **/
-    public function begin()
-    {
-        $this->Instance->beginTransaction();
-        return $this;
     }
 
     public function where($mWhere=null)
@@ -82,8 +75,8 @@ class CURD {
     {
         $aSelect = explode(',', $this->sSelect);
         if (!in_array($this->sPrimaryKey, $aSelect)) {
-            $this->bTmpSelectPK = true;
             $aSelect[] = $this->sPrimaryKey;
+            $this->bTmpSelectPK = true;
             $this->sSelect      = join(',', $aSelect);
         }
         return $this;
@@ -142,9 +135,7 @@ class CURD {
         $mWhere=null,
         $iFetchMode=\PDO::FETCH_ASSOC
     ){
-        if (!is_null($mWhere)) {
-            $this->where($mWhere);
-        }
+        if (!is_null($mWhere)) $this->where($mWhere);
         $sSQL = self::buildQuerySQL($aArgs);
         $STMT = $this->Instance->prepare($sSQL);
         $STMT->execute($aArgs);
@@ -156,9 +147,7 @@ class CURD {
         $mWhere=null,
         $iFetchMode=\PDO::FETCH_ASSOC
     ) {
-        if (!is_null($mWhere)) {
-            $this->where($mWhere);
-        }
+        if (!is_null($mWhere)) $this->where($mWhere);
         $sSQL = sprintf('explain %s',self::buildQuerySQL($aArgs));
         $STMT = $this->Instance->prepare($sSQL);
         $STMT->execute($aArgs);
@@ -173,8 +162,19 @@ class CURD {
         }
         $aArgs       = array();
         $sSQLPrepare = $this->buildSaveSQL($aArgs);
-        $STMT        = $this->getInstance()->prepare($sSQLPrepare);
+        $STMT        = $this->Instance->prepare($sSQLPrepare);
         return $STMT->execute($aArgs);
+    }
+
+    public function findCount($mWhere=null)
+    {
+        if (!is_null($mWhere)) $this->where($mWhere);
+        $this->select('count(1) as total');
+        $sSQL = self::buildQuerySQL($aArgs);
+        $STMT = $this->Instance->prepare($sSQL);
+        $STMT->execute($aArgs);
+        $mResult = $STMT->fetch();
+        return Arr::get($mResult, 'total', 0);
     }
 
     public function buildSaveSQL(&$aArgs)
@@ -187,19 +187,22 @@ class CURD {
         foreach ($aData as $sK => $mV) {
             $sField     .= "$sK,";
             $sBindParam .= "?,";
-            $aArgs[] = $mV;
+            $aArgs[]     = $mV;
         }
         $sField     = trim($sField, ',');
         $sBindParam = trim($sBindParam, ',');
-
-        return sprintf('INSERT INTO %s(%s) values(%s)', $this->sTable, $sField, $sBindParam);
+        return sprintf('INSERT INTO %s(%s) values(%s)',
+            $this->sTable,
+            $sField,
+            $sBindParam
+        );
     }
 
-    public static function buildUpdateSQL(&$aUpdateDataArg, &$aArgs)
+    public function buildUpdateSQL(&$aUpdateDataArg, &$aArgs)
     {
         $aUpdatePre = $aUpdateData = array();
-        foreach ($this->aData as $aK => $mV) {
-            if (is_int($aK)) {
+        foreach ($this->aData as $sK => $mV) {
+            if (is_int($sK)) {
                 $aUpdatePre[] = $mV;
             }else{
                 $sKK          = self::addQuote($sK);
@@ -226,12 +229,9 @@ class CURD {
         );
     }
 
-
     public function delete($mWhere=array())
     {
-        if (!is_null($mWhere)) {
-            $this->where($mWhere);
-        }
+        if (!is_null($mWhere)) $this->where($mWhere);
         $aArgs = array();
         $sSQL  = self::buildDeleteSQL($this->aWhere, $aArgs);
         $STMT  = $this->Instance->prepare($sSQL);
@@ -248,14 +248,30 @@ class CURD {
 
     public function update($mWhere=null) {
 
-        if (!is_null($mWhere)) {
-            $this->where($mWhere);
-        }
-        $aArgs = $aUpdateData = array();
-        $sSQLPrepare = self::buildUpdateSQL($aUpdateData, $aArgs);
-        $STMT  = $this->getInstance()->prepare($sSQLPrepare);
+        if (!is_null($mWhere)) $this->where($mWhere);
+        $aArgs       = $aUpdateData = array();
+        $sSQLPrepare = $this->buildUpdateSQL($aUpdateData, $aArgs);
+        $STMT        = $this->Instance->prepare($sSQLPrepare);
         return $STMT->execute(array_merge($aUpdateData, $aArgs));
     }
+
+    /**
+     *  事务
+     **/
+    public function begin()
+    {
+        $this->Instance->beginTransaction();
+        return $this;
+    }
+    public function rollBack()
+    {
+        return $this->Instance->rollBack();
+    }
+    public function commit()
+    {
+        return $this->Instance->commit();
+    }
+    ///////////////////事务END/////////////////////
 
     /**
      * @param array $aArgs
@@ -264,9 +280,8 @@ class CURD {
     public static function buildCondition($aWhere, &$aArgs = array())
     {
         # 为空直接返回1
-        if (empty($aWhere)) {
-            return 1;
-        }
+        if (empty($aWhere)) return 1;
+
         # 提取出条件关系
         $aWhereBuild = array();
         if (isset($aWhere[-1])) {
@@ -291,8 +306,9 @@ class CURD {
                         $aWhereBuild[] = '1';
                     } else {
                         $mV = array_unique($mV);
-                        $aWhereBuild[] = sprintf(
-                            "$sKey $sOP (%s)",
+                        $aWhereBuild[] = sprintf('%s %s (%s)',
+                            $sKey,
+                            $sOP,
                             implode(',', array_fill(0, count($mV), '?'))
                         );
                         $aArgs = array_merge($aArgs, $mV);
@@ -305,7 +321,7 @@ class CURD {
                     $aArgs[]       = array_shift($mV);
                     $aArgs[]       = array_shift($mV);
                 }else {
-                    $aWhereBuild[] = sprintf('%s %s ? ',$sKey, $sOP);
+                    $aWhereBuild[] = sprintf(' %s %s ? ',$sKey, $sOP);
                     $aArgs[]       = $mV;
                 }
             }
