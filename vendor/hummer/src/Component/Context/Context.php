@@ -41,17 +41,18 @@ class Context{
     public function __get($sVarName)
     {
         if (!$this->isRegister('Config')) {
-            throw new \DomainException('[CTX] : Error');
+            throw new \DomainException('[CTX] : ERROR : NONE CTX CONFIG');
         }
         $CFG = $this->Config;
-
         if (self::$_aAllCFG === null) self::$_aAllCFG = $CFG->get('module');
 
         foreach (self::$_aAllCFG as $aModule) {
             if (!isset($aModule['module']) || !isset($aModule['class'])) {
                 throw new \DomainException('[CTX] : Error');
             }
-            if ($aModule['module'] != $sVarName || $aModule['run_mode'] != $this->sRunMode) {
+            if ($aModule['module'] != $sVarName ||
+                (isset($aModule['run_mode']) && $aModule['run_mode'] != $this->sRunMode)
+            ) {
                 continue;
             }
             $this->__aModuleConf__[$sVarName] = $aModule;

@@ -15,10 +15,11 @@ class CURD {
     public $sPrimaryKey  = 'id';
 
     public $sTable;
-    public $aWhere     = array();
-    public $aData      = array();
-    public $sSelect    = null;
-    public $sJoinTable = '';
+    public $aWhere      = array();
+    public $aData       = array();
+    public $sSelect     = '*';
+    public $sJoinTable  = '';
+    public $sForceIndex ='';
     public $sLimit;
     public $sGroupBy;
     public $sOrder;
@@ -52,6 +53,12 @@ class CURD {
         return $this->Instance;
     }
 
+    public function forceIndex($sIndexName)
+    {
+        $this->sForceIndex = sprintf('force index(`%s`)',$sIndexName);
+        return $this;
+    }
+
     public function where($mWhere=null)
     {
         if (!is_null($mWhere)) {
@@ -74,7 +81,7 @@ class CURD {
     public function forceSelectPK()
     {
         $aSelect = explode(',', $this->sSelect);
-        if (!in_array($this->sPrimaryKey, $aSelect)) {
+        if ($this->sSelect != '*' && !in_array($this->sPrimaryKey, $aSelect)) {
             $aSelect[] = $this->sPrimaryKey;
             $this->bTmpSelectPK = true;
             $this->sSelect      = join(',', $aSelect);
@@ -115,7 +122,7 @@ class CURD {
                 $sJoinType = 'LEFT';
                 break;
         }
-        $this->sJoinTable = sprintf(' %s JOIN %s ', $sJoinType, $sTable);
+        $this->sJoinTable = sprintf('%s %s JOIN %s ', $this->sJoinTable, $sJoinType, $sTable);
         return $this;
     }
 
@@ -148,11 +155,14 @@ class CURD {
         $iFetchMode=\PDO::FETCH_ASSOC
     ) {
         if (!is_null($mWhere)) $this->where($mWhere);
-        $sSQL = sprintf('explain %s',self::buildQuerySQL($aArgs));
+        $sSQL = trim(sprintf('explain %s',self::buildQuerySQL($aArgs)));
         $STMT = $this->Instance->prepare($sSQL);
         $STMT->execute($aArgs);
         $STMT->setFetchMode($iFetchMode);
-        return $STMT->fetchAll();
+        $sEndSQL = self::buildEndSQL(str_replace('explain ','',$sSQL), $aArgs);
+        $aResult = $STMT->fetchAll();
+        array_unshift($aResult, $sEndSQL);
+        return $aResult;
     }
 
     public function save($aSaveData=array())
@@ -163,7 +173,8 @@ class CURD {
         $aArgs       = array();
         $sSQLPrepare = $this->buildSaveSQL($aArgs);
         $STMT        = $this->Instance->prepare($sSQLPrepare);
-        return $STMT->execute($aArgs);
+        $STMT->execute($aArgs);
+        return $this->Instance->lastInsertId();
     }
 
     public function findCount($mWhere=null)
@@ -219,9 +230,10 @@ class CURD {
 
     public function buildQuerySQL(&$aArgs)
     {
-        return sprintf('SELECT %s FROM %s %s WHERE %s %s %s',
+        return sprintf('SELECT %s FROM %s %s %s WHERE %s %s %s',
             $this->sSelect ? $this->sSelect : '*',
             $this->sTable,
+            $this->sForceIndex,
             $this->sJoinTable,
             self::buildCondition($this->aWhere, $aArgs),
             $this->sGroupBy,
@@ -349,5 +361,22 @@ class CURD {
     public static function _addQuote($sK)
     {
         return $sK[0] === ':' ? substr($sK, 1) : "`$sK`";
+    }
+
+    /**
+     *  build end execute SQL
+     *  @info for debug use
+     **/
+    public static function buildEndSQL($sSQL, $aArgs)
+    {
+        while (strpos($sSQL, '?'))
+        {
+            $mParam = array_shift($aArgs);
+            if (!is_int($mParam)) {
+                $mParam = sprintf('"%s"', $mParam);
+            }
+            $sSQL = preg_replace('/\?/', $mParam, $sSQL, 1);
+        }
+        return $sSQL;
     }
 }

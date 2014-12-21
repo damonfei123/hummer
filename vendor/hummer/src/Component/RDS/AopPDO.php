@@ -14,7 +14,7 @@ class AopPDO {
     {
         $iS = microtime(true);
         $mRS = call_user_func_array(array($Obj, $sMethod), $aArgv);
-        fprintf(STDOUT, $Obj->queryString . "\n", microtime(true) - $iS);
+        //fprintf(STDOUT, $Obj->queryString . "\n", microtime(true) - $iS);
         $Result->value = $mRS;
     }
 

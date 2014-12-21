@@ -5,25 +5,25 @@ use Hummer\Component\RDS\CURD;
 use Hummer\Component\Helper\Arr;
 
 class Factory {
-    private static $aDBConfig;
-    private static $aAopCallBack;
-    private static $aModelConf;
-    private static $sAppModelNS;
-    private static $sDefaultModelClass;
-    private $sDefaultDB = 'default';
+    private static $_aDBConfig;
+    private static $_aAopCallBack;
+    private static $_aModelConf;
+    private static $_sAppModelNS;
+    private static $_sDefaultModelClass;
+    private $_sDefaultDB = 'default';
 
     public function __construct(
-        array $aDBConfig,     //DB config
-        array $aModelConfig,  //Model config
-        $sAppModelNS        = '',
-        $sDefaultModelClass = 'Hummer\\Component\\RDS\\Model\\Model',
-        $aAopCallBack
+        array $_aDBConfig,     //DB config
+        array $_aModelConfig,  //Model config
+        $_sAppModelNS        = '',
+        $_sDefaultModelClass = 'Hummer\\Component\\RDS\\Model\\Model',
+        $_aAopCallBack
     ) {
-        self::$aDBConfig          = $aDBConfig;
-        self::$aAopCallBack       = $aAopCallBack;
-        self::$aModelConf         = $aModelConfig;
-        self::$sAppModelNS        = $sAppModelNS;
-        self::$sDefaultModelClass = $sDefaultModelClass;
+        self::$_aDBConfig          = $_aDBConfig;
+        self::$_aAopCallBack       = $_aAopCallBack;
+        self::$_aModelConf         = $_aModelConfig;
+        self::$_sAppModelNS        = $_sAppModelNS;
+        self::$_sDefaultModelClass = $_sDefaultModelClass;
     }
 
     public function __call($sModel, $aArgs=null)
@@ -34,17 +34,17 @@ class Factory {
         return false;
     }
 
-    private static $aCURD;
+    private static $_aCURD;
     private static $_aModel;
     public function get($sModelName, $aArgs=null)
     {
         if (!isset(self::$_aModel[$sModelName])) {
             $CURD = $this->initCURD($sModelName);
-            $aConf = self::$aModelConf[$sModelName];
+            $aConf = self::$_aModelConf[$sModelName];
 
             $sModelClassName = isset($aConf['model_class']) ?
-                self::$sAppModelNS . '\\' . $aConf['model_class'] :
-                self::$sDefaultModelClass;
+                self::$_sAppModelNS . '\\' . $aConf['model_class'] :
+                self::$_sDefaultModelClass;
 
             self::$_aModel[$sModelName] = new $sModelClassName(
                 $sModelName,
@@ -53,29 +53,28 @@ class Factory {
                 $this
             );
         }
-
         return self::$_aModel[$sModelName];
     }
 
     public function initCURD($sModelName)
     {
-        $sModelDB = isset(self::$aModelConf[$sModelName]) ?
-            Arr::get(self::$aModelConf[$sModelName], 'db', $this->sDefaultDB) :
-            $this->sDefaultDB;
+        $sModelDB = isset(self::$_aModelConf[$sModelName]) ?
+            Arr::get(self::$_aModelConf[$sModelName], 'db', $this->_sDefaultDB) :
+            $this->_sDefaultDB;
 
-        if (!isset(self::$aCURD[$sModelDB])) {
-            if (!array_key_exists($this->sDefaultDB, self::$aDBConfig)) {
+        if (!isset(self::$_aCURD[$sModelDB])) {
+            if (!array_key_exists($this->_sDefaultDB, self::$_aDBConfig)) {
                 throw new \InvalidArgumentException('[ FACTORY ] : NONE DB CONFIG');
             }
             $PDO = new CURD(
-                self::$aDBConfig[$sModelDB]['dsn'],
-                self::$aDBConfig[$sModelDB]['username'],
-                self::$aDBConfig[$sModelDB]['password'],
-                self::$aDBConfig[$sModelDB]['option'],
-                self::$aAopCallBack
+                self::$_aDBConfig[$sModelDB]['dsn'],
+                self::$_aDBConfig[$sModelDB]['username'],
+                self::$_aDBConfig[$sModelDB]['password'],
+                self::$_aDBConfig[$sModelDB]['option'],
+                self::$_aAopCallBack
             );
-            self::$aCURD[$sModelDB] = $PDO;
+            self::$_aCURD[$sModelDB] = $PDO;
         }
-        return self::$aCURD[$sModelDB];
+        return self::$_aCURD[$sModelDB];
     }
 }

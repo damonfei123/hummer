@@ -23,11 +23,20 @@ class Adaptor_PHP {
 
     public static function _get($sModule, $sBaseDir)
     {
-        $mConfig = null;
-        $sModule = str_replace('.', '/', $sModule);
-        if(file_exists($sFilePath = $sBaseDir . '/' . $sModule . '.php')){
+        $mConfig   = null;
+        $iPos      = strpos($sModule, '.');
+        $sFileName = $sModule;
+        if (false !== $iPos) {
+            $sFileName = substr($sModule, 0, $iPos);
+        }
+        if(file_exists($sFilePath = $sBaseDir . '/' . $sFileName. '.php')){
             $mConfig = require($sFilePath);
         }
-        return $mConfig;
+        if (false === $iPos) {
+            return $mConfig;
+        }
+        $sKey = substr($sModule, $iPos+1);
+        $sKey = str_replace('.',"']['", $sKey);
+        return $mConfig["$sKey"];
     }
 }

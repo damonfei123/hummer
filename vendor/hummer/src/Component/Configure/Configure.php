@@ -17,6 +17,9 @@ class Configure{
                 case '@':
                     $mResult = $CFG->get(substr($mResult, 1));
                     break;
+                case '\\':
+                    $mResult = substr($mResult, 1);
+                    break;
             }
         }elseif(is_array($mResult)){
             foreach ($mResult as $mK => $mV) {
