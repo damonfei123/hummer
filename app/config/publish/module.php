@@ -26,6 +26,6 @@ return array(
     ),
     array(
         'module' => 'Template',
-        'class'  => 'Hummer\\Component\\Template\\SmartyAdaptor',
+        'class'  => 'Hummer\\Component\\Template\\TemplateAdaptor',
     ),
 );

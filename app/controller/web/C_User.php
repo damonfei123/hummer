@@ -30,6 +30,7 @@ class C_User extends Web_Base{
         $User = RDB()->getUser()->findMulti();
         foreach ($User as $user) {
             echo $user->id;
+            echo $user->name;
         }
 
 
