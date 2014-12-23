@@ -13,6 +13,7 @@ class C_Base{
         $this->Context      =  Context::getInst();
         $this->Config       = $this->Context->Config;
         $this->Log          = $this->Context->Log;
+        $this->HttpRequest  = $this->Context->HttpRequest;
         $this->HttpResponse = $this->Context->HttpResponse;
     }
 

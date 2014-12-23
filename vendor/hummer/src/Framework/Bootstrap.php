@@ -48,7 +48,31 @@ class Bootstrap{
 
     public static function handleError($iErrNum, $sErrStr, $sErrFile, $iErrLine, $sErrContext)
     {
-        echo 'catch Error' . $iErrNum . ':' . $sErrStr . "\nIn File[$sErrFile]:Line[$iErrLine]<br/>\n";
+        $sStr = sprintf('Catch Error.[%d]:%s %s In File [%s],line %d ',
+                $iErrNum,
+                $sErrStr,
+                $sErrFile,
+                $iErrLine
+        );
+        $C = Context::getInst();
+        if ($C === null || !$C->isRegister('Log')) {
+            trigger_error($sStr, E_USER_WARNING);
+        }else{
+            switch ($iErrNum)
+            {
+                case E_NOTICE:
+                case E_USER_NOTICE:
+                    $C->Log->notice($sStr);
+                    break;
+                case E_USER_ERROR:
+                    throw new \ErrorException($sStr);
+                    break;
+
+                default:
+                    $C->Log->warn($sStr);
+                    break;
+            }
+        }
     }
 
     public function run($sRouteKey=null)
@@ -67,8 +91,6 @@ class Bootstrap{
                     foreach ($aCallBack as $CallBack) {
                         $CallBack->call();
                     }
-                    #SEND TO WEB
-                    $C->HttpResponse->send();
                     break;
                 case self::S_RUN_CLI:
                     break;

@@ -13,12 +13,12 @@ class Mode{
         $sControllerPre,
         $sActionPre
     ) {
-        $sURL = self::_TrimInValidURI(Arr::get(parse_url($REQ->getRequestURI()),'path',''));
-        $aURLPATH = explode('/', substr($sURL,1));
+        $sURL = Helper::TrimInValidURI(Arr::get(parse_url($REQ->getRequestURI()),'path',''));
+        $aURLPATH = explode('/', strtolower(substr($sURL,1)));
         #Action
         $sURIAction = array_pop($aURLPATH);
         $sURIAction = $sURIAction === '' ? 'default' : $sURIAction;
-        $sAction    = $sActionPre . ucfirst($sURIAction);
+        $sAction    = $sActionPre . ucfirst(Helper::ReplaceLineToUpper($sURIAction));
         if (count($aURLPATH) === 0) {
             array_unshift($aURLPATH, 'main');
         }
@@ -27,23 +27,15 @@ class Mode{
         $sControllerPathPre = sprintf('%s%s%s%s',
             $sControllerPath,
             $sControllerDepth,
-            $sControllerPre ,
+            $sControllerPre,
             $sControllerName
         );
         if($sRequestMethod=$REQ->getRequestMethod() !== 'GET'){
             $sControllerPathPre .= '_' . $sControllerPathPre;
-        };
+        }
         $CallBack = new CallBack();
         $CallBack->setCBObject($sControllerPathPre, $sAction);
 
         return $CallBack;
-    }
-
-    private static function _TrimInValidURI($sURI)
-    {
-        while (strpos($sURI, '//')) {
-            $sURI = str_replace('//','/', $sURI);
-        }
-        return $sURI;
     }
 }
