@@ -27,5 +27,17 @@ return array(
     array(
         'module' => 'Template',
         'class'  => 'Hummer\\Component\\Template\\TemplateAdaptor',
+        'params' => array(
+            VIEW_DIR,
+            '/home/zhangyinfei/project/test/data/templates_c',
+            '/home/zhangyinfei/project/test/data/cache',
+            '/home/zhangyinfei/project/test/data/config',
+            'options' => array(
+                'force_compile'    => true,
+                //'debugging'  => true,
+                'caching'          => true,
+                'cache_lifetime'   => 120,
+            )
+        )
     ),
 );

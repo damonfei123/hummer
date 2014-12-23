@@ -1,7 +1,7 @@
 <?php
 namespace App\model;
 
-use Hummer\Component\RDS\Model\Model;
+use App\system\model\Model_Base;
 
-class Model_User extends Model{
+class Model_User extends Model_Base{
 }

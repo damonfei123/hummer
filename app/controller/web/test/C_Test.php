@@ -1,9 +1,11 @@
 <?php
 namespace App\controller\web\test;
 
-class C_Test{
+use App\system\controller\Web_Base;
 
-    public function actionTestEfasfd()
+class C_Test extends Web_Base{
+
+    public function actionDefault()
     {
         echo 1;
     }
