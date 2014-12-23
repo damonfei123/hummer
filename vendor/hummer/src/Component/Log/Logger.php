@@ -49,36 +49,37 @@ class Logger{
         $this->sGUID     = $sRequestID ? $sRequestID : md5(uniqid(__class__,true));
     }
 
-    public function debug($sMessage)
+    public function debug($sMessage, array $aContext = array())
     {
-        $this->log(self::LEVEL_DEBUG, $sMessage);
+        $this->log(self::LEVEL_DEBUG, $sMessage, $aContext);
     }
-    public function warn($sMessage)
+    public function warn($sMessage, array $aContext = array())
     {
-        $this->log(self::LEVEL_WARN, $sMessage);
+        $this->log(self::LEVEL_WARN, $sMessage, $aContext);
     }
-    public function info($sMessage)
+    public function info($sMessage, array $aContext = array())
     {
-        $this->log(self::LEVEL_INFO, $sMessage);
+        $this->log(self::LEVEL_INFO, $sMessage, $aContext);
     }
-    public function notice($sMessage)
+    public function notice($sMessage, array $aContext = array())
     {
-        $this->log(self::LEVEL_NOTICE, $sMessage);
+        $this->log(self::LEVEL_NOTICE, $sMessage, $aContext);
     }
-    public function error($sMessage)
+    public function error($sMessage, array $aContext = array())
     {
-        $this->log(self::LEVEL_ERROR, $sMessage);
+        $this->log(self::LEVEL_ERROR, $sMessage, $aContext);
     }
-    public function fatal($sMessage)
+    public function fatal($sMessage, array $aContext = array())
     {
-        $this->log(self::LEVEL_FATEAL, $sMessage);
+        $this->log(self::LEVEL_FATEAL, $sMessage, $aContext);
     }
 
-    public function log($iLevel, $sMessage)
+    public function log($iLevel, $sMessage, $aContext=array())
     {
         if (!($iLevel & $this->iLogLevel) || empty($this->aWriter)) {
             return;
         }
+        $sMessage = self::interpolate($sMessage, $aContext);
         list($sUSec, $sSec) = explode(' ', microtime());
         $aRow = array(
             'sTime'    => sprintf('%s.%s',
@@ -93,5 +94,14 @@ class Logger{
             $Writer->setGUID($this->sGUID);
             $Writer->acceptData($aRow);
         }
+    }
+
+    public static function interpolate($sMessage, $aContext=array())
+    {
+        $aReplace = array();
+        foreach ($aContext as $sK => $mV) {
+            $aReplace['{'.$sK.'}'] = ((is_array($mV)) || is_object($mV)) ? json_encode($mV) : (string)$mV;
+        }
+        return strtr($sMessage, $aReplace);
     }
 }

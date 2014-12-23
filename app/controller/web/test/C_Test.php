@@ -7,6 +7,11 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
-        echo 1;
+        $this->Log->info(11);
+        $this->Log->error(11);
+        $this->Log->fatal(11);
+        $this->Log->warn(11);
+        $this->Log->warn(11);
+        RDB()->getUser()->findMulti();
     }
 }

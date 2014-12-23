@@ -2,6 +2,7 @@
 namespace Hummer\Component\RDS;
 
 use Hummer\Component\Helper\Packer;
+use Hummer\Component\Context\Context;
 
 class AopPDO {
     public static $aAopPreExecCost = array(
@@ -12,9 +13,18 @@ class AopPDO {
 
     public static function stmtExecBefore($Obj, $sMethod, $aArgv, \stdClass $Result)
     {
-        $iS = microtime(true);
+        $Log = Context::getInst()->Log;
+        $iS  = microtime(true);
         $mRS = call_user_func_array(array($Obj, $sMethod), $aArgv);
-        //fprintf(STDOUT, $Obj->queryString . "\n", microtime(true) - $iS);
+        $iDiff = microtime(true) - $iS;
+        $Log->info(
+            '[SQL] : {cost}; {sql}; {bind}',
+            array(
+                'sql'  => $Obj->queryString,
+                'bind' => empty($aArgv[0]) ? '' : $aArgv[0],
+                'cost' => sprintf('%.2f ms', $iDiff * 1000)
+            )
+        );
         $Result->value = $mRS;
     }
 

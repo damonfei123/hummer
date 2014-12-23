@@ -6,9 +6,9 @@ use Hummer\Component\Helper\Helper;
 
 class C_Web extends C_Base{
 
-    public function __construct() {
+    public function __construct($sTpl='html') {
         parent::__construct();
-
+        $this->sTpl     = $sTpl;
         $this->template = $this->Context->Template;
     }
 
@@ -25,17 +25,17 @@ class C_Web extends C_Base{
     public function display($sTemplate=null)
     {
         $this->bCalledDisplay = true;
-        return $this->template->display($this->getTplPath($this->HttpRequest, $sTemplate));
+        return $this->template->display($this->getTplPath($this->HttpRequest, $sTemplate,$this->sTpl));
     }
 
-    public static function getTplPath($REQ, $sTemplate=null)
+    public static function getTplPath($REQ, $sTemplate=null, $sTpl)
     {
         if (is_null($sTemplate)) {
             $sURL       = Helper::TrimInValidURI(Arr::get(parse_url($REQ->getRequestURI()),'path',''));
             $aURLPATH   = explode('/', strtolower(substr($sURL,1)));
             $sTplFile   = array_pop($aURLPATH);
             $sTplFile   = $sTplFile == '' ? 'default' : $sTplFile;
-            $sTplFile   = sprintf('%s.tpl', Helper::ReplaceLineToUpper($sTplFile));
+            $sTplFile   = sprintf('%s.%s', Helper::ReplaceLineToUpper($sTplFile), $sTpl);
             $sTemplate  = sprintf('%s%s%s',join('/', $aURLPATH),'/', $sTplFile);
         }
         return $sTemplate;

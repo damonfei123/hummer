@@ -48,7 +48,7 @@ class Bootstrap{
 
     public static function handleError($iErrNum, $sErrStr, $sErrFile, $iErrLine, $sErrContext)
     {
-        $sStr = sprintf('Catch Error.[%d]:%s %s In File [%s],line %d ',
+        $sStr = sprintf('Catch Error.[%d]:%s In File [%s],line %d ',
                 $iErrNum,
                 $sErrStr,
                 $sErrFile,
