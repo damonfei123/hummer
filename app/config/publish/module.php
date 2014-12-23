@@ -8,7 +8,7 @@ return array(
         'params' => array(
             array(
                 'WebDeBug' => array('\@WebPage'),
-                'File'     => array('\@File', '/tmp/Hummer_Log_{month}/hummer_{level}_{date}.log')
+                'File'     => array('\@File','/tmp/Hummer_Log_{date}/hummer_{level}_{date}.log')
             ),
             Logger::LEVEL_ALL
         ),
@@ -23,5 +23,9 @@ return array(
             'Hummer\\Component\\RDS\\Model\\Model',
             \Hummer\Component\RDS\AopPDO::$aAopPreExecCost
         ),
+    ),
+    array(
+        'module' => 'Template',
+        'class'  => 'Hummer\\Component\\Template\\SmartyAdaptor',
     ),
 );

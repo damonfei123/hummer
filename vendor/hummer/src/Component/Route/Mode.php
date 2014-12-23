@@ -2,6 +2,7 @@
 namespace Hummer\Component\Route;
 
 use Hummer\Component\Helper\Arr;
+use Hummer\Component\Helper\Helper;
 
 class Mode{
 
@@ -22,7 +23,7 @@ class Mode{
             array_unshift($aURLPATH, 'main');
         }
         $sControllerName    = ucfirst(array_pop($aURLPATH));
-        $sControllerDepth   = self::TrimEnd(implode('\\', $aURLPATH),'\\');
+        $sControllerDepth   = Helper::TrimEnd(implode('\\', $aURLPATH),'\\');
         $sControllerPathPre = sprintf('%s%s%s%s',
             $sControllerPath,
             $sControllerDepth,
@@ -36,12 +37,6 @@ class Mode{
         $CallBack->setCBObject($sControllerPathPre, $sAction);
 
         return $CallBack;
-    }
-
-    protected static function TrimEnd($sV, $sSeperator='/')
-    {
-        $sV = trim($sV, $sSeperator) . $sSeperator;
-        return $sV === $sSeperator ? '' : $sV;
     }
 
     private static function _TrimInValidURI($sURI)

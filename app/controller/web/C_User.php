@@ -12,10 +12,27 @@ class C_User extends Web_Base{
 
     public function actionDefault()
     {
-        $this->Log->info('来个中文');
-        pr(RDB()->getUser()->explain(array('name like' => '%xx%')));
-        //pr(RDB()->getUser()->explain(array('id between' => array(1,4))));
-        //echo RDB()->getUser()->data(array('name' => 'damon'))->save();
+        $Template = View();
+
+        $Template->setTemplateDir(VIEW_DIR);
+        $Template->setCompileDir('/home/zhangyinfei/project/test/data/templates_c');
+        $Template->setCacheDir('/home/zhangyinfei/project/test/data/cache');
+        $Template->setConfigDir('/home/zhangyinfei/project/test/data/config');
+
+        //echo $Template::SMARTY_VERSION;
+        $Template->force_compile = true;
+        //$Template->debugging = true;
+        $Template->caching = true;
+        $Template->cache_lifetime = 120;
+
+        $Template->assign("LastName", array("Doe", "Smith", "Johnson", "Case"));
+
+        $User = RDB()->getUser()->findMulti();
+        foreach ($User as $user) {
+            echo $user->id;
+        }
+
+
+        $Template->display('index.tpl');
     }
 }
-

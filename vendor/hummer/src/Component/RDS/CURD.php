@@ -144,10 +144,7 @@ class CURD {
     ){
         if (!is_null($mWhere)) $this->where($mWhere);
         $sSQL = self::buildQuerySQL($aArgs);
-        $STMT = $this->Instance->prepare($sSQL);
-        $STMT->execute($aArgs);
-        $STMT->setFetchMode($iFetchMode);
-        return $STMT->fetchAll();
+        return $this->queryAndFind($sSQL, $aArgs, $iFetchMode);
     }
 
     public function explain(
@@ -156,13 +153,23 @@ class CURD {
     ) {
         if (!is_null($mWhere)) $this->where($mWhere);
         $sSQL = trim(sprintf('explain %s',self::buildQuerySQL($aArgs)));
-        $STMT = $this->Instance->prepare($sSQL);
-        $STMT->execute($aArgs);
-        $STMT->setFetchMode($iFetchMode);
+        $aResult = $this->queryAndFind($sSQL, $aArgs, $iFetchMode);
+
+        #sql info
         $sEndSQL = self::buildEndSQL(str_replace('explain ','',$sSQL), $aArgs);
-        $aResult = $STMT->fetchAll();
-        array_unshift($aResult, $sEndSQL);
-        return $aResult;
+
+        #table indexes
+        $aIndexes = $this->queryAndFind(
+            sprintf('SHOW INDEXES FROM %s', $this->sTable),
+            $aArgs,
+            $iFetchMode
+        );
+
+        return array(
+            'SQL'   => $sEndSQL,
+            'TABLE INDEX' => $aIndexes,
+            'EXPLAIN'     => $aResult
+        );
     }
 
     public function save($aSaveData=array())
@@ -182,9 +189,7 @@ class CURD {
         if (!is_null($mWhere)) $this->where($mWhere);
         $this->select('count(1) as total');
         $sSQL = self::buildQuerySQL($aArgs);
-        $STMT = $this->Instance->prepare($sSQL);
-        $STMT->execute($aArgs);
-        $mResult = $STMT->fetch();
+        $mResult = $this->queryAndFind($sSQL, $aArgs,null, true);
         return Arr::get($mResult, 'total', 0);
     }
 
@@ -378,5 +383,17 @@ class CURD {
             $sSQL = preg_replace('/\?/', $mParam, $sSQL, 1);
         }
         return $sSQL;
+    }
+
+    public function queryAndFind(
+        $sSQL,
+        $aArgs,
+        $iFetchMode=\PDO::FETCH_ASSOC,
+        $bOnlyOne=false
+    ) {
+        $STMT = $this->Instance->prepare($sSQL);
+        $STMT->execute($aArgs);
+        $STMT->setFetchMode($iFetchMode);
+        return $bOnlyOne ? $STMT->fetch() : $STMT->fetchAll();
     }
 }

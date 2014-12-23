@@ -10,6 +10,12 @@ class Writer_WebPage implements IWriter{
         $this->aLog[] = $aRow;
     }
 
+    public function setGUID($sGUID)
+    {
+        #GUID should be same for one request
+        $this->sGUID = $sGUID;
+    }
+
     public function __destruct()
     {
     }

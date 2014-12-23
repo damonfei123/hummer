@@ -30,6 +30,11 @@ function go($sUrl=null)
     $C->HttpResponse->setHeaderRedirect($sUrl);
 }
 
+function View()
+{
+    return CTX()->Template;
+}
+
 function pr($mVar) {
     echo "<pre>";
     if (is_object($mVar)) {

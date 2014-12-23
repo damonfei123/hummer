@@ -2,8 +2,12 @@
 namespace Hummer\Component\Log;
 
 use Hummer\Component\Helper\Dir;
+use Hummer\Component\Helper\Time;
 
 class Writer_File implements IWriter {
+
+    protected $aData = array();
+    protected $sGUID = null;
 
     protected $sFileFormat;
     protected $sContentFormat;
@@ -20,35 +24,63 @@ class Writer_File implements IWriter {
 
     public function __construct(
         $sFileFormat,
-        $sContentFormat=null
+        $sContentFormat=null,
+        $sMonthFormat='Ym',
+        $sDateFormat='Ymd'
     ) {
-        $this->sFileFormat= $sFileFormat;
+        $this->sMonthFormat = $sMonthFormat;
+        $this->sDateFormat  = $sDateFormat;
+        $this->sFileFormat  = $sFileFormat;
         $this->sContentFormat = is_null($sContentFormat) ?
-            '[{iLevel}] : {sTime} : {sGUID} : {sContent}' :
+            '[{iLevel}] : {sTime} : {sContent}' :
             $sContentFormat;
     }
-
-    protected $aLog;
 
     public function acceptData($aRow)
     {
         if (!$this->bEnable) {
             return;
         }
+        $sLevelName = Logger::getLogNameByLevelID($aRow['iLevel']);
         $sLogMsg = str_replace(
-            array('{iLevel}', '{sTime}', '{sGUID}', '{sContent}'),
-            array(Logger::getLogNameByLevelID($aRow['iLevel']), $aRow['sTime'], $aRow['sGUID'], $aRow['sMessage']),
+            array('{iLevel}', '{sTime}', '{sContent}'),
+            array($sLevelName, $aRow['sTime'], $aRow['sMessage']),
             $this->sContentFormat
         ) . PHP_EOL;
 
-        $sFilePath = str_replace(
-            array('{level}', '{date}', '{month}'),
-            array(Logger::getLogNameByLevelID($aRow['iLevel']), date('Y-m-d'), date('Ym')),
-            $this->sFileFormat
-        );
-        if(!Dir::makeDir(dirname($sFilePath))){
-            throw new \RuntimeException('[Log] : Make Dir Error');
+        #Add to queue
+        $this->aData[$sLevelName][] = $sLogMsg;
+    }
+
+    public function setGUID($sGUID)
+    {
+        #GUID should be same for one request
+        $this->sGUID  = $sGUID;
+
+    }
+
+    /**
+     *  END
+     *  Flush log to file
+     **/
+    public function __destruct()
+    {
+        $sDate  = Time::time(null,$this->sDateFormat);
+        $sMonth = Time::time(null,$this->sMonthFormat);
+        foreach ($this->aData as $sLevelName => $aContent) {
+            $sFilePath = str_replace(
+                array('{level}', '{date}', '{month}'),
+                array($sLevelName, $sDate, $sMonth),
+                $this->sFileFormat
+            );
+            if(!Dir::makeDir(dirname($sFilePath))){
+                throw new \RuntimeException('[Log] : Make Dir Error');
+            }
+            file_put_contents(
+                $sFilePath ,
+                sprintf('%s[%s]%s%s',PHP_EOL, $this->sGUID, PHP_EOL,implode('',$aContent)),
+                FILE_APPEND|LOCK_EX
+            );
         }
-        file_put_contents($sFilePath , $sLogMsg, FILE_APPEND);
     }
 }

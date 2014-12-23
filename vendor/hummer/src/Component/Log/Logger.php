@@ -9,7 +9,7 @@ class Logger{
 
     const DESC_DEBUG   = 'debug';
     const DESC_INFO    = 'info';
-    const DESC_WARNING = 'warning';
+    const DESC_WARN    = 'warn';
     const DESC_NOTICE  = 'notice';
     const DESC_ERROR   = 'error';
     const DESC_FATEAL  = 'fatal';
@@ -17,7 +17,7 @@ class Logger{
 
     const LEVEL_DEBUG   = 1;
     const LEVEL_INFO    = 2;
-    const LEVEL_WARNING = 4;
+    const LEVEL_WARN    = 4;
     const LEVEL_NOTICE  = 8;
     const LEVEL_ERROR   = 16;
     const LEVEL_FATEAL  = 32;
@@ -26,7 +26,7 @@ class Logger{
     public static $aLogInfo = array(
         self::LEVEL_DEBUG   => self::DESC_DEBUG,
         self::LEVEL_INFO    => self::DESC_INFO,
-        self::LEVEL_WARNING => self::DESC_WARNING,
+        self::LEVEL_WARN    => self::DESC_WARN,
         self::LEVEL_NOTICE  => self::DESC_NOTICE,
         self::LEVEL_ERROR   => self::DESC_ERROR,
         self::LEVEL_FATEAL  => self::DESC_FATEAL
@@ -55,7 +55,7 @@ class Logger{
     }
     public function warn($sMessage)
     {
-        $this->log(self::LEVEL_WARNING, $sMessage);
+        $this->log(self::LEVEL_WARN, $sMessage);
     }
     public function info($sMessage)
     {
@@ -86,10 +86,11 @@ class Logger{
                 substr($sUSec, strpos($sUSec,'.')+1, 4)
             ),
             'iLevel'   => $iLevel,
-            'sMessage' => $sMessage,
-            'sGUID'    => $this->sGUID
+            'sMessage' => $sMessage
         );
+        #display to every writer
         foreach ($this->aWriter as $Writer) {
+            $Writer->setGUID($this->sGUID);
             $Writer->acceptData($aRow);
         }
     }

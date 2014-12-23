@@ -48,7 +48,7 @@ class Bootstrap{
 
     public static function handleError($iErrNum, $sErrStr, $sErrFile, $iErrLine, $sErrContext)
     {
-        echo 'catch Error' . $iErrNum . ':' . $sErrStr . "\nIn File[$sErrFile]:Line[$iErrLine]\n";
+        echo 'catch Error' . $iErrNum . ':' . $sErrStr . "\nIn File[$sErrFile]:Line[$iErrLine]<br/>\n";
     }
 
     public function run($sRouteKey=null)
