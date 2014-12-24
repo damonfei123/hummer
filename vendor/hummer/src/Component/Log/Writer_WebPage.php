@@ -24,7 +24,7 @@ class Writer_WebPage implements IWriter{
         ) . PHP_EOL;
 
         #Add to queue
-        $this->aLog[$sLevelName][] = $sLogMsg;
+        $this->aLog[$aRow['iLevel'].'_'.$sLevelName][] = $sLogMsg;
     }
 
     public function setGUID($sGUID)
@@ -41,8 +41,11 @@ class Writer_WebPage implements IWriter{
         $sLight      = 'TPT_Info';
         $sLevelTitle = $sLevelMsg = '';
 
+        krsort($this->aLog, SORT_NUMERIC);;
+
         foreach ($this->aLog as $sLevelName => $aLog) {
-            $sItemErr = 'TPT_Info';
+            $sLevelName = substr($sLevelName, strpos($sLevelName,'_') + 1 );
+            $sItemErr   = 'TPT_Info';
             if (in_array($sLevelName, array(
                 Logger::DESC_WARN,
                 Logger::DESC_NOTICE,
@@ -68,16 +71,16 @@ class Writer_WebPage implements IWriter{
 <style type="text/css" media="screen">
     #Template_Log { position: fixed; top: 0; right: 0;}
     #Template_Log .TPT_light { width: 20px; height: 20px; float: right; cursor: pointer; }
-    #Template_Log .TPT_light.TPT_Err { background-color: red; -webkit-animation:mymove 1s infinite; }
-    #Template_Log .TPT_light.TPT_Info { background-color: #C2BFBF;}
+    #Template_Log .TPT_light.TPT_Err { background-color: red; -webkit-animation:mymove 0.5s infinite; }
+    #Template_Log .TPT_light.TPT_Info { background-color: green;}
     #Template_Log .TPT_Msg{ width: 600px; background-color: #ECECEC; clear: right; float: right; padding-bottom: 10px;  font-family: 微软雅黑,幼圆; font-size: 14px; display: none; }
     #Template_Log .TPT_Msg .TPT_Err { background-color: #F00; }
     #Template_Log .TPT_Msg .TPT_Info { background-color: #C2BFBF; }
-    #Template_Log ul { list-style-type: none; zoom: 1; overflow: hidden; }
+    #Template_Log ul { list-style-type: none; zoom: 1; overflow: hidden; border-bottom: 1px dashed #ccc; }
     #Template_Log ul, #Template_Log .TPT_Detail { margin: 0 0px; padding: 0; }
     #Template_Log ul li{ float: left; height: 30px; line-height: 30px; padding: 2px 15px; background-color: #000; color: #FFF; cursor: pointer; }
     #Template_Log .TPT_Detail { clear: both; padding: 0 10px; display: none; }
-    #Template_Log .TPT_Detail .TPT_Line { margin: 10px 0; border-bottom: 1px dashed #ccc; }
+    #Template_Log .TPT_Detail .TPT_Line { margin: 10px 0; border-bottom: 1px dashed #ccc; line-height: 30px; }
 
     <!-- CSS3 -->
     @keyframes mymove
@@ -102,9 +105,9 @@ class Writer_WebPage implements IWriter{
     }
 </style>
 <div id="Template_Log">
-    <div class="TPT_light {$sLight}" onclick="_fm_log_show();">
+    <div class="TPT_light {$sLight}" id="TPT_light" onclick="_fm_log_show();">
     </div>
-    <div class="TPT_Msg" id="TPT_Log_All_Msg">
+    <div class="TPT_Msg" id="TPT_Log_All_Msg" onclick="_fm_stop_propo();">
         <ul>
         {$sLevelTitle}
         </ul>
@@ -115,7 +118,7 @@ class Writer_WebPage implements IWriter{
     var _fm_log_all_msg = document.getElementById('TPT_Log_All_Msg');
     var _fm_detail_msg  = document.getElementById('TPT_Detail_Msg');
 
-    var _fm_show_ex = function(obj, level){
+    var _fm_show_ex = function(obj, level, evt){
         var TPT_Detail = document.getElementsByClassName('TPT_Detail');
         for(i=0; i< TPT_Detail.length; i++){
             TPT_Detail[i].style.display = 'none';
@@ -132,11 +135,35 @@ class Writer_WebPage implements IWriter{
         _fm_show_detail.style.display = 'block';
 
         obj.style.borderTop = '2px solid blue';
+
+        var e = (evt)?evt:window.event;
+        if (window.event) {
+            e.cancelBubble=true;// ie下阻止冒泡
+        } else {
+            e.stopPropagation();// 其它浏览器下阻止冒泡
+        }
     }
 
-    var _fm_log_show    = function(){
+    var _fm_log_show = function(evt){
         var block = _fm_log_all_msg;
         _fm_toggle_show(block);
+
+        var e = (evt)?evt:window.event;
+        if (window.event) {
+            e.cancelBubble=true;// ie下阻止冒泡
+        } else {
+            e.stopPropagation();// 其它浏览器下阻止冒泡
+        }
+    }
+
+    var _fm_stop_propo = function(evt){
+
+        var e = (evt)?evt:window.event;
+        if (window.event) {
+            e.cancelBubble=true;// ie下阻止冒泡
+        } else {
+            e.stopPropagation();// 其它浏览器下阻止冒泡
+        }
     }
 
     var _fm_toggle_show = function(obj){
@@ -146,6 +173,17 @@ class Writer_WebPage implements IWriter{
             obj.style.display = 'block';
         }else{
             obj.style.display = 'none';
+        }
+    }
+
+    window.onload = function(){
+        var body      = document.getElementsByTagName('body')[0];
+        body.onclick = function(){
+            var TPT_light   = document.getElementById('TPT_light');
+            var TPT_All_Msg = document.getElementById('TPT_Log_All_Msg');
+            if (TPT_All_Msg.style.display == 'block') {
+                TPT_light.click();
+            }
         }
     }
 </script>

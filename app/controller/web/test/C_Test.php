@@ -12,6 +12,6 @@ class C_Test extends Web_Base{
         $this->Log->fatal(11);
         $this->Log->warn(11);
         $this->Log->warn(11);
-        RDB()->getUser()->findMulti();
+        DB()->getUser()->findMulti();
     }
 }

@@ -3,8 +3,8 @@ function CTX(){
     return end($GLOBALS['__SELF__CONTEXT']);
 }
 
-function RDB() {
-    return CTX()->RDB;
+function DB() {
+    return CTX()->DB;
 }
 
 function C($sCookie) {
