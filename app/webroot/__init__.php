@@ -4,7 +4,7 @@ function CTX(){
 }
 
 function DB() {
-    return CTX()->DB;
+    return CTX()->RDB;
 }
 
 function C($sCookie) {

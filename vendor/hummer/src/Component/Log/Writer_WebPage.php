@@ -115,8 +115,42 @@ class Writer_WebPage implements IWriter{
     </div>
 </div>
 <script type="text/javascript" charset="utf-8">
-    var _fm_log_all_msg = document.getElementById('TPT_Log_All_Msg');
-    var _fm_detail_msg  = document.getElementById('TPT_Detail_Msg');
+
+    //解决IE8之类不支持getElementsByClassName
+    if (!document.getElementsByClassName) {
+        document.getElementsByClassName = function (className, element) {
+            var children = (element || document).getElementsByTagName('*');
+            var elements = new Array();
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                var classNames = child.className.split(' ');
+                for (var j = 0; j < classNames.length; j++) {
+                    if (classNames[j] == className) {
+                        elements.push(child);
+                        break;
+                    }
+                }
+            }
+            return elements;
+        };
+    }
+
+    var _fm_log_all_msg = '';
+    var _fm_detail_msg  = '';
+
+    window.onload = function(){
+        _fm_log_all_msg = document.getElementById('TPT_Log_All_Msg');
+        _fm_detail_msg  = document.getElementById('TPT_Detail_Msg');
+
+        var body = document.getElementsByTagName('body')[0];
+        body.onclick = function(){
+            var TPT_light   = document.getElementById('TPT_light');
+            var TPT_All_Msg = document.getElementById('TPT_Log_All_Msg');
+            if (TPT_All_Msg.style.display == 'block') {
+                TPT_light.click();
+            }
+        }
+    }
 
     var _fm_show_ex = function(obj, level, evt){
         var TPT_Detail = document.getElementsByClassName('TPT_Detail');
@@ -169,21 +203,13 @@ class Writer_WebPage implements IWriter{
     var _fm_toggle_show = function(obj){
         var block = obj.style.display;
         if(block == 'none' || block == ''){
-            document.getElementById('TPT_Log_All_Msg').childNodes[1].childNodes[1].click();
+            var _sf_all_debug = document.getElementById('TPT_Log_All_Msg');
+            var _sf_all_debug_ul = _sf_all_debug.getElementsByTagName('ul')[0];
+            var _sf_all_debug_li = _sf_all_debug_ul.getElementsByTagName('li')[0];
+            _sf_all_debug_li.click();
             obj.style.display = 'block';
         }else{
             obj.style.display = 'none';
-        }
-    }
-
-    window.onload = function(){
-        var body      = document.getElementsByTagName('body')[0];
-        body.onclick = function(){
-            var TPT_light   = document.getElementById('TPT_light');
-            var TPT_All_Msg = document.getElementById('TPT_Log_All_Msg');
-            if (TPT_All_Msg.style.display == 'block') {
-                TPT_light.click();
-            }
         }
     }
 </script>

@@ -14,7 +14,7 @@ return array(
         ),
     ),
     array(
-        'module' => 'DB',
+        'module' => 'RDB',
         'class'  => 'Hummer\\Component\\RDS\\Factory',
         'params' => array(
             '@database',
