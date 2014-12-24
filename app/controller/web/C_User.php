@@ -8,7 +8,7 @@ class C_User extends Web_Base{
     public function actionDefault()
     {
 
-        $User = RDB()->getUser()->findMulti();
+        $User = DB()->getUser()->findMulti();
         foreach ($User as $user) {
             echo $user->id;
             echo $user->name;

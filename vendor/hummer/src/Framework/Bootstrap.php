@@ -3,6 +3,7 @@ namespace Hummer\Framework;
 
 use Hummer\Component\Route\Route;
 use Hummer\Component\RDS\Factory;
+use Hummer\Component\Helper\Helper;
 use Hummer\Component\Context\Context;
 use Hummer\Component\Http\HttpRequest;
 use Hummer\Component\Http\HttpResponse;
@@ -77,9 +78,11 @@ class Bootstrap{
 
     public function run($sRouteKey=null)
     {
+        $sTS = microtime(true);
         $C = $this->Context;
+        $Log = $C->Log;
+        $Log->info('RUN START:');
         try{
-            $Log = $C->Log;
             switch ($C->sRunMode)
             {
                 case self::S_RUN_HTTP:
@@ -97,6 +100,9 @@ class Bootstrap{
                 default:
                     throw new \RuntimeException('[Bootstrap] : ERROR RUN MODE');
             }
+        }catch(\SmartyException $E){
+            #Smarty Exception
+            $Log->warn($E->getMessage());
         }catch(RouteErrorException $E){
             //$C->HttpResponse->setStatus(404);
             //$C->HttpResponse->send();
@@ -104,5 +110,10 @@ class Bootstrap{
         }catch(\Exception $E){
             echo $E->getMessage();
         }
+
+        $Log->info(sprintf('RUN END: Time: %s ms, Mem: %s',
+            round(microtime(true) - $sTS, 6) * 1000,
+            Helper::Mem()
+        ));
     }
 }

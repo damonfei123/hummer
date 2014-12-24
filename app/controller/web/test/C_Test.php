@@ -7,6 +7,6 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
-        DB()->getUser()->findMulti();
+        DB()->getUser2()->limit(100)->group('parent_id')->findMulti();
     }
 }
