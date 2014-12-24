@@ -76,7 +76,8 @@ class Context{
         if (isset($aModuleConfig['packer'])) {
             $Obj = new Packer($Obj, $aModuleConfig['packer']);
         }
-        $this->$sVarName = $Obj;#SAVE FOR NEXT
+        $this->$sVarName = $Obj; #SAVE FOR NEXT
+        $this->__aVarRegister__[$sVarName] = $Obj;
         return $Obj;
     }
 }
