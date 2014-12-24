@@ -38,9 +38,11 @@ class Factory {
     private static $_aModel;
     public function get($sModelName, $aArgs=null)
     {
+        $sModelName = str_replace(' ', '|', $sModelName);
+        $sRealModel = self::getRealModel($sModelName);
         if (!isset(self::$_aModel[$sModelName])) {
-            $CURD = $this->initCURD($sModelName);
-            $aConf = self::$_aModelConf[$sModelName];
+            $CURD  = $this->initCURD($sModelName);
+            $aConf = Arr::get(self::$_aModelConf, $sRealModel,array());
 
             $sModelClassName = isset($aConf['model_class']) ?
                 self::$_sAppModelNS . '\\' . $aConf['model_class'] :
@@ -56,10 +58,20 @@ class Factory {
         return self::$_aModel[$sModelName];
     }
 
+    public static function getRealModel($sModelName)
+    {
+        $sRealModel = null;
+        if (false !== ($iPos=strpos($sModelName, '|'))) {
+            $sRealModel = substr($sModelName, 0, $iPos);
+        }
+        return ucfirst($sRealModel);
+    }
+
     public function initCURD($sModelName)
     {
-        $sModelDB = isset(self::$_aModelConf[$sModelName]) ?
-            Arr::get(self::$_aModelConf[$sModelName], 'db', $this->_sDefaultDB) :
+        $sRealModel = self::getRealModel($sModelName);
+        $sModelDB = isset(self::$_aModelConf[$sRealModel]) ?
+            Arr::get(self::$_aModelConf[$sRealModel], 'db', $this->_sDefaultDB) :
             $this->_sDefaultDB;
 
         if (!isset(self::$_aCURD[$sModelDB])) {

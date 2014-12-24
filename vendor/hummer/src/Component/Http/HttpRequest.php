@@ -34,6 +34,11 @@ class HttpRequest{
         return $this->BagGET->get($mKeyOrKeys);
     }
 
+    public function getSRV($mKey)
+    {
+        return Arr::get($this->aSERVER, $mKey, null);
+    }
+
     public function getP($mKeyOrKeys)
     {
         return $this->BagPOST->get($mKeyOrKeys);
@@ -56,6 +61,11 @@ class HttpRequest{
     public function getRequestURI()
     {
         return $this->aSERVER['REQUEST_URI'];
+    }
+
+    public function getQueryString()
+    {
+        return $this->aSERVER['QUERY_STRING'];
     }
 
     public function getProtocol()

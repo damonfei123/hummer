@@ -24,10 +24,15 @@ class Model{
             $sCalledNS = substr($sCalledClassName, 0, $iPos);
         }
         #Item class
+        if (false !== ($iPos=strpos($sModelName, '|'))) {
+            $sItemModelName = substr($sModelName, 0, $iPos);
+        }else{
+            $sItemModelName = $sModelName;
+        }
         $this->sItemClassName = sprintf('%s%s%s',
             $sCalledNS,
             '\\',
-            Arr::get($aConfig, 'item_class', 'Item_'.$sModelName)
+            Arr::get($aConfig, 'item_class', 'Item_'.ucfirst($sItemModelName))
         );
         #table
         $sTable = Arr::get($aConfig, 'table', strtolower($sModelName));
@@ -56,7 +61,7 @@ class Model{
         $aGroup = array();
         foreach ($aItems as $aItem) {
             $mPK = $aItem[$this->sPrimaryKey];
-            if ($this->CURD->bTmpSelectPK) unset($aItem[$this->sPrimaryKey]);
+            //if ($this->CURD->bTmpSelectPK) unset($aItem[$this->sPrimaryKey]);
             $aGroup[$mPK] = new $this->sItemClassName($aItem, $this);
         }
         return $aGroup;
@@ -75,7 +80,7 @@ class Model{
     public function __call($sMethod, $aArgv)
     {
         if (!method_exists($this->CURD, $sMethod)) {
-            throw new \BadMethodCallException('[CURD] : method error !!! ');
+            throw new \BadMethodCallException('[CURD] : method{'.$sMethod.'} error !!! ');
         }
         $mResult = call_user_func_array(array($this->CURD, $sMethod), $aArgv);
         if (is_object($mResult) && $mResult instanceof CURD) {

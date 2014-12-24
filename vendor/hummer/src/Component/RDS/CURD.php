@@ -15,6 +15,7 @@ class CURD {
     public $sPrimaryKey  = 'id';
 
     public $sTable;
+    public $aTableAsMap = array();
     public $aWhere      = array();
     public $aData       = array();
     public $sSelect     = '*';
@@ -69,8 +70,24 @@ class CURD {
 
     public function table($sTable)
     {
+        if (false !== strpos($sTable, '|')) {
+            $aTable = explode('|', $sTable);
+            $sTable = array_shift($aTable);
+            $this->aTableAsMap[$sTable] = array_pop($aTable);
+        }
         $this->sTable = $sTable;
         return $this;
+    }
+
+    public function getRealMapTable()
+    {
+        $sAsTable = Arr::get($this->aTableAsMap, $this->sTable, '');
+        return sprintf('%s %s',$this->sTable, $sAsTable);
+    }
+
+    public function getTableAsMap()
+    {
+        return Arr::get($this->aTableAsMap, $this->sTable, $this->sTable);
     }
 
     public function select($sSelect)
@@ -78,11 +95,20 @@ class CURD {
         $this->sSelect = $sSelect;
         return $this;
     }
+
+    public function getSelect()
+    {
+        return $this->sSelect ? $this->sSelect : '*';
+    }
+
     public function forceSelectPK()
     {
         $aSelect = explode(',', $this->sSelect);
-        if ($this->sSelect != '*' && !in_array($this->sPrimaryKey, $aSelect)) {
-            $aSelect[] = $this->sPrimaryKey;
+        if ($this->sSelect != '*' &&
+            !in_array($this->sPrimaryKey, $aSelect) &&
+            false === strpos('.'.$this->sPrimaryKey, $this->sSelect)
+        ) {
+            $aSelect[]          = $this->getTableAsMap() . '.' . $this->sPrimaryKey;
             $this->bTmpSelectPK = true;
             $this->sSelect      = join(',', $aSelect);
         }
@@ -160,7 +186,7 @@ class CURD {
 
         #table indexes
         $aIndexes = $this->queryAndFind(
-            sprintf('SHOW INDEXES FROM %s', $this->sTable),
+            sprintf('SHOW INDEXES FROM %s', $this->getRealMapTable()),
             $aArgs,
             $iFetchMode
         );
@@ -237,7 +263,7 @@ class CURD {
     {
         return sprintf('SELECT %s FROM %s %s %s WHERE %s %s %s',
             $this->sSelect ? $this->sSelect : '*',
-            $this->sTable,
+            $this->getRealMapTable(),
             $this->sForceIndex,
             $this->sJoinTable,
             self::buildCondition($this->aWhere, $aArgs),
@@ -258,7 +284,7 @@ class CURD {
     public function buildDeleteSQL($aWhere, &$aArgs)
     {
         return sprintf('DELETE FROM %s WHERE %s',
-            $this->sTable,
+            $this->getRealMapTable(),
             self::buildCondition($aWhere, $aArgs)
         );
     }
@@ -393,7 +419,7 @@ class CURD {
     ) {
         $STMT = $this->Instance->prepare($sSQL);
         $STMT->execute($aArgs);
-        $STMT->setFetchMode($iFetchMode);
+        $STMT->setFetchMode($iFetchMode ? $iFetchMode : \PDO::FETCH_ASSOC);
         return $bOnlyOne ? $STMT->fetch() : $STMT->fetchAll();
     }
 }
