@@ -22,15 +22,18 @@ class C_Web extends C_Base{
 
     protected $bCalledDisplay = false;
 
-    public function display($sTemplate=null)
+    public function display($sTemplate='')
     {
         $this->bCalledDisplay = true;
+        if (is_null($sTemplate)) {
+            return;
+        }
         return $this->template->display($this->getTplPath($this->HttpRequest, $sTemplate,$this->sTpl));
     }
 
     public static function getTplPath($REQ, $sTemplate=null, $sTpl)
     {
-        if (is_null($sTemplate)) {
+        if ($sTemplate === '') {
             $sURL       = Helper::TrimInValidURI(Arr::get(parse_url($REQ->getRequestURI()),'path',''));
             $aURLPATH   = explode('/', strtolower(substr($sURL,1)));
             $sTplFile   = array_pop($aURLPATH);

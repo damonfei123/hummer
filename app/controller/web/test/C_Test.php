@@ -9,8 +9,6 @@ class C_Test extends Web_Base{
     public function actionDefault()
     {
         DB()->getUser()->where(array('id between' => array(1,4)))->find();
-        /*
-        return;
         DB()->getUser()->find();
         //DB()->getUser2()->limit(100)->group('parent_id')->findMulti();
         $Page = new Page($this->HttpRequest, 1);
@@ -19,6 +17,5 @@ class C_Test extends Web_Base{
             echo $key;
             echo "<br />";
         }
-        */
     }
 }

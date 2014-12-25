@@ -7,14 +7,13 @@ class C_User extends Web_Base{
 
     public function actionDefault()
     {
-
         $User = DB()->getUser()->findMulti();
         foreach ($User as $user) {
             echo $user->id;
             echo $user->name;
         }
         $this->assign(array('LastName' => 'Damon'));
-        $this->display();
+        $this->display(null);
     }
 
     public function __after__()

@@ -104,19 +104,33 @@ class Page {
             }
         }
 
-        return $sPagination;
+        return sprintf('%s%s%s', "<div class='pagination'>", $sPagination, '</div>');
     }
 
     public function generateList($iPage, $iMaxPage, $sBindParam, $iPagePrev, $iPageNext)
     {
-        $sList = '';
-        for ($i = 1; $i <= $iMaxPage; $i++) {
+        $sList = ''; $iTmpPage = $iPage;
+        $iPageStart = ($iPage - $iPagePrev) > 0 ? ($iPage - $iPagePrev) : 1;
+        $iPageEnd   = ($iPage + $iPageNext) < $iMaxPage ? ($iPage + $iPageNext) : $iMaxPage;
+
+        $sList .= $iPageStart != 1 ? self::generateHtml(1, $sBindParam, 1) : '';
+        $sList .= $iPageStart > 2 ? '<span>...</span>' : '';
+
+        #pre
+        for ($i = $iPageStart; $i < $iPage; $i++) {
             if ($i == $iPage) {
                 $sList .= '<span>'.$iPage.'</span>';
             }else{
                 $sList .= self::generateHtml($i, $sBindParam, $i);
             }
         }
+        #next
+        for ($i = $iPage; $i <= $iPageEnd; $i++) {
+            $sList .= self::generateHtml($i, $sBindParam, $i);
+        }
+        $sList .= $iPageEnd < $iMaxPage-1 ? '<span>...</span>' : '';
+        $sList .= $iPageEnd != $iMaxPage ? self::generateHtml($iMaxPage, $sBindParam, $iMaxPage) : '';
+
         return $sList;
     }
     public static function generateHtml($iPage, $sBindParam, $sItemName)

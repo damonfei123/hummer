@@ -10,6 +10,8 @@ class CURD {
     public $Instance    = null;
     public $aOption;
 
+    public $bMulti       = false;
+
     public $bTmpSelectPK = false;
     public $sPrimaryKey  = 'id';
 
@@ -51,6 +53,15 @@ class CURD {
             ),$this->aAopCallBack);
         }
         return $this->Instance;
+    }
+
+    public function enableMulti()
+    {
+        $this->bMulti = true;
+    }
+    public function disableMulti()
+    {
+        $this->bMulti = false;
     }
 
     public function forceIndex($sIndexName)
@@ -185,7 +196,8 @@ class CURD {
 
         #table indexes
         $aIndexes = $this->queryAndFind(
-            sprintf('SHOW INDEXES FROM %s', $this->getRealMapTable()),
+            sprintf('SHOW INDEXES FROM %s',
+            $this->getRealMapTable()),
             $aArgs,
             $iFetchMode
         );
@@ -419,11 +431,13 @@ class CURD {
         $STMT = $this->Instance->prepare($sSQL);
         $STMT->execute($aArgs);
         $STMT->setFetchMode($iFetchMode ? $iFetchMode : \PDO::FETCH_ASSOC);
-        $this->emptyCondition();
+        if (!$this->bMulti) {
+            $this->resetCondition();
+        }
         return $bOnlyOne ? $STMT->fetch() : $STMT->fetchAll();
     }
 
-    protected function emptyCondition()
+    protected function resetCondition()
     {
         $this->bTmpSelectPK = false;
         $this->sPrimaryKey  = 'id';
