@@ -11,7 +11,6 @@ class CURD {
     public $aOption;
 
     public $bTmpSelectPK = false;
-
     public $sPrimaryKey  = 'id';
 
     public $sTable;
@@ -62,7 +61,7 @@ class CURD {
 
     public function where($mWhere=null)
     {
-        if (!is_null($mWhere)) {
+        if (!is_null($mWhere) && $mWhere) {
             $this->aWhere = is_array($mWhere) ? $mWhere : array($this->sPrimaryKey => $mWhere);
         }
         return $this;
@@ -420,6 +419,24 @@ class CURD {
         $STMT = $this->Instance->prepare($sSQL);
         $STMT->execute($aArgs);
         $STMT->setFetchMode($iFetchMode ? $iFetchMode : \PDO::FETCH_ASSOC);
+        $this->emptyCondition();
         return $bOnlyOne ? $STMT->fetch() : $STMT->fetchAll();
+    }
+
+    protected function emptyCondition()
+    {
+        $this->bTmpSelectPK = false;
+        $this->sPrimaryKey  = 'id';
+
+        $this->sTable;
+        $this->aTableAsMap = array();
+        $this->aWhere      = array();
+        $this->aData       = array();
+        $this->sSelect     = '*';
+        $this->sJoinTable  = '';
+        $this->sForceIndex = '';
+        $this->sLimit      = '';
+        $this->sGroupBy    = '';
+        $this->sOrder      = '';
     }
 }

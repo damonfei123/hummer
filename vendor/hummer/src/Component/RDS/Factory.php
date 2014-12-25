@@ -36,6 +36,10 @@ class Factory {
 
     private static $_aCURD;
     private static $_aModel;
+    /**
+     *  @param $sModelName  string Model
+     *      ex: user | user u
+     **/
     public function get($sModelName, $aArgs=null)
     {
         $sModelName = str_replace(' ', '|', $sModelName);
@@ -60,9 +64,10 @@ class Factory {
 
     public static function getRealModel($sModelName)
     {
-        $sRealModel = null;
         if (false !== ($iPos=strpos($sModelName, '|'))) {
             $sRealModel = substr($sModelName, 0, $iPos);
+        }else{
+            $sRealModel = $sModelName;
         }
         return ucfirst($sRealModel);
     }

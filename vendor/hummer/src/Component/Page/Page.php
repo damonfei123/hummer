@@ -23,9 +23,10 @@ class Page {
 
     public function getPage($M, &$aList)
     {
+        $MM = clone $M;
         return $this->getPageFromCB(
             array($M, 'findCount'),
-            array($M, 'findMulti'),
+            array($MM, 'findMulti'),
             $aList
         );
     }
@@ -46,9 +47,9 @@ class Page {
         if ($iPage > $iMaxPage) {
             throw new \InvalidArgumentException('[Page] : Page params error');
         }
-        $M           = $mListCB[0];
+        $M      = $mListCB[0];
         $M->select($sSelect)->limit(($iPage-1) * $iNumPerPage, $iNumPerPage);
-        $aList       = call_user_func(array($M, $mListCB[1]));
+        $aList  = call_user_func(array($M, $mListCB[1]));
         return call_user_func_array($this->mDefaultRender,array($this->HttpRequest,array(
             'page'      => $iPage,
             'total'     => $iTotal

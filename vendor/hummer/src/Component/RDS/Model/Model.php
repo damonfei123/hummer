@@ -44,7 +44,7 @@ class Model{
         }
     }
 
-    public function find($mWhere=array())
+    public function find($mWhere=null)
     {
         $aItem = $this->CURD->limit(1)->querySmarty($mWhere);
         return empty($aItem) ? null : new $this->sItemClassName(array_shift($aItem), $this);
@@ -87,5 +87,13 @@ class Model{
             return $this;
         }
         return $mResult;
+    }
+
+    /**
+     *  Deep clone
+     **/
+    public function __clone()
+    {
+        $this->CURD = clone $this->CURD;
     }
 }
