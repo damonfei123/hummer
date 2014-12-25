@@ -4,19 +4,26 @@ namespace Hummer\Component\Page;
  * 分页类
 */
 use Hummer\Component\Helper\Arr;
+use Hummer\Component\Helper\Helper;
 
 class Page {
 
     protected $HttpRequest;
     protected $iNumPerPage;
     protected $mDefaultRender;
+    protected $sPageStyle;
+    protected $aPageConfig;
 
     public function __construct(
-        $HttpRequest ,
+        $HttpRequest,
         $iNumPerPage=10,
+        $aPageConfig=array(),
+        $sPageStyle=null,
         $mDefaultRender = array('Hummer\\Component\\Page\\Page', 'defaultRender')
     ) {
         $this->HttpRequest    = $HttpRequest;
+        $this->sPageStyle     = $sPageStyle;
+        $this->aPageConfig    = (array)$aPageConfig;
         $this->iNumPerPage    = (int)$iNumPerPage;
         $this->mDefaultRender = $mDefaultRender;
     }
@@ -41,7 +48,7 @@ class Page {
         #get total
         $iTotal      = call_user_func($mCountCB);
 
-        $iMaxPage    = ceil($iTotal / $this->iNumPerPage );
+        $iMaxPage    = ceil( $iTotal / $this->iNumPerPage );
 
         if ($iPage > $iMaxPage) {
             throw new \InvalidArgumentException('[Page] : Page params error');
@@ -52,26 +59,35 @@ class Page {
         return call_user_func_array($this->mDefaultRender,array($this->HttpRequest,array(
             'page'      => $iPage,
             'total'     => $iTotal
-        )));
+        ),$this->aPageConfig, $this->sPageStyle));
     }
 
     public function defaultRender(
         $REQ,
         $aResult,
         array $aConfig = array(),
-        $sDisplayItem = 'first.prev.list.next.last'
+        $sDisplayItem  = null
     ) {
         $iPage    =  Arr::get($aResult, 'page', 1);
         $iTotal   = Arr::get($aResult, 'total', 1);
+        $sDisplayItem = Helper::TOOP(
+            $sDisplayItem,
+            $sDisplayItem,
+            'stat.pageInfo.first.prev.list.next.last'
+        );
 
         $iMaxPage = ceil($iTotal / $this->iNumPerPage );
 
         $aConfig = array_merge(array(
-            'first' => '首页',
-            'prev'  => '上一页',
-            'next'  => '下一页',
-            'last'  => '尾页'
+            'stat'       => '总共%d条记录',
+            'pageInfo'   => '第|page|页/共|total|页',
+            'first'      => '首页',
+            'prev'       => '上一页',
+            'next'       => '下一页',
+            'last'       => '尾页',
+            'ellipsis'   => '...'
         ), $aConfig);
+
         $aBindParam = array();
         $aParam     = explode('&',$REQ->getQueryString());
         if ($aParam) foreach ($aParam as $sParam) {
@@ -80,17 +96,39 @@ class Page {
                 $aBindParam[$aItemParam[0]] = $aItemParam[1];
             }
         }
-        $sPagination  = '<div class=\'pagination\'>';
+        #共多少条记录
+        $aDisplay['stat']     = sprintf('<span>'.$aConfig['stat'].'</span>',$iTotal);
+        #pageInfo
+        $aDisplay['pageInfo'] = strtr('<span>'.$aConfig['pageInfo'].'</span>',array(
+            '|page|'  => $iPage,
+            '|total|' => $iMaxPage
+        ));
+
         $sBindParam   = http_build_query($aBindParam);
         $aDisplayItem = array();
         #首页
         $aDisplay['first'] = self::generateHtml(1, $sBindParam, $aConfig['first']);
         #上一页
-        $aDisplay['prev']  = self::generateHtml( $iPage <=1 ? 1 : $iPage - 1, $sBindParam, $aConfig['prev']);
+        $aDisplay['prev']  = self::generateHtml(
+            Helper::TOOP($iPage <=1, 1, $iPage-1),
+            $sBindParam,
+            $aConfig['prev']
+        );
         #list
-        $aDisplay['list']  = self::generateList($iPage, $iMaxPage, $sBindParam, $iPagePrev=3, $iPageNext=3);
+        $aDisplay['list']  = self::generateList(
+            $iPage,
+            $iMaxPage,
+            $sBindParam,
+            $iPagePrev=3,
+            $iPageNext=4,
+            $aConfig['ellipsis']
+        );
         #下一页
-        $aDisplay['next']  = self::generateHtml($iPage >= $iMaxPage ? $iMaxPage : $iPage + 1 , $sBindParam, $aConfig['next']);
+        $aDisplay['next']  = self::generateHtml(
+            Helper::TOOP($iPage >= $iMaxPage,$iMaxPage,$iPage + 1) ,
+            $sBindParam,
+            $aConfig['next']
+        );
         #尾页
         $aDisplay['last']  = self::generateHtml($iMaxPage, $sBindParam, $aConfig['last']);
 
@@ -102,18 +140,23 @@ class Page {
                 $sPagination .= $aDisplay[$item];
             }
         }
-
         return sprintf('%s%s%s', "<div class='pagination'>", $sPagination, '</div>');
     }
 
-    public function generateList($iPage, $iMaxPage, $sBindParam, $iPagePrev, $iPageNext)
-    {
+    public function generateList(
+        $iPage,
+        $iMaxPage,
+        $sBindParam,
+        $iPagePrev,
+        $iPageNext,
+        $sEllipsis='...'
+    ) {
         $sList = ''; $iTmpPage = $iPage;
-        $iPageStart = ($iPage - $iPagePrev) > 0 ? ($iPage - $iPagePrev) : 1;
-        $iPageEnd   = ($iPage + $iPageNext) < $iMaxPage ? ($iPage + $iPageNext) : $iMaxPage;
+        $iPageStart = Helper::TOOP(($iPage - $iPagePrev) > 0, ($iPage - $iPagePrev), 1);
+        $iPageEnd   = Helper::TOOP(($iPage + $iPageNext) < $iMaxPage, ($iPage + $iPageNext), $iMaxPage);
 
-        $sList .= $iPageStart != 1 ? self::generateHtml(1, $sBindParam, 1) : '';
-        $sList .= $iPageStart > 2 ? '<span>...</span>' : '';
+        $sList .= Helper::TOOP($iPageStart != 1,self::generateHtml(1, $sBindParam, 1),'');
+        $sList .= Helper::TOOP($iPageStart > 2 , sprintf('<span>%s</span>', $sEllipsis), '');
 
         #pre
         for ($i = $iPageStart; $i < $iPage; $i++) {
@@ -127,8 +170,9 @@ class Page {
         for ($i = $iPage; $i <= $iPageEnd; $i++) {
             $sList .= self::generateHtml($i, $sBindParam, $i);
         }
-        $sList .= $iPageEnd < $iMaxPage-1 ? '<span>...</span>' : '';
-        $sList .= $iPageEnd != $iMaxPage ? self::generateHtml($iMaxPage, $sBindParam, $iMaxPage) : '';
+        $sList .= Helper::TOOP($iPageEnd < $iMaxPage-1, sprintf('<span>%s<span>', $sEllipsis), '');
+        $sList .= Helper::TOOP( $iPageEnd != $iMaxPage,
+            self::generateHtml($iMaxPage, $sBindParam, $iMaxPage), '');
 
         return $sList;
     }

@@ -29,7 +29,9 @@ class Factory {
     public function __call($sModel, $aArgs=null)
     {
         if (($sModel = substr($sModel, 3)) !== false) {
-            return $this->get($sModel, $aArgs);
+            $aArgs   = (array)$aArgs;
+            $sModel  = sprintf('%s %s', $sModel, array_shift($aArgs));
+            return $this->get($sModel);
         }
         return false;
     }
@@ -40,9 +42,9 @@ class Factory {
      *  @param $sModelName  string Model
      *      ex: user | user u
      **/
-    public function get($sModelName, $aArgs=null)
+    public function get($sModelName, array $aArgs=null)
     {
-        $sModelName = str_replace(' ', '|', $sModelName);
+        $sModelName = str_replace(' ', '|', trim($sModelName));
         $sRealModel = self::getRealModel($sModelName);
         if (!isset(self::$_aModel[$sModelName])) {
             $CURD  = $this->initCURD($sModelName);
