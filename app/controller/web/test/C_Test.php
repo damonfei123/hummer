@@ -6,18 +6,24 @@ use Hummer\Component\Page\Page;
 
 class C_Test extends Web_Base{
 
-    public function actionDefault()
+    public function __before__()
     {
         $this->HttpResponse->noCache();
         $this->HttpResponse->charset();
-        DB()->getUser()->where(array('id between' => array(1,4)))->find();
-        DB()->getUser()->find();
-        //DB()->getUser2()->limit(100)->group('parent_id')->findMulti();
+    }
+
+    public function actionDefault()
+    {
         $Page = new Page($this->HttpRequest, 1);
-        echo $Page->getPage(DB()->get('user u2')->select('u.*')->join('user u on u2.id = u.id'), $aList);
-        foreach ($aList as $key) {
-            echo $key;
-            echo "<br />";
+        echo $Page->getPage(
+                DB()->getUser()
+                    ->select('u2.id,u2.name')
+                    ->left('user u2 on user.id = u2.id')
+                    ->where(array('u2.id BETWEEN' => array(1,30))),
+                $aList);
+
+        foreach ($aList as $data) {
+            echo $data;
         }
     }
 }

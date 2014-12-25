@@ -38,7 +38,6 @@ class Page {
     ) {
         $iPage       = max(1, (int)$this->HttpRequest->getG('page'));
         $iNumPerPage = max(1, $this->iNumPerPage);
-        $sSelect     = $mCountCB[0]->getSelect();
         #get total
         $iTotal      = call_user_func($mCountCB);
 
@@ -48,7 +47,7 @@ class Page {
             throw new \InvalidArgumentException('[Page] : Page params error');
         }
         $M      = $mListCB[0];
-        $M->select($sSelect)->limit(($iPage-1) * $iNumPerPage, $iNumPerPage);
+        $M->limit(($iPage-1) * $iNumPerPage, $iNumPerPage);
         $aList  = call_user_func(array($M, $mListCB[1]));
         return call_user_func_array($this->mDefaultRender,array($this->HttpRequest,array(
             'page'      => $iPage,

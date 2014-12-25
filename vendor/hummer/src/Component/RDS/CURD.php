@@ -162,6 +162,15 @@ class CURD {
         return $this;
     }
 
+    public function left($sTable)
+    {
+        return $this->join($sTable,'L');
+    }
+    public function right($sTable)
+    {
+        return $this->join($sTable,'R');
+    }
+
     public function group($sColumn)
     {
         $this->sGroupBy = sprintf(' GROUP BY %s ' , $sColumn);
@@ -365,6 +374,7 @@ class CURD {
                             $sOP,
                             implode(',', array_fill(0, count($mV), '?'))
                         );
+                        $aArgs = (array)$aArgs;
                         $aArgs = array_merge($aArgs, $mV);
                     }
                 } else if('BETWEEN' == $sOP){
