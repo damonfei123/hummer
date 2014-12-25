@@ -94,6 +94,8 @@ class Bootstrap{
                     foreach ($aCallBack as $CallBack) {
                         $CallBack->call();
                     }
+                    #send header & content
+                    $C->HttpResponse->send();
                     break;
                 case self::S_RUN_CLI:
                     break;

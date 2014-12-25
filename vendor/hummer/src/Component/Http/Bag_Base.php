@@ -7,7 +7,7 @@ class Bag_Base implements \ArrayAccess, \Countable {
         $this->aData = $aData;
     }
 
-    public function set($mKeyOrKVMap, $mValue, $bOverWriteIfExists = true)
+    public function set($mKeyOrKVMap, $mValue = null, $bOverWriteIfExists = true)
     {
         if (is_array($mKeyOrKVMap)) {
             $this->aData = $bOverWriteIfExists ?

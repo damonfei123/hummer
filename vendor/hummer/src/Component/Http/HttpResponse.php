@@ -16,21 +16,36 @@ class HttpResponse{
         $this->iHttpStatus = $iHttpStatus;
     }
 
-     protected $sProtocol = 'HTTP/1.1';
-     public function setProtocol($sProtocol='HTTP/1.1')
-     {
-         $this->sProtocol = $sProtocol;
-     }
+    protected $sProtocol = 'HTTP/1.1';
+    public function setProtocol($sProtocol='HTTP/1.1')
+    {
+        $this->sProtocol = $sProtocol;
+    }
 
-     protected $sContent;
-     public function getContent()
-     {
-         return $this->sContent;
-     }
-     public function setContent($sContent='')
-     {
-         $this->sContent = $sContent;
-     }
+    protected $sContent;
+    public function getContent()
+    {
+        return $this->sContent;
+    }
+    public function setContent($sContent='')
+    {
+        $this->sContent = $sContent;
+    }
+
+    public function noCache()
+    {
+        $this->BagHeader->set(array(
+            'Expires'       => 'Mon, 26 Jul 1997 05:00:00 GMT',
+            'Last-Modified' => gmdate("D, d M Y H:i:s") . "GMT",
+            'Cache-Control' => 'no-cache, must-revalidate',
+            'Pragma'        => 'no-cache'
+        ));
+    }
+
+    public function charset($sCharset = 'utf-8')
+    {
+        $this->BagHeader->set('Content-type','text/html; charset='.$sCharset);
+    }
 
     public function setHeader($mKeyOrKVMap, $mValue=null, $bOverWrite=true)
     {

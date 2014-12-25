@@ -8,6 +8,8 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
+        $this->HttpResponse->noCache();
+        $this->HttpResponse->charset();
         DB()->getUser()->where(array('id between' => array(1,4)))->find();
         DB()->getUser()->find();
         //DB()->getUser2()->limit(100)->group('parent_id')->findMulti();
