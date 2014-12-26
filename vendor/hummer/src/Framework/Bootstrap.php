@@ -1,13 +1,17 @@
 <?php
-// +-----------------------------------------------------------------------------+
-// | Hummer [ Make Code Beauty And Web Easy ]                                    |
-// +-----------------------------------------------------------------------------+
-// | Copyright (c) 2014 https://github.com/damonfei123 All rights reserved.      |
-// +-----------------------------------------------------------------------------+
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )                     |
-// +-----------------------------------------------------------------------------+
-// | Author: Damon <zhangyinfei313com@163.com>                                   |
-// +-----------------------------------------------------------------------------+
+/*************************************************************************************
+
+   +-----------------------------------------------------------------------------+
+   | Hummer [ Make Code Beauty And Web Easy ]                                    |
+   +-----------------------------------------------------------------------------+
+   | Copyright (c) 2014 https://github.com/damonfei123 All rights reserved.      |
+   +-----------------------------------------------------------------------------+
+   | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )                     |
+   +-----------------------------------------------------------------------------+
+   | Author: Damon <zhangyinfei313com@163.com>                                   |
+   +-----------------------------------------------------------------------------+
+
+**************************************************************************************/
 namespace Hummer\Framework;
 
 use Hummer\Component\Route\Route;
@@ -64,7 +68,7 @@ class Bootstrap{
 
     public static function handleError($iErrNum, $sErrStr, $sErrFile, $iErrLine, $sErrContext)
     {
-        $sStr = sprintf('Catch Error.[%d]:%s In File [%s],line %d ',
+        $sStr = sprintf('Catch Error[%d] : %s In File [%s], line %d ',
                 $iErrNum,
                 $sErrStr,
                 $sErrFile,
@@ -81,8 +85,10 @@ class Bootstrap{
                     $C->Log->notice($sStr);
                     break;
                 case E_USER_ERROR:
-                    throw new \ErrorException($sStr);
+                    $C->Log->error($sStr);
+                    throw new \ErrorException('[User] : Error' . $sStr);
                     break;
+                case E_USER_WARNING:
                 default:
                     $C->Log->warn($sStr);
                     break;

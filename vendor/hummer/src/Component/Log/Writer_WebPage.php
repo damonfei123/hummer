@@ -1,6 +1,8 @@
 <?php
 namespace Hummer\Component\Log;
 
+use Hummer\Component\Context\Context;
+
 class Writer_WebPage implements IWriter{
 
     protected $aLog;
@@ -13,18 +15,17 @@ class Writer_WebPage implements IWriter{
 
     public function acceptData($aRow)
     {
-        if (!$this->bEnable) {
-            return;
-        }
-        $sLevelName = Logger::getLogNameByLevelID($aRow['iLevel']);
-        $sLogMsg = str_replace(
-            array('{iLevel}', '{sTime}', '{sContent}'),
-            array($sLevelName, $aRow['sTime'], $aRow['sMessage']),
-            $this->sContentFormat
-        ) . PHP_EOL;
+        if ($this->bEnable) {
+            $sLevelName = Logger::getLogNameByLevelID($aRow['iLevel']);
+            $sLogMsg = str_replace(
+                array('{iLevel}', '{sTime}', '{sContent}'),
+                array($sLevelName, $aRow['sTime'], $aRow['sMessage']),
+                $this->sContentFormat
+            ) . PHP_EOL;
 
-        #Add to queue
-        $this->aLog[$aRow['iLevel'].'_'.$sLevelName][] = $sLogMsg;
+            #Add to queue
+            $this->aLog[$aRow['iLevel'].'_'.$sLevelName][] = $sLogMsg;
+        }
     }
 
     public function setGUID($sGUID)
@@ -35,7 +36,7 @@ class Writer_WebPage implements IWriter{
 
     public function __destruct()
     {
-        if (!$this->bEnable) {
+        if (!$this->bEnable || Context::getInst()->HttpRequest->isAjax()) {
             return;
         }
         $sLight      = 'TPT_Info';

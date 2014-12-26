@@ -11,16 +11,17 @@ class Mode{
         $RES,
         $sControllerPath,
         $sControllerPre,
-        $sActionPre
+        $sActionPre,
+        array $aDefaultCA = array('main', 'default')
     ) {
         $sURL = Helper::TrimInValidURI(Arr::get(parse_url($REQ->getRequestURI()),'path',''));
         $aURLPATH = explode('/', strtolower(substr($sURL,1)));
         #Action
         $sURIAction = array_pop($aURLPATH);
-        $sURIAction = $sURIAction === '' ? 'default' : $sURIAction;
+        $sURIAction = Helper::TOOP($sURIAction === '', $aDefaultCA[1], $sURIAction);
         $sAction    = $sActionPre . ucfirst(Helper::ReplaceLineToUpper($sURIAction));
         if (count($aURLPATH) === 0) {
-            array_unshift($aURLPATH, 'main');
+            array_unshift($aURLPATH, $aDefaultCA[0]);
         }
         $sControllerName    = ucfirst(array_pop($aURLPATH));
         $sControllerDepth   = Helper::TrimEnd(implode('\\', $aURLPATH),'\\');
@@ -49,17 +50,18 @@ class Mode{
         $aArgv,
         $sControllerPath,
         $sControllerPre,
-        $sActionPre
+        $sActionPre,
+        array $aDefaultCA = array('main', 'default')
     ) {
-        $aParam     = (array)json_decode($aArgv[2], true);
+        $aParam     = isset($aArgv[2]) ? (array)json_decode($aArgv[2], true) : array();
         $sRoute     = Helper::TrimInValidURI($aArgv[1], '..', '.');
         $aURLPATH   = explode('.', $sRoute);
         #Action
         $sURIAction = array_pop($aURLPATH);
-        $sURIAction = $sURIAction === '' ? 'default' : $sURIAction;
+        $sURIAction = Helper::TOOP($sURIAction === '', $aDefaultCA[1], $sURIAction);
         $sAction    = $sActionPre . ucfirst(Helper::ReplaceLineToUpper($sURIAction));
         if (count($aURLPATH) === 0) {
-            array_unshift($aURLPATH, 'main');
+            array_unshift($aURLPATH, $aDefaultCA[0]);
         }
         $sControllerName    = ucfirst(array_pop($aURLPATH));
         $sControllerDepth   = Helper::TrimEnd(implode('\\', $aURLPATH),'\\');
@@ -74,5 +76,4 @@ class Mode{
         $CallBack->setCBObject($sControllerPathPre, $sAction, $aParam);
         return $CallBack;
     }
-
 }

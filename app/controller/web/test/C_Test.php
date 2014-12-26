@@ -14,11 +14,17 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
+        DB()->getUser2()->find();
+        $this->display('/test/test/show');
+        return true;
+
         //Session
         $Session = CTX()->Session;
         $Session->set('name', 'damon');
         echo $Session->get('name');
 
+        //echo $this->fetch('show');
+        //$this->display('show');
 
         //Redis
         $Redis = Redis();

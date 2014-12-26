@@ -16,19 +16,40 @@ class C_Web extends C_Base{
     {
         $this->bCalledDisplay = true;
         if (!is_null($sTemplate)) {
-            $this->template->display($this->getTplPath($this->HttpRequest, $sTemplate,$this->sTpl));
+            $this->template->display(
+                $this->getTplPath($this->HttpRequest, $sTemplate,$this->sTpl)
+            );
         }
+    }
+
+    public function fetch($sTemplate='')
+    {
+        $sContent = '';
+        if ($sTemplate) {
+            $sContent = $this->template->fetch(
+                $this->getTplPath($this->HttpRequest, $sTemplate,  $this->sTpl)
+            );
+        }
+        return $sContent;
     }
 
     public static function getTplPath($REQ, $sTemplate=null, $sTpl)
     {
-        if ($sTemplate === '') {
-            $sURL       = Helper::TrimInValidURI(Arr::get(parse_url($REQ->getRequestURI()),'path',''));
-            $aURLPATH   = explode('/', strtolower(substr($sURL,1)));
-            $sTplFile   = array_pop($aURLPATH);
-            $sTplFile   = $sTplFile == '' ? 'default' : $sTplFile;
-            $sTplFile   = sprintf('%s.%s', Helper::ReplaceLineToUpper($sTplFile), $sTpl);
-            $sTemplate  = sprintf('%s%s%s',join('/', $aURLPATH),'/', $sTplFile);
+        if ($sTemplate && '/' == $sTemplate[0]) {
+            $sTemplate = sprintf('%s.%s', substr($sTemplate, 1), $sTpl);
+        }else{
+            $sURL      = Helper::TrimInValidURI(
+                Arr::get(parse_url($REQ->getRequestURI()),'path','')
+            );
+            $aURLPATH  = explode('/', strtolower(substr($sURL,1)));
+            $sTplFile  = array_pop($aURLPATH);
+            $sTplFile  = Helper::TOOP(
+                $sTemplate,
+                $sTemplate,
+                Helper::TOOP($sTplFile == '', 'default' , $sTplFile)
+            );
+            $sTplFile  = sprintf('%s.%s', Helper::ReplaceLineToUpper($sTplFile), $sTpl);
+            $sTemplate = sprintf('%s%s%s',join('/', $aURLPATH),'/', $sTplFile);
         }
         return $sTemplate;
     }
