@@ -13,7 +13,6 @@ class TemplateAdaptor extends \Smarty {
         $aOption     = array()
     ) {
         parent::__construct();
-
         $this->setTemplateDir($sTemplate);
         $this->setCompileDir($sTemplate_c);
         $this->setCacheDir($sCache);

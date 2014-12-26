@@ -1,0 +1,54 @@
+<?php
+namespace Hummer\Component\Log;
+
+use Hummer\Component\Helper\Dir;
+use Hummer\Component\Helper\Time;
+
+class Writer_STDIO implements IWriter {
+
+    protected $aData = array();
+    protected $sGUID = null;
+
+    protected $sFileFormat;
+    protected $sContentFormat;
+    protected $bEnable = true;
+
+    public function setDisable()
+    {
+        $this->bEnable = false;
+    }
+    public function setEnable()
+    {
+        $this->bEnable = true;
+    }
+
+    public function __construct(
+        $sContentFormat=null
+    ) {
+        $this->sContentFormat = is_null($sContentFormat) ?
+            '[{iLevel}] : {sTime} : {sContent}' :
+            $sContentFormat;
+    }
+
+    public function acceptData($aRow)
+    {
+        if ($this->bEnable) {
+            $sLevelName = Logger::getLogNameByLevelID($aRow['iLevel']);
+            $sLogMsg = str_replace(
+                array('{iLevel}', '{sTime}', '{sContent}'),
+                array($sLevelName, $aRow['sTime'], $aRow['sMessage']),
+                $this->sContentFormat
+            ) . PHP_EOL;
+
+            #flush to STDIO
+            fprintf(STDOUT, sprintf('[%s]%s', $this->sGUID, $sLogMsg), null);
+        }
+    }
+
+    public function setGUID($sGUID)
+    {
+        #GUID should be same for one request
+        $this->sGUID  = $sGUID;
+
+    }
+}

@@ -7,9 +7,9 @@ class CallBack{
 
     protected $mCallable;
 
-    public function setCBObject($sControllerPath, $sAction)
+    public function setCBObject($sControllerPath, $sAction, $aArgs=array())
     {
-        $this->mCallable = array($sControllerPath, $sAction);
+        $this->mCallable = array($sControllerPath, $sAction, $aArgs);
         return $this;
     }
 
@@ -36,6 +36,9 @@ class CallBack{
             ));
         }
 
+        #aArgs
+        $aArgs = (array)$this->mCallable[2];
+
         #before and after
         $sBefore = $sAfter = null;
         $sMethodBefore = sprintf('__before__%s__', $sMethod);
@@ -47,13 +50,16 @@ class CallBack{
 
         $bContinue = true;
         if ($sBefore !== null) {
-            $bContinue = call_user_func(array($mClassOrObject, $sBefore));
+            $bContinue = call_user_func(array($mClassOrObject, $sBefore), $aArgs);
         }
         if ($bContinue !== false) {
-            $bContinue = call_user_func($this->mCallable);
+            $bContinue = call_user_func(array(
+                $this->mCallable[0],
+                $this->mCallable[1]
+            ), $aArgs);
         }
         if ($bContinue !== false && $sAfter !== null) {
-            call_user_func(array($mClassOrObject, $sAfter));
+            call_user_func(array($mClassOrObject, $sAfter), $aArgs);
         }
     }
 }

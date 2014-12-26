@@ -36,6 +36,8 @@ class Bootstrap{
         if ($aRegisterMap['sRunMode'] == self::S_RUN_HTTP) {
             $aRegisterMap['HttpRequest']  = new HttpRequest();
             $aRegisterMap['HttpResponse'] = new HttpResponse();
+        }elseif(self::S_RUN_CLI == $aRegisterMap['sRunMode']){
+            $aRegisterMap['aArgv'] = $GLOBALS['argv'];
         }
         $this->Context->registerMulti($aRegisterMap);
     }
@@ -101,6 +103,13 @@ class Bootstrap{
                     $C->HttpResponse->send();
                     break;
                 case self::S_RUN_CLI:
+                    $aCallBack = $C->Route->generateFromCli(
+                        $C->aArgv,
+                        $C->Config->get($sRouteKey === null ? 'route.cli' : $sRouteKey)
+                    );
+                    foreach ($aCallBack as $CallBack) {
+                        $CallBack->call();
+                    }
                     break;
                 default:
                     throw new \RuntimeException('[Bootstrap] : ERROR RUN MODE');

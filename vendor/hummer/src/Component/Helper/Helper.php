@@ -10,10 +10,10 @@ class Helper{
         return $sV === $sSeperator ? '' : $sV;
     }
 
-    public static function TrimInValidURI($sURI)
+    public static function TrimInValidURI($sURI, $sInvalid = '//', $sReplace='/')
     {
-        while (strpos($sURI, '//')) {
-            $sURI = str_replace('//','/', $sURI);
+        while (strpos($sURI, $sInvalid)) {
+            $sURI = str_replace($sInvalid,$sReplace, $sURI);
         }
         return $sURI;
     }

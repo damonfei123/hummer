@@ -38,4 +38,41 @@ class Mode{
 
         return $CallBack;
     }
+
+
+
+    /**
+     *  Route mode
+     *  Test.controller.action
+     **/
+    public static function Http_Cli(
+        $aArgv,
+        $sControllerPath,
+        $sControllerPre,
+        $sActionPre
+    ) {
+        $aParam     = (array)json_decode($aArgv[2], true);
+        $sRoute     = Helper::TrimInValidURI($aArgv[1], '..', '.');
+        $aURLPATH   = explode('.', $sRoute);
+        #Action
+        $sURIAction = array_pop($aURLPATH);
+        $sURIAction = $sURIAction === '' ? 'default' : $sURIAction;
+        $sAction    = $sActionPre . ucfirst(Helper::ReplaceLineToUpper($sURIAction));
+        if (count($aURLPATH) === 0) {
+            array_unshift($aURLPATH, 'main');
+        }
+        $sControllerName    = ucfirst(array_pop($aURLPATH));
+        $sControllerDepth   = Helper::TrimEnd(implode('\\', $aURLPATH),'\\');
+        $sControllerPathPre = sprintf('%s%s%s%s',
+            $sControllerPath,
+            $sControllerDepth,
+            $sControllerPre,
+            $sControllerName
+        );
+
+        $CallBack = new CallBack();
+        $CallBack->setCBObject($sControllerPathPre, $sAction, $aParam);
+        return $CallBack;
+    }
+
 }

@@ -8,4 +8,12 @@ return array(
             'action'
         )
     ),
+    'cli' => array(
+        array(
+            array('Hummer\Component\Route\Mode', 'Http_Cli'),
+            'App\\controller\\cli\\',
+            'C_',
+            'action'
+        )
+    ),
 );

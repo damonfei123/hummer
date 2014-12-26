@@ -14,8 +14,17 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
+        //Session
+        $Session = CTX()->Session;
+        $Session->set('name', 'damon');
+        echo $Session->get('name');
+
+
+        //Redis
         $Redis = Redis();
         $Redis->set('xx','xxxx');
+
+        //Page
         $Page = new Page($this->HttpRequest, 1);
         echo $Page->getPage(
                 DB()->getUser()
