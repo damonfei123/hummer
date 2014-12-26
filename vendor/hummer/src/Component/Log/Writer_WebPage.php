@@ -73,7 +73,7 @@ class Writer_WebPage implements IWriter{
     #Template_Log .TPT_light { width: 20px; height: 20px; float: right; cursor: pointer; border-radius: 15px; }
     #Template_Log .TPT_light.TPT_Err { background-color: red; -webkit-animation:mymove 0.5s infinite; }
     #Template_Log .TPT_light.TPT_Info { background-color: green;}
-    #Template_Log .TPT_Msg{ width: 600px; background-color: #ECECEC; clear: right; float: right; padding-bottom: 10px;  font-family: 微软雅黑,幼圆; font-size: 14px; display: none; border: 1px solid #ccc; border-top: 0; box-shadow: 10px 10px 20px #ccc; border-bottom-left-radius: 10px; word-break: break-all; }
+    #Template_Log .TPT_Msg{ width: 720px; background-color: #ECECEC; clear: right; float: right; padding-bottom: 10px;  font-family: 微软雅黑,幼圆; font-size: 14px; display: none; border: 1px solid #ccc; border-top: 0; box-shadow: 10px 10px 20px #ccc; border-bottom-left-radius: 10px; word-break: break-all; }
     #Template_Log .TPT_Msg .TPT_Err { background-color: #F00; }
     #Template_Log .TPT_Msg .TPT_Info { background-color: #C2BFBF; }
     #Template_Log ul { list-style-type: none; zoom: 1; overflow: hidden; border-bottom: 1px dashed #ccc; }

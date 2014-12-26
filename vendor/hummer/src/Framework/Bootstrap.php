@@ -23,10 +23,13 @@ class Bootstrap{
         $aRegisterMap = array(
             'Config'    => $Configure,
             'sEnv'      => $sEnv,
+            'Arr'       => array(),
             'Route'     => new Route($this->Context),
-            'sRunMode'  => strtolower(PHP_SAPI) === self::S_RUN_CLI ?
-                self::S_RUN_CLI :
+            'sRunMode'  => Helper::TOOP(
+                strtolower(PHP_SAPI) === self::S_RUN_CLI,
+                self::S_RUN_CLI,
                 self::S_RUN_HTTP
+            )
         );
 
         #HTTP
@@ -81,7 +84,7 @@ class Bootstrap{
         $sTS = microtime(true);
         $C = $this->Context;
         $Log = $C->Log;
-        $Log->info('RUN START:');
+        $Log->info('RUN START');
         try{
             switch ($C->sRunMode)
             {

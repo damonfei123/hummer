@@ -7,6 +7,11 @@ function DB() {
     return CTX()->RDB;
 }
 
+function Redis()
+{
+    return CTX()->Redis;
+}
+
 function C($sCookie) {
     return CTX()->HttpRequest->getC($sCookie);
 }

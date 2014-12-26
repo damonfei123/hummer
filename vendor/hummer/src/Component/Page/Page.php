@@ -1,8 +1,9 @@
 <?php
-namespace Hummer\Component\Page;
 /**
- * 分页类
+ * Page
 */
+namespace Hummer\Component\Page;
+
 use Hummer\Component\Helper\Arr;
 use Hummer\Component\Helper\Helper;
 
@@ -96,7 +97,7 @@ class Page {
                 $aBindParam[$aItemParam[0]] = $aItemParam[1];
             }
         }
-        #共多少条记录
+        #page stat
         $aDisplay['stat']     = sprintf('<span>'.$aConfig['stat'].'</span>',$iTotal);
         #pageInfo
         $aDisplay['pageInfo'] = strtr('<span>'.$aConfig['pageInfo'].'</span>',array(
@@ -106,9 +107,9 @@ class Page {
 
         $sBindParam   = http_build_query($aBindParam);
         $aDisplayItem = array();
-        #首页
+        #first page
         $aDisplay['first'] = self::generateHtml(1, $sBindParam, $aConfig['first']);
-        #上一页
+        #prev page
         $aDisplay['prev']  = self::generateHtml(
             Helper::TOOP($iPage <=1, 1, $iPage-1),
             $sBindParam,
@@ -123,13 +124,13 @@ class Page {
             $iPageNext=4,
             $aConfig['ellipsis']
         );
-        #下一页
+        #next page
         $aDisplay['next']  = self::generateHtml(
             Helper::TOOP($iPage >= $iMaxPage,$iMaxPage,$iPage + 1) ,
             $sBindParam,
             $aConfig['next']
         );
-        #尾页
+        #last page
         $aDisplay['last']  = self::generateHtml($iMaxPage, $sBindParam, $aConfig['last']);
 
         #return

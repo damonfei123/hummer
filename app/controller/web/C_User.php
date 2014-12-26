@@ -7,6 +7,9 @@ class C_User extends Web_Base{
 
     public function actionDefault()
     {
+        $Redis = Redis();
+        $Redis->set('xx','x');
+
         $User = DB()->getUser()->findMulti();
         foreach ($User as $user) {
             echo $user->id;

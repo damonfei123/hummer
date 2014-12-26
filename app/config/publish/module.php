@@ -25,6 +25,11 @@ return array(
         ),
     ),
     array(
+        'module' => 'Redis',
+        'class'  => 'Hummer\\Component\\Redis\\Redis',
+        'params' => array('@redis'),
+    ),
+    array(
         'module' => 'Template',
         'class'  => 'Hummer\\Component\\Template\\TemplateAdaptor',
         'params' => array(
