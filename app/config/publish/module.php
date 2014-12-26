@@ -17,7 +17,7 @@ return array(
         'module' => 'RDB',
         'class'  => 'Hummer\\Component\\RDS\\Factory',
         'params' => array(
-            '@database',
+            '@database.db',
             '@model',
             'App\\model',
             'Hummer\\Component\\RDS\\Model\\Model',
@@ -27,7 +27,7 @@ return array(
     array(
         'module' => 'Redis',
         'class'  => 'Hummer\\Component\\Redis\\Redis',
-        'params' => array('@redis'),
+        'params' => array('@database.redis'),
     ),
     array(
         'module' => 'Template',
