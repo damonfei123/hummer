@@ -8,6 +8,7 @@ use Hummer\Component\Context\Context;
 use Hummer\Component\Http\HttpRequest;
 use Hummer\Component\Http\HttpResponse;
 use Hummer\Component\Route\RouteErrorException;
+use Hummer\Component\Context\InvalidClassException;
 
 class Bootstrap{
 
@@ -73,7 +74,6 @@ class Bootstrap{
                 case E_USER_ERROR:
                     throw new \ErrorException($sStr);
                     break;
-
                 default:
                     $C->Log->warn($sStr);
                     break;
@@ -114,6 +114,8 @@ class Bootstrap{
                 default:
                     throw new \RuntimeException('[Bootstrap] : ERROR RUN MODE');
             }
+        }catch(InvalidClassException $E){
+            $Log->fatal($E->getMessage());
         }catch(\SmartyException $E){
             #Smarty Exception
             $Log->warn($E->getMessage());
