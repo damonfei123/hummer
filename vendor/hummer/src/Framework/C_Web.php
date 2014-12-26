@@ -6,29 +6,18 @@ use Hummer\Component\Helper\Helper;
 
 class C_Web extends C_Base{
 
-    public function __construct($sTpl='html') {
+    public function __construct() {
         parent::__construct();
-        $this->sTpl     = $sTpl;
-        $this->template = $this->Context->Template;
+        $this->HttpRequest  = $this->Context->HttpRequest;
+        $this->HttpResponse = $this->Context->HttpResponse;
     }
-
-    public function assign($mKey, $mValue=null)
-    {
-        $aAssign = is_array($mKey) ? $mKey : array($mKey => $mValue);
-        foreach ($aAssign as $sKey => $mV) {
-            $this->template->assign($sKey, $mV);
-        }
-    }
-
-    protected $bCalledDisplay = false;
 
     public function display($sTemplate='')
     {
         $this->bCalledDisplay = true;
-        if (is_null($sTemplate)) {
-            return;
+        if (!is_null($sTemplate)) {
+            $this->template->display($this->getTplPath($this->HttpRequest, $sTemplate,$this->sTpl));
         }
-        return $this->template->display($this->getTplPath($this->HttpRequest, $sTemplate,$this->sTpl));
     }
 
     public static function getTplPath($REQ, $sTemplate=null, $sTpl)

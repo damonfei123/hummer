@@ -40,7 +40,7 @@ return array(
                 'caching'          => true,
                 'cache_lifetime'   => 120,
             )
-        )
+        ),
     ),
     array(
         'module' => 'RDB',
