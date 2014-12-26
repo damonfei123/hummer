@@ -15,6 +15,7 @@ define('CONTROLLER_DIR', APP_DIR  . '/controller/');
 
 require ROOT_DIR . '/vendor/autoload.php';
 
+
 Bootstrap::setHandle();
 $B = new Bootstrap(
     Configure::factory(
@@ -25,4 +26,11 @@ $B = new Bootstrap(
     'development'
 );
 require '__init__.php';
-$B->run();
+
+try{
+    $B->run();
+}catch(\SmartyException $E){
+    CTX()->Log->fatal($E->getMessage());
+}catch(Exception $E){
+    CTX()->Log->warn($E->getMessage());
+}

@@ -14,6 +14,8 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
+        $Redis = Redis();
+        $Redis->set('xx','xxxx');
         $Page = new Page($this->HttpRequest, 1);
         echo $Page->getPage(
                 DB()->getUser()

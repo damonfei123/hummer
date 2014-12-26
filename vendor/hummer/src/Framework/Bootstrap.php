@@ -82,7 +82,7 @@ class Bootstrap{
     public function run($sRouteKey=null)
     {
         $sTS = microtime(true);
-        $C = $this->Context;
+        $C   = $this->Context;
         $Log = $C->Log;
         $Log->info('RUN START');
         try{
@@ -109,11 +109,13 @@ class Bootstrap{
             #Smarty Exception
             $Log->warn($E->getMessage());
         }catch(RouteErrorException $E){
-            //$C->HttpResponse->setStatus(404);
-            //$C->HttpResponse->send();
-            echo $E->getMessage();
+            #Route Error
+            $C->HttpResponse->setStatus(404);
+            $C->HttpResponse->send();
+            $Log->fatal($E->getMessage());
         }catch(\Exception $E){
-            echo $E->getMessage();
+            #Uncatch Error
+            $Log->warn($E->getMessage());
         }
 
         $Log->info(sprintf('RUN END: Time: %s ms, Mem: %s',

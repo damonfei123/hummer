@@ -9,8 +9,11 @@ class Event_Register{
     const E_ALL_AFTER  = 'Hummer.Component.Redis.Redis.__ALL__:after';
     const E_REDIS_MODE = 'Hummer.Component.Redis.Event_Register:time';
 
-    public static function register_All()
+    public static function register_All($bEvent=true)
     {
+        if (!$bEvent) {
+            return true;
+        }
         Event::register(
             self::E_ALL_BEFORE,
             function($sMethodName, $aArgs=array()){
@@ -22,14 +25,13 @@ class Event_Register{
             function($mResult, $sMethodName, $aArgs){
                 $Log   = Context::getInst()->Log;
                 $Log->info(
-                    '[REDIS] : Time : {cost}; cmd : {cmd}; args : {args}',
+                    '[Redis] : Time : {cost}; cmd : {cmd}; Args : {args}',
                     array(
                         'cost' => round(microtime(true) - Context::getInst()->Arr[self::E_REDIS_MODE], 6),
                         'args' => json_encode($aArgs),
                         'cmd'  => $sMethodName
                     )
                 );
-                echo 1;
             }
         );
     }
