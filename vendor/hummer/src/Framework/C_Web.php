@@ -6,8 +6,8 @@ use Hummer\Component\Helper\Helper;
 
 class C_Web extends C_Base{
 
-    public function __construct() {
-        parent::__construct();
+    public function __construct($sTpl='') {
+        parent::__construct($sTpl);
         $this->HttpRequest  = $this->Context->HttpRequest;
         $this->HttpResponse = $this->Context->HttpResponse;
     }
@@ -33,6 +33,13 @@ class C_Web extends C_Base{
         return $sContent;
     }
 
+    /**
+     *  @param $REQ        {HttpRequest}
+     *  @param $sTemplate  {string}
+     *      ex: xx | /xx | /xx/xx/xx
+     *  @param $sTpl       {string}
+     *  @return {string}
+     **/
     public static function getTplPath($REQ, $sTemplate=null, $sTpl)
     {
         if ($sTemplate && '/' == $sTemplate[0]) {
@@ -59,7 +66,6 @@ class C_Web extends C_Base{
     {
         $this->bEnableTpl = false;
     }
-
 
     public function __destruct()
     {

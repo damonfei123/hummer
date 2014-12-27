@@ -61,6 +61,8 @@ class Factory {
                 $this
             );
         }
+        #init Table
+        self::$_aModel[$sModelName]->setTable($sModelName);
         return self::$_aModel[$sModelName];
     }
 

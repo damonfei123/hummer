@@ -31,6 +31,4 @@ try{
     $B->run();
 }catch(\SmartyException $E){
     CTX()->Log->fatal($E->getMessage());
-}catch(Exception $E){
-    CTX()->Log->warn($E->getMessage());
 }

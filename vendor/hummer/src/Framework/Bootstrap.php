@@ -46,7 +46,6 @@ class Bootstrap{
             )
         );
 
-        #HTTP
         if ($aRegisterMap['sRunMode'] == self::S_RUN_HTTP) {
             $aRegisterMap['HttpRequest']  = new HttpRequest();
             $aRegisterMap['HttpResponse'] = new HttpResponse();
@@ -57,7 +56,7 @@ class Bootstrap{
     }
 
     public static function setHandle(
-        $mCBErrorHandle=array('Hummer\\Framework\\Bootstrap', 'handleError'),
+        $mCBErrorHandle = array('Hummer\\Framework\\Bootstrap', 'handleError'),
         $iErrType = null
     ) {
         set_error_handler(
@@ -69,10 +68,10 @@ class Bootstrap{
     public static function handleError($iErrNum, $sErrStr, $sErrFile, $iErrLine, $sErrContext)
     {
         $sStr = sprintf('Catch Error[%d] : %s In File [%s], line %d ',
-                $iErrNum,
-                $sErrStr,
-                $sErrFile,
-                $iErrLine
+            $iErrNum,
+            $sErrStr,
+            $sErrFile,
+            $iErrLine
         );
         $C = Context::getInst();
         if ($C === null || !$C->isRegister('Log')) {
@@ -86,7 +85,7 @@ class Bootstrap{
                     break;
                 case E_USER_ERROR:
                     $C->Log->error($sStr);
-                    throw new \ErrorException('[User] : Error' . $sStr);
+                    throw new \ErrorException('[Bootstrap] : Error' . $sStr);
                     break;
                 case E_USER_WARNING:
                 default:

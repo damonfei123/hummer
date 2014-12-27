@@ -62,6 +62,7 @@ class CURD {
     public function disableMulti()
     {
         $this->bMulti = false;
+        $this->resetCondition();
     }
 
     public function forceIndex($sIndexName)
@@ -452,7 +453,6 @@ class CURD {
         $this->bTmpSelectPK = false;
         $this->sPrimaryKey  = 'id';
 
-        $this->sTable;
         $this->aTableAsMap = array();
         $this->aWhere      = array();
         $this->aData       = array();

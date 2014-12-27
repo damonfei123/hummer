@@ -1,9 +1,10 @@
 <?php
 namespace Hummer\Component\Log;
 
-use Hummer\Component\Helper\Suger;
 use Hummer\Component\Helper\Arr;
 use Hummer\Component\Helper\Time;
+use Hummer\Component\Helper\Suger;
+use Hummer\Component\Helper\Helper;
 
 class Logger{
 
@@ -35,7 +36,6 @@ class Logger{
     {
         return Arr::get(self::$aLogInfo, $iLevel, null);
     }
-
 
     public function __construct(
         array $aWriterConf,
@@ -77,7 +77,7 @@ class Logger{
     public function log($iLevel, $sMessage, $aContext=array())
     {
         if (!($iLevel & $this->iLogLevel) || empty($this->aWriter)) {
-            return;
+            goto END;
         }
         $sMessage = self::interpolate($sMessage, $aContext);
         list($sUSec, $sSec) = explode(' ', microtime());
@@ -94,13 +94,19 @@ class Logger{
             $Writer->setGUID($this->sGUID);
             $Writer->acceptData($aRow);
         }
+
+        END:
     }
 
     public static function interpolate($sMessage, $aContext=array())
     {
         $aReplace = array();
         foreach ($aContext as $sK => $mV) {
-            $aReplace['{'.$sK.'}'] = ((is_array($mV)) || is_object($mV)) ? json_encode($mV) : (string)$mV;
+            $aReplace['{'.$sK.'}'] = Helper::TOOP(
+                is_array($mV) || is_object($mV),
+                json_encode($mV),
+                $mV
+            );
         }
         return strtr($sMessage, $aReplace);
     }

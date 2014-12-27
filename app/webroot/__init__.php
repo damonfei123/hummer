@@ -41,7 +41,7 @@ function View()
 }
 
 function pr($mVar) {
-    echo "<pre>";
+    if (php_sapi_name() != 'cli') { echo "<pre>"; }
     if (is_object($mVar)) {
         echo $mVar;
     }else{

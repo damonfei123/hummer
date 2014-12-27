@@ -9,7 +9,10 @@ return array(
         'params' => array(
             array(
                 'WebDeBug' => array('\@WebPage'),
-                'File'     => array('\@File','/tmp/Hummer_http_Log_{date}/hummer_{level}_{date}.log')
+                'File'     => array(
+                    '\@File',
+                    '/tmp/Hummer_http_Log_{date}/hummer_{level}_{date}.log'
+                )
             ),
             Logger::LEVEL_ALL
         ),

@@ -3,6 +3,7 @@ namespace Hummer\Component\RDS\Model;
 
 use Hummer\Component\RDS\CURD;
 use Hummer\Component\Helper\Arr;
+use Hummer\Component\Helper\Helper;
 
 class Model{
 
@@ -29,19 +30,26 @@ class Model{
         }else{
             $sItemModelName = $sModelName;
         }
+        $bAppItem = isset($aConfig['item_class']) && $aConfig['item_class'];
         $this->sItemClassName = sprintf('%s%s%s',
-            $sCalledNS,
+            Helper::TOOP($bAppItem, $sCalledNS, __NAMESPACE__),
             '\\',
-            Arr::get($aConfig, 'item_class', 'Item_'.ucfirst($sItemModelName))
+            Arr::get($aConfig, 'item_class', 'Item')
         );
         #table
-        $sTable = Arr::get($aConfig, 'table', strtolower($sModelName));
-        $this->CURD->table($sTable);
+        $this->setTable($sModelName);
+        $this->aConfig = $aConfig;
 
         #primary key
         if (isset($aConfig['pk'])) {
             $this->CURD->sPrimaryKey($aConfig['pk']);
         }
+    }
+
+    public function setTable($sModelName)
+    {
+        $sTable = Arr::get($this->aConfig, 'table', strtolower($sModelName));
+        $this->CURD->table($sTable);
     }
 
     public function find($mWhere=null)
