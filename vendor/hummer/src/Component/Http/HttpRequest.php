@@ -42,6 +42,11 @@ class HttpRequest{
         $this->BagREQUEST = new Bag_Param($aREQUEST === null ? $_REQUEST : $aREQUEST);
     }
 
+    public function getF($sFile)
+    {
+        return Arr::get($this->aFILE, $sFile, null);
+    }
+
     public function getG($mKeyOrKeys)
     {
         return $this->BagGET->get($mKeyOrKeys);

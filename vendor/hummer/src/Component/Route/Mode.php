@@ -44,8 +44,8 @@ class Mode{
             $sControllerPre,
             $sControllerName
         );
-        if($sRequestMethod=$REQ->getRequestMethod() !== 'GET'){
-            $sControllerPathPre .= '_' . $sControllerPathPre;
+        if(($sRequestMethod=$REQ->getRequestMethod()) !== 'GET'){
+            $sAction .= '_' . $sRequestMethod;
         }
         $CallBack = new CallBack();
         $CallBack->setCBObject($sControllerPathPre, $sAction);

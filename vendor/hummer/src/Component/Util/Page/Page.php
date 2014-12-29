@@ -62,7 +62,7 @@ class Page {
         $iMaxPage    = ceil( $iTotal / $this->iNumPerPage );
 
         if ($iPage > $iMaxPage) {
-            throw new \InvalidArgumentException('[Page] : Page params error');
+            throw new \InvalidArgumentException('[Page] : Page params error, page > maxpage');
         }
         $M      = $mListCB[0];
         $M->limit(($iPage-1) * $iNumPerPage, $iNumPerPage);

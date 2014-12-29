@@ -82,7 +82,9 @@ class C_Web extends C_Base{
 
     public function __destruct()
     {
-        if ($this->bEnableTpl && !$this->bCalledDisplay) {
+        if ($this->bEnableTpl && !$this->bCalledDisplay &&
+            $this->HttpRequest->getRequestURI() === 'GET'
+        ) {
             $this->display();
         }
     }

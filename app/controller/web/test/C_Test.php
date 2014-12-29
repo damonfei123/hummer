@@ -3,6 +3,7 @@ namespace App\controller\web\test;
 
 use App\system\controller\Web_Base;
 use Hummer\Component\Util\Page\Page;
+use Hummer\Component\Util\File\File;
 
 class C_Test extends Web_Base{
 
@@ -14,9 +15,8 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
-        //echo DB()->get('data d')->find();
-        //echo DB()->get('user')->find();
-        /*
+        echo DB()->get('data d')->find();
+        echo DB()->get('user')->find();
         foreach(DB()->get('user u')
             ->select('u.*')
             ->join('data d on u.id = d.id')
@@ -25,13 +25,13 @@ class C_Test extends Web_Base{
             echo $M->id . '=>' . $M->name;
             echo "<br/>";
         }
-        */
         #添加
-        //echo DB()->getData()->data(array('age' => 12))->add();
         //echo DB()->getData()->data(array('age' => 12))->save();
+        //echo DB()->getData()->add(array('age' => 12));
 
         #删除
         //DB()->getData()->where(array('id BETWEEN' => array(7,9)))->delete();
+        //DB()->getData()->delete(2);
 
         #事务transaction
         /*
@@ -53,6 +53,10 @@ class C_Test extends Web_Base{
         DB()->getUser()->where(array('id in' => array(1,2)))->findMulti();
         DB()->getUser('u')->left('user u2 on u.id = u2.id')->findMulti();
 
+        foreach(DB()->getUser()->where(array('name like' => '%d%'))->findMulti() as $D){
+            echo $D;
+        };
+
         pr(DB()->getUser()->where(array('id BETWEEN' => array(1,4)))->explain());
 
         DB()->getUser()->where("name = 'damon'")->find();
@@ -66,6 +70,9 @@ class C_Test extends Web_Base{
         foreach ($Datas as $Data) {
             echo $Data->id . '=>' . $Data->name . '<br />';
         }
+        */
+
+        #exists
         $Exists = clone DB()->getData()->where('user.id = data.id');
         $Exists = DB()->getUser()
             ->where(array('id between' => array(3,10)))
@@ -76,7 +83,6 @@ class C_Test extends Web_Base{
             echo "<br />";
         }
 
-        #exists
 
         //同一Model调用多次方法，如分页需要用到  ---start
         //one
@@ -93,14 +99,11 @@ class C_Test extends Web_Base{
         $User->findCount();
         $User2->findMulti();
         DB()->getUser()->findMulti();
-        */
 
         //Session
-        /*
         $Session = CTX()->Session;
         $Session->set('name', 'damon');
         echo $Session->get('name');
-        */
 
         //Redis
         $Redis = Redis();
@@ -122,14 +125,16 @@ class C_Test extends Web_Base{
         //echo $this->fetch('show');
         //echo $this->fetch('/test/test/show');
 
+        $this->display('show');
         //$this->display('/test/test/show');
-        //$this->display('show');
-        //$this->display();
-        //$this->display(null);
+        //$this->display();         //test/test/default
+        //$this->display(null);     //disable template
     }
 
-    public function __after__()
+    public function actionDefault_POST()
     {
-        echo "<br><b>After</b><br>";
+        $File = new File('file','/home/zhangyinfei/project/test/data/file/');
+        pr($File->upload());
     }
+
 }
