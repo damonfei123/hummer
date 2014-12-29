@@ -136,6 +136,7 @@ class Bootstrap{
         }catch(RouteErrorException $E){
             #Route Error
             $C->HttpResponse->setStatus(404);
+            $C->HttpResponse->setContent($C->Template->fetch($C->Config->get('syspage.404')));
             $C->HttpResponse->send();
             $Log->fatal($E->getMessage());
         }catch(\Exception $E){

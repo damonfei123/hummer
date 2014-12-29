@@ -2,7 +2,7 @@
 namespace App\controller\web\test;
 
 use App\system\controller\Web_Base;
-use Hummer\Component\Page\Page;
+use Hummer\Component\Util\Page\Page;
 
 class C_Test extends Web_Base{
 
@@ -44,8 +44,8 @@ class C_Test extends Web_Base{
             $PDO->rollback();
         }
         */
-        #查询
         /*
+        #查询
         DB()->get('user')->find();
         DB()->get('user u')->select('id')->find();
         DB()->getUser()->where(array('id BETWEEN' => array(1,12)))->findMulti();
