@@ -65,6 +65,12 @@ class Model{
         $this->CURD->table($sTable);
     }
 
+    public function initModel($sModelName)
+    {
+        $this->CURD->resetCondition();
+        $this->setTable($sModelName);
+    }
+
     public function find($mWhere=null)
     {
         $aItem = $this->CURD->limit(1)->querySmarty($mWhere);

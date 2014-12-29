@@ -16,27 +16,24 @@ class C_Test extends Web_Base{
     {
         //echo DB()->get('data d')->find();
         //echo DB()->get('user')->find();
+        /*
         foreach(DB()->get('user u')
             ->select('u.*')
             ->join('data d on u.id = d.id')
             ->findMulti() as $M
         ){
-            echo $M->id;
-            echo $M->name;
+            echo $M->id . '=>' . $M->name;
+            echo "<br/>";
         }
+        */
         #添加
-        //DB()->getData()->data(array('age' => 12))->save();
+        //echo DB()->getData()->data(array('age' => 12))->add();
+        //echo DB()->getData()->data(array('age' => 12))->save();
 
         #删除
         //DB()->getData()->where(array('id BETWEEN' => array(7,9)))->delete();
 
         #事务transaction
-        /*
-        $PDO = DB()->getData()->begin();
-        $iOne = DB()->getData()->data(array('age' => 12))->save();
-        $iTwo = DB()->getData()->data(array('age' => 12))->save();
-        $PDO->commit();
-        */
         /*
         $PDO = DB()->getData()->begin();
         $iOne = DB()->get('user')->data(array('name' => 'damon'))->save();
@@ -47,8 +44,6 @@ class C_Test extends Web_Base{
             $PDO->rollback();
         }
         */
-
-
         #查询
         /*
         DB()->get('user')->find();
@@ -57,7 +52,31 @@ class C_Test extends Web_Base{
         DB()->getUser()->where(array('id BETWEEN' => array(1,12)))->findCustom();
         DB()->getUser()->where(array('id in' => array(1,2)))->findMulti();
         DB()->getUser('u')->left('user u2 on u.id = u2.id')->findMulti();
-        DB()->get('user u')->group('u2.id')->left('user u2 on u.id = u2.id')->findMulti();
+
+        pr(DB()->getUser()->where(array('id BETWEEN' => array(1,4)))->explain());
+
+        DB()->getUser()->where("name = 'damon'")->find();
+        DB()->getUser()->where("id = 5")->find();
+
+        $Datas = DB()->get('user u')
+            ->group('u2.id')
+            ->left('user u2 on u.id = u2.id')
+            ->having('u2.id >= 6')
+            ->findMulti();
+        foreach ($Datas as $Data) {
+            echo $Data->id . '=>' . $Data->name . '<br />';
+        }
+        $Exists = clone DB()->getData()->where('user.id = data.id');
+        $Exists = DB()->getUser()
+            ->where(array('id between' => array(3,10)))
+            ->exists($Exists)
+            ->findMulti();
+        foreach ($Exists as $E) {
+            echo $E->id;
+            echo "<br />";
+        }
+
+        #exists
 
         //同一Model调用多次方法，如分页需要用到  ---start
         //one
@@ -75,7 +94,6 @@ class C_Test extends Web_Base{
         $User2->findMulti();
         DB()->getUser()->findMulti();
         */
-        return;
 
         //Session
         /*
@@ -108,5 +126,10 @@ class C_Test extends Web_Base{
         //$this->display('show');
         //$this->display();
         //$this->display(null);
+    }
+
+    public function __after__()
+    {
+        echo "<br><b>After</b><br>";
     }
 }

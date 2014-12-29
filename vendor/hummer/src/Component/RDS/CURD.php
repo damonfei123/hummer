@@ -16,6 +16,7 @@ namespace Hummer\Component\RDS;
 
 use Hummer\Component\Helper\Packer;
 use Hummer\Component\Helper\Arr;
+use Hummer\Component\Helper\Helper;
 
 class CURD {
 
@@ -37,6 +38,7 @@ class CURD {
     public $sForceIndex ='';
     public $sLimit;
     public $sGroupBy;
+    public $sHaving;
     public $sOrder;
     public $aAopCallBack;
 
@@ -87,7 +89,11 @@ class CURD {
     public function where($mWhere=null)
     {
         if (!is_null($mWhere) && $mWhere) {
-            $this->aWhere = is_array($mWhere) ? $mWhere : array($this->sPrimaryKey => $mWhere);
+            $this->aWhere = Helper::TOOP(
+                is_int($mWhere),
+                array($this->sPrimaryKey => $mWhere),
+                $mWhere
+            );
         }
         return $this;
     }
@@ -190,6 +196,21 @@ class CURD {
         $this->sGroupBy = sprintf(' GROUP BY %s ' , $sColumn);
         return $this;
     }
+    public function having($sHaving)
+    {
+        $this->sHaving = sprintf(' HAVING %s ', $sHaving);
+        return $this;
+    }
+
+    public function exists($CURD)
+    {
+        if (!($CURD instanceof \Hummer\Component\RDS\Model\Model)) {
+            throw new \InvalidArgumentException('[CURD] : ERROR, Param Must Be CURD OBJ');
+        }
+        $aArgs = array();
+        $this->aWhere['__exists__'] = $CURD->getQuerySQL($aArgs);
+        return $this;
+    }
 
     public function exec($sSQL, $aArgs=array())
     {
@@ -202,7 +223,7 @@ class CURD {
         $iFetchMode=\PDO::FETCH_ASSOC
     ){
         if (!is_null($mWhere)) $this->where($mWhere);
-        $sSQL = self::buildQuerySQL($aArgs);
+        $sSQL = $this->buildQuerySQL($aArgs);
         return $this->queryAndFind($sSQL, $aArgs, $iFetchMode);
     }
 
@@ -211,7 +232,7 @@ class CURD {
         $iFetchMode=\PDO::FETCH_ASSOC
     ) {
         if (!is_null($mWhere)) $this->where($mWhere);
-        $sSQL = trim(sprintf('explain %s',self::buildQuerySQL($aArgs)));
+        $sSQL = trim(sprintf('explain %s',$this->buildQuerySQL($aArgs)));
         $aResult = $this->queryAndFind($sSQL, $aArgs, $iFetchMode);
 
         #sql info
@@ -244,11 +265,16 @@ class CURD {
         return $this->Instance->lastInsertId();
     }
 
+    public function add($aSaveData=array())
+    {
+        return $this->save($aSaveData);
+    }
+
     public function findCount($mWhere=null)
     {
         if (!is_null($mWhere)) $this->where($mWhere);
         $this->select('count(1) as total');
-        $sSQL = self::buildQuerySQL($aArgs);
+        $sSQL = $this->buildQuerySQL($aArgs);
         $mResult = $this->queryAndFind($sSQL, $aArgs,null, true);
         return Arr::get($mResult, 'total', 0);
     }
@@ -295,15 +321,22 @@ class CURD {
 
     public function buildQuerySQL(&$aArgs)
     {
-        return sprintf('SELECT %s FROM %s %s %s WHERE %s %s %s',
+        return sprintf('SELECT %s FROM %s %s %s WHERE %s %s %s %s',
             $this->sSelect ? $this->sSelect : '*',
             $this->getRealMapTable(),
             $this->sForceIndex,
             $this->sJoinTable,
             self::buildCondition($this->aWhere, $aArgs),
             $this->sGroupBy,
+            $this->sHaving,
             $this->sLimit
         );
+    }
+
+    public function getQuerySQL()
+    {
+        $aArgs = array();
+        return $this->buildQuerySQL($aArgs);
     }
 
     public function delete($mWhere=array())
@@ -354,25 +387,32 @@ class CURD {
      * @param array $aArgs
      * @return int|string
      */
-    public static function buildCondition($aWhere, &$aArgs = array())
+    public static function buildCondition($mWhere, &$aArgs = array())
     {
         # 为空直接返回1
-        if (empty($aWhere)) return 1;
+        if (empty($mWhere)) return 1;
+
+        if (is_string($mWhere)) {
+            return $mWhere;
+        }
 
         # 提取出条件关系
         $aWhereBuild = array();
-        if (isset($aWhere[-1])) {
-            $sRelation = strtoupper($aWhere[-1]);
-            unset($aWhere[-1]);
+        if (isset($mWhere[-1])) {
+            $sRelation = strtoupper($mWhere[-1]);
+            unset($mWhere[-1]);
         } else {
             $sRelation = 'AND';
         }
 
         # 遍历条件
+        $aWhere = $mWhere;
         foreach ($aWhere as $sK => $mV) {
             if (is_int($sK)) {
                 # 如果是子条件, 递归调用
                 $aWhereBuild[] = '(' . self::buildCondition($mV, $aArgs) . ')';
+            }elseif($sK == '__exists__'){
+                $aWhereBuild[] = 'EXISTS (' . self::buildCondition($mV, $aArgs) . ')';
             } else {
                 # 如果不是子条件, 解析
                 list($sKey, $sOP) = array_replace(array('', '='), explode(' ', $sK, 2));
@@ -461,7 +501,7 @@ class CURD {
         return $bOnlyOne ? $STMT->fetch() : $STMT->fetchAll();
     }
 
-    protected function resetCondition()
+    public function resetCondition()
     {
         $this->bTmpSelectPK = false;
         $this->sPrimaryKey  = 'id';
@@ -474,6 +514,7 @@ class CURD {
         $this->sForceIndex = '';
         $this->sLimit      = '';
         $this->sGroupBy    = '';
+        $this->sHaving     = '';
         $this->sOrder      = '';
     }
 }
