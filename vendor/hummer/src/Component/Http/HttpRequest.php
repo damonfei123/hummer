@@ -18,11 +18,34 @@ use Hummer\Component\Helper\Arr;
 
 class HttpRequest{
 
+    /**
+     *  @var $aFILE $_FILES
+     **/
     protected $aFILE;
+
+    /**
+     *  @var $aSERVER $_SERVER
+     **/
     protected $aSERVER;
+
+    /**
+     *  @var $BagPOST $_POSt
+     **/
     protected $BagPOST;
+
+    /**
+     * @var $BagGET $_GET
+     **/
     protected $BagGET;
+
+    /**
+     *  @var $BagCOOKIE $_COOKIE
+     **/
     protected $BagCOOKIE;
+
+    /**
+     *  @var $BagREQUEST $_REQUEST
+     **/
     protected $BagREQUEST;
 
 

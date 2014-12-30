@@ -20,15 +20,27 @@ use Hummer\Component\Helper\Helper;
 
 class CURD {
 
+    /**
+     *  @var PDO Config
+     **/
     public $sDSN        = null;
     public $Instance    = null;
     public $aOption;
 
+    /**
+     *  @var Same Model For Multi Query
+     **/
     public $bMulti       = false;
 
+    /**
+     *  @var primary key & foreign key
+     **/
     public $bTmpSelectPK = false;
     public $sPrimaryKey  = 'id';
 
+    /**
+     *  @var Table Condition
+     **/
     public $sTable;
     public $aTableAsMap = array();
     public $aWhere      = array();
@@ -186,6 +198,7 @@ class CURD {
     {
         return $this->join($sTable,'L');
     }
+
     public function right($sTable)
     {
         return $this->join($sTable,'R');
@@ -216,6 +229,14 @@ class CURD {
     {
         $STMT = $this->Instance->prepare($sSQL);
         return $STMT->execute($aArgs);
+    }
+
+    public function query($sSQL, $aArgs, $iFetchMode=\PDO::FETCH_ASSOC)
+    {
+        $STMT = $this->Instance->prepare($sSQL);
+        $STMT->execute($aArgs);
+        $STMT->setFetchMode($iFetchMode ? $iFetchMode : \PDO::FETCH_ASSOC);
+        return $STMT->fetchAll();
     }
 
     public function querySmarty(

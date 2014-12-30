@@ -17,13 +17,38 @@ namespace Hummer\Component\RDS;
 use Hummer\Component\RDS\CURD;
 use Hummer\Component\Helper\Arr;
 use Hummer\Component\Helper\Helper;
+use Hummer\Component\Context\InvalidArgumentException;
 
 class Factory {
+
+    /**
+     *  @var $_aDBConfig All Database config
+     **/
     private static $_aDBConfig;
+
+    /**
+     * @var $_aAopCallBack
+     **/
     private static $_aAopCallBack;
+
+    /**
+     * @var $_aModelConf model config
+     **/
     private static $_aModelConf;
+
+    /**
+     *  @var $_sAppModelNS APP namespace
+     **/
     private static $_sAppModelNS;
+
+    /**
+     *  @var $_sDefaultModelClass Default Model
+     **/
     private static $_sDefaultModelClass;
+
+    /**
+     *  @var $_sDefaultDB Default Database Config
+     **/
     private $_sDefaultDB = 'default';
 
     public function __construct(
@@ -40,19 +65,31 @@ class Factory {
         self::$_sDefaultModelClass = $_sDefaultModelClass;
     }
 
-    public function __call($sModel, $aArgs=null)
+    public function __call($sModel, $aArgs=array())
     {
         if (($sModel = substr($sModel, 3)) !== false) {
             $aArgs   = (array)$aArgs;
             $sModel  = sprintf('%s %s', $sModel, array_shift($aArgs));
             return $this->get($sModel, array_shift($aArgs));
         }
-        return false;
+        throw new \BadMethodCallException('[ Factory ] : Err : call undefined method');
     }
 
+    /**
+     *  @var $_aCURD All CURD Object Cache
+     **/
     private static $_aCURD;
+
+    /**
+     * @var $_aDB All DB Cache
+     **/
     private static $_aDB;
+
+    /**
+     *  @var $_aModel Model Cache
+     **/
     private static $_aModel;
+
     /**
      *  @param $sModelName  string Model
      *      ex: user | user u
@@ -87,16 +124,21 @@ class Factory {
         return self::$_aModel[$_sTmpModel];
     }
 
+    /**
+     *  Parse Model, Get Real Model
+     *  Ex:  user -> User | user u -> User
+     **/
     public static function getRealModel($sModelName)
     {
         if (false !== ($iPos=strpos($sModelName, '|'))) {
-            $sRealModel = substr($sModelName, 0, $iPos);
-        }else{
-            $sRealModel = $sModelName;
+            $sModelName = substr($sModelName, 0, $iPos);
         }
-        return ucfirst($sRealModel);
+        return ucfirst($sModelName);
     }
 
+    /**
+     *  Init CURD By Deferent Database
+     **/
     public function initCURD($sModelName, $sModelDB=null)
     {
         $sRealModel = self::getRealModel($sModelName);

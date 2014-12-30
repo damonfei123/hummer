@@ -16,6 +16,9 @@ namespace Hummer\Component\Http;
 
 class HttpResponse{
 
+    /**
+     *  @var $BagHeader Headers
+     **/
     protected $BagHeader;
 
     public function __construct()

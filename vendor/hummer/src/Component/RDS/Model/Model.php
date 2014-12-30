@@ -20,8 +20,19 @@ use Hummer\Component\Helper\Helper;
 
 class Model{
 
+    /**
+     *  @var $CURD  Hummer\Component\RDS\CURD
+     **/
     public $CURD;
+
+    /**
+     *  @var $sTable Table
+     **/
     public $sTable;
+
+    /**
+     *  @var $sItemClassName  Hummer\Component\RDS\Model\Item;
+     **/
     public $sItemClassName;
 
     public function __construct(

@@ -58,6 +58,12 @@ class C_Test extends Web_Base{
             echo "<br/>";
         }
 
+        $Users = DB()->getUser('u', 'default_slave')->query('select count(*) as num from user');
+        $Users = DB()->getUser('u', 'default_slave')
+            ->query('select * from user where id = ? ', array(40464));
+        //$Users = DB()->getUser('u')->exec('delete from user where id < 20');
+        //$Users = DB()->getUser('u')->exec('delete from user where id < ?' ,array(21));
+
         #exists
         $Exists = clone DB()->getData()->where('user.id = data.id');
         $Exists = DB()->getUser()

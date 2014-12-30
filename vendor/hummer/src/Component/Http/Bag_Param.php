@@ -18,6 +18,9 @@ use Hummer\Component\Helper\Arr;
 
 class Bag_Param extends Bag_Base{
 
+    /**
+     *  @var $aData Params
+     **/
     protected $aData;
 
     public function get($mKeyOrKeys)

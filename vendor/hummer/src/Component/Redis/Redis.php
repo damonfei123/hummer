@@ -19,8 +19,19 @@ use Hummer\Component\Event\Event;
 
 class Redis{
 
+    /**
+     *  @var $Instance
+     **/
     protected $Instance = null;
+
+    /**
+     *  @var $Redis
+     **/
     protected $Redis    = null;
+
+    /**
+     *  @var $aConfig Redis Config
+     **/
     protected $aConfig;
 
 

@@ -14,9 +14,18 @@
 **************************************************************************************/
 namespace Hummer\Component\Configure;
 
+use Hummer\Component\Helper\Helper;
+
 class Adaptor_PHP {
 
+    /**
+     *  @var $sBaseDir
+     **/
     private $sBaseDir;
+
+    /**
+     *  @var $sDefaultDir
+     **/
     private $sDefaultDir;
 
     public function __construct($sBaseDir, $sDefaultDir)
@@ -25,13 +34,13 @@ class Adaptor_PHP {
         $this->sDefaultDir = $sDefaultDir;
     }
 
-    private $aConfig=array();
+    private $aConfig = array();
 
     public function get($sConfigName)
     {
         $mBaseConfig    = self::_get($sConfigName, $this->sBaseDir);
         $mDefaultConfig = self::_get($sConfigName, $this->sDefaultDir);
-        return $mBaseConfig === null ? $mDefaultConfig : $mBaseConfig;
+        return Helper::TOOP($mBaseConfig === null, $mDefaultConfig, $mBaseConfig);
     }
 
     public static function _get($sModule, $sBaseDir)

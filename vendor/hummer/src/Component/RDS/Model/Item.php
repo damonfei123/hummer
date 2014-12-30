@@ -19,8 +19,19 @@ use Hummer\Component\Helper\Arr;
 
 class Item implements \ArrayAccess {
 
+    /**
+     *  @var $aData Row Data
+     **/
     protected $aData;
+
+    /**
+     *  @var $Model
+     **/
     protected $Model;
+
+    /**
+     *  @var $aNewData Update Data
+     **/
     protected $aNewData;
 
     public function __construct($aData = array(), $Model) {
