@@ -16,38 +16,12 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
-        echo DB()->get('data d')->find();
-        echo DB()->get('user')->find();
-        foreach(DB()->get('user u')
-            ->select('u.*')
-            ->join('data d on u.id = d.id')
-            ->findMulti() as $M
-        ){
-            echo $M->id . '=>' . $M->name;
-            echo "<br/>";
-        }
-        #添加
-        //echo DB()->getData()->data(array('age' => 12))->save();
-        //echo DB()->getData()->add(array('age' => 12));
-
-        #删除
-        //DB()->getData()->where(array('id BETWEEN' => array(7,9)))->delete();
-        //DB()->getData()->delete(2);
-
-        #事务transaction
-        /*
-        $PDO = DB()->getData()->begin();
-        $iOne = DB()->get('user')->data(array('name' => 'damon'))->save();
-        $iTwo = DB()->getData()->data(array('age' => 12))->save();
-        if ($iOne && $iTwo) {
-            $PDO->commit();
-        }else{
-            $PDO->rollback();
-        }
-        */
-        /*
         #查询
+        /*
         DB()->get('user')->find();
+
+        DB()->get('user u')->find();
+
         DB()->get('user u')->select('id')->find();
         DB()->getUser()->where(array('id BETWEEN' => array(1,12)))->findMulti();
         DB()->getUser()->where(array('id BETWEEN' => array(1,12)))->findCustom();
@@ -71,7 +45,18 @@ class C_Test extends Web_Base{
         foreach ($Datas as $Data) {
             echo $Data->id . '=>' . $Data->name . '<br />';
         }
-        */
+        echo DB()->get('data d')->find();
+        echo DB()->get('user')->find();
+        foreach(DB()->get('user u')
+            ->select('u.*')
+            //->where('u.id between 6 and 8')
+            ->where(array('u.id between' => array(6,8)))
+            ->join('data d on u.id = d.id')
+            ->findMulti() as $M
+        ){
+            echo $M->id . '=>' . $M->name;
+            echo "<br/>";
+        }
 
         #exists
         $Exists = clone DB()->getData()->where('user.id = data.id');
@@ -83,6 +68,40 @@ class C_Test extends Web_Base{
             echo $E->id;
             echo "<br />";
         }
+
+        ///////程序读写分离,线上环境一定要注意从库不要有写权限///////////////
+        //默认走配置的(主)库
+        echo DB()->get('user')->find();
+        //查询的可以指定slave查询,增删改可以走默认主库,实现主从分离,特别是大量的读操作
+        echo DB()->get('user u', 'default_slave')
+            ->where(array('id BETWEEN' => array(1,500000)))
+            ->findCount();
+        //或者
+        echo DB()->getUser('u', 'default_slave')
+            ->where(array('id BETWEEN' => array(1,500000)))
+            ->findCount();
+
+
+        */
+        #添加
+        //echo DB()->getData()->data(array('age' => rand(0,100)))->save();
+        //echo DB()->getData()->add(array('age' => 12));
+
+        #删除
+        //DB()->getData()->where(array('id BETWEEN' => array(7,9)))->delete();
+        //DB()->getData()->delete(2);
+
+        #事务transaction
+        /*
+        $PDO = DB()->getData()->begin();
+        $iOne = DB()->get('user')->data(array('name' => 'damon'))->save();
+        $iTwo = DB()->getData()->data(array('age' => 12))->save();
+        if ($iOne && $iTwo) {
+            $PDO->commit();
+        }else{
+            $PDO->rollback();
+        }
+        */
 
 
         //同一Model调用多次方法，如分页需要用到  ---start
@@ -110,7 +129,7 @@ class C_Test extends Web_Base{
         $Redis = Redis();
         $Redis->set('xx','xxxx');
 
-        //Page
+        //分页类
         $Page = new Page(1);
         echo $Page->getPage(
                 DB()->getUser()
@@ -123,6 +142,7 @@ class C_Test extends Web_Base{
             echo $data;
         }
 
+        #图片处理:缩放、裁切、水印
         /*
         $image = new Image(
             "/home/zhangyinfei/project/test/data/file/1419907292.jpg",
@@ -156,14 +176,16 @@ class C_Test extends Web_Base{
         //echo $this->fetch('/test/test/show');
 
         //$this->display('show');
-        //$this->disableTpl(); #no display
+        //$this->disableTpl(); #不加载模板
+        //$this->enableTpl(); #开启模板
         //$this->display('/test/test/show');
-        //$this->display();         //test/test/default
-        //$this->display(null);     //disable template
+        //$this->display();         //自动模板 -> 路由  test/test/default
+        //$this->display(null);     //不加载模板
     }
 
     public function actionDefault_POST()
     {
+        //文件上传处理
         $File = new File(
             'file',
             '/home/zhangyinfei/project/test/data/file',
@@ -180,5 +202,13 @@ class C_Test extends Web_Base{
     public static function saveFileName($aFileInfo)
     {
         return time();
+    }
+
+    /**
+     *  After
+     **/
+    public function __after__()
+    {
+        echo "<br>After...</br>";
     }
 }

@@ -16,6 +16,7 @@ namespace Hummer\Component\RDS;
 
 use Hummer\Component\RDS\CURD;
 use Hummer\Component\Helper\Arr;
+use Hummer\Component\Helper\Helper;
 
 class Factory {
     private static $_aDBConfig;
@@ -44,30 +45,37 @@ class Factory {
         if (($sModel = substr($sModel, 3)) !== false) {
             $aArgs   = (array)$aArgs;
             $sModel  = sprintf('%s %s', $sModel, array_shift($aArgs));
-            return $this->get($sModel);
+            return $this->get($sModel, array_shift($aArgs));
         }
         return false;
     }
 
     private static $_aCURD;
+    private static $_aDB;
     private static $_aModel;
     /**
      *  @param $sModelName  string Model
      *      ex: user | user u
      **/
-    public function get($sModelName, array $aArgs=null)
+    public function get($sModelName, $sDB = '')
     {
-        $sModelName = str_replace(' ', '|', trim($sModelName));
+        $sModelName = str_replace(' ', '|', Helper::TrimInValidURI(trim($sModelName), '  ', ' '));
         $sRealModel = self::getRealModel($sModelName);
-        if (!isset(self::$_aModel[$sModelName])) {
-            $CURD  = $this->initCURD($sModelName);
-            $aConf = Arr::get(self::$_aModelConf, $sRealModel,array());
-
+        #config
+        $aConf = Arr::get(self::$_aModelConf, $sRealModel,array());
+        $sDB   = Helper::TOOP($sDB, $sDB, Arr::get($aConf, 'db', $this->_sDefaultDB));
+        $CURD = Helper::TOOP(
+            isset(self::$_aDB[$sDB]),
+            self::$_aDB[$sDB],
+            $this->initCURD($sModelName, $sDB)
+        );
+        $_sTmpModel = sprintf('%s_%s', $sDB, $sRealModel);
+        if (!isset(self::$_aModel[$_sTmpModel])) {
             $sModelClassName = isset($aConf['model_class']) ?
                 self::$_sAppModelNS . '\\' . $aConf['model_class'] :
                 self::$_sDefaultModelClass;
 
-            self::$_aModel[$sModelName] = new $sModelClassName(
+            self::$_aModel[$_sTmpModel] = new $sModelClassName(
                 $sModelName,
                 $CURD,
                 $aConf,
@@ -75,8 +83,8 @@ class Factory {
             );
         }
         #init Model
-        self::$_aModel[$sModelName]->initModel($sModelName);
-        return self::$_aModel[$sModelName];
+        self::$_aModel[$_sTmpModel]->initModel($sModelName);
+        return self::$_aModel[$_sTmpModel];
     }
 
     public static function getRealModel($sModelName)
@@ -89,12 +97,9 @@ class Factory {
         return ucfirst($sRealModel);
     }
 
-    public function initCURD($sModelName)
+    public function initCURD($sModelName, $sModelDB=null)
     {
         $sRealModel = self::getRealModel($sModelName);
-        $sModelDB = isset(self::$_aModelConf[$sRealModel]) ?
-            Arr::get(self::$_aModelConf[$sRealModel], 'db', $this->_sDefaultDB) :
-            $this->_sDefaultDB;
 
         if (!isset(self::$_aCURD[$sModelDB])) {
             if (!array_key_exists($this->_sDefaultDB, self::$_aDBConfig)) {
