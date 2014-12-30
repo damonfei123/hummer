@@ -110,7 +110,7 @@ class C_Test extends Web_Base{
         $Redis->set('xx','xxxx');
 
         //Page
-        $Page = new Page($this->HttpRequest, 1);
+        $Page = new Page(1);
         echo $Page->getPage(
                 DB()->getUser()
                     ->select('u2.id,u2.name')
@@ -133,8 +133,12 @@ class C_Test extends Web_Base{
 
     public function actionDefault_POST()
     {
-        $File = new File('file','/home/zhangyinfei/project/test/data/file/');
+        $File = new File(
+            'file',
+            '/home/zhangyinfei/project/test/data/file/',
+            array('ext' => 'image,txt')
+        );
+        //上传
         pr($File->upload());
     }
-
 }

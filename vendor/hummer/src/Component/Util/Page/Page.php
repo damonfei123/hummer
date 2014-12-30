@@ -16,23 +16,42 @@ namespace Hummer\Component\Util\Page;
 
 use Hummer\Component\Helper\Arr;
 use Hummer\Component\Helper\Helper;
+use Hummer\Component\Context\Context;
 
 class Page {
 
+    /**
+     *  @var $HttpRequest Context::HttpRequest
+     **/
     protected $HttpRequest;
+
+    /**
+     *  @var $iNumPerPage Per num in every Page
+     **/
     protected $iNumPerPage;
+
+    /**
+     *  @var $mDefaultRender array Render to show
+     **/
     protected $mDefaultRender;
+
+    /**
+     *  @var $sPageStyle string page info style
+     **/
     protected $sPageStyle;
+
+    /**
+     *  @var $aPageConfig array page config
+     **/
     protected $aPageConfig;
 
     public function __construct(
-        $HttpRequest,
         $iNumPerPage=10,
         $aPageConfig=array(),
         $sPageStyle=null,
         $mDefaultRender = array('Hummer\\Component\\Util\\Page\\Page', 'defaultRender')
     ) {
-        $this->HttpRequest    = $HttpRequest;
+        $this->HttpRequest    = Context::getInst()->HttpRequest;
         $this->sPageStyle     = $sPageStyle;
         $this->aPageConfig    = (array)$aPageConfig;
         $this->iNumPerPage    = (int)$iNumPerPage;

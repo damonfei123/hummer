@@ -18,6 +18,7 @@ use Hummer\Component\Helper\Arr;
 use Hummer\Component\Helper\Helper;
 
 class Session{
+
     public function __construct()
     {
         session_start();

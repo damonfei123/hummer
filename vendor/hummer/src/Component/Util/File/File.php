@@ -20,10 +20,24 @@ use Hummer\Component\Helper\Helper;
 
 class File{
 
+    /**
+     *  @var $_REQ HttpRequest
+     **/
     protected $_REQ;
-    protected $_aSavePath;
+
+    /**
+     *  @var $_aFileInfo upload file info
+     **/
     protected $_aFileInfo;
+
+    /**
+     * @var $_sSavePath upload save file to dir
+     **/
     protected $_sSavePath;
+
+    /**
+     * @var $_aConfig file upload config
+     **/
     protected $_aConfig;
 
     public function __construct(
@@ -38,8 +52,61 @@ class File{
         $this->aConfig        = array_merge(array(
             'ext'   => '*',
             'max'   => 200000
-        ),$aConfig);
+        ),$this->parseExt($aConfig));
         $this->_aSaveFileName = $aSaveFileName;
+    }
+
+    /**
+     *  Parse file config
+     *  @param ext : jpg,png | image -> image ext,like jpg,png,bmp...
+     **/
+    protected function parseExt(array $aConfig = array())
+    {
+        $_aConfig = array();
+        $sExt     = Arr::get($aConfig, 'ext', '');
+        $aExt     = explode(',', $sExt);
+        foreach ($aExt as &$ext) {
+            if ($ext == 'image') {
+                $ext = 'jpg,png,bmp,gif';
+            }
+        }
+        $aConfig['ext'] = join(',', $aExt);
+        return $aConfig;
+    }
+
+    /**
+     *  file upload
+     **/
+    public function upload()
+    {
+        $iErrCode = 0;
+        if (!$this->_aFileInfo) {
+            $iErr = ERR_NOFILE;
+            goto END;
+        }
+        if ($iErrCode=$this->checkFile()) {
+            goto END;
+        }
+        $sFileFullName = $this->getFileFullName();
+        if(!move_uploaded_file($this->_aFileInfo['tmp_name'], $this->getSaveFilePath())) {
+            $iErrCode = self::ERR_FILE_UPLOAD_FAIL;
+            goto END;
+        }
+
+        END:
+        if (0 != $iErrCode) {
+            $aRet = array(
+                'iErrCode' => $iErrCode,
+                'err_msg' => $this->getErrorMsg($iErrCode)
+            );
+        }else{
+            $aRet = array(
+                'iErrCode'  => 0,
+                'filename'  => $sFileFullName,
+                'filepath'  => $this->getSaveFilePath()
+            );
+        }
+        return $aRet;
     }
 
     public static function getFileName($aFileInfo)
@@ -58,6 +125,7 @@ class File{
      *  @var file pull path
      **/
     protected $_sTmpSaveFilePath = null;
+
     public function getSaveFilePath()
     {
         if (is_null($this->_sTmpSaveFilePath)) {
@@ -81,7 +149,7 @@ class File{
     public function isAllowFile()
     {
         return $this->aConfig['ext'] == '*' ||
-            in_array($this->getFileExt, array_map('strtolower',explode(',',$this->aConfg)));
+            in_array($this->getFileExt(), array_map('strtolower',explode(',',$this->aConfig['ext'])));
     }
 
     public function isBigFile()
@@ -128,38 +196,6 @@ class File{
             self::ERR_FILE_EXISTS       => '文件已存在'
         );
         return Arr::get($aErrMsg, $iErrCode, '未知错误');
-    }
-
-    public function upload()
-    {
-        $iErrCode = 0;
-        if (!$this->_aFileInfo) {
-            $iErr = ERR_NOFILE;
-            goto END;
-        }
-        if ($iErrCode=$this->checkFile()) {
-            goto END;
-        }
-        $sFileFullName = $this->getFileFullName();
-        if(!move_uploaded_file($this->_aFileInfo['tmp_name'], $this->getSaveFilePath())) {
-            $iErrCode = self::ERR_FILE_UPLOAD_FAIL;
-            goto END;
-        }
-
-        END:
-        if (0 != $iErrCode) {
-            $aRet = array(
-                'iErrCode' => $iErrCode,
-                'err_msg' => $this->getErrorMsg($iErrCode)
-            );
-        }else{
-            $aRet = array(
-                'iErrCode'  => 0,
-                'filename'  => $sFileFullName,
-                'filepath'  => $this->getSaveFilePath()
-            );
-        }
-        return $aRet;
     }
 
     public function checkFile()
