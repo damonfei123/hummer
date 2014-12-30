@@ -47,12 +47,12 @@ class File{
         $aSaveFileName = array('\\Hummer\\Component\\Util\\File\\File', 'getFileName')
     ) {
         $this->_REQ           = Context::getInst()->HttpRequest;
-        $this->_sSavePath     = $sSavePath;
+        $this->_sSavePath     = Helper::TrimEnd($sSavePath,'/', 'r');
         $this->_aFileInfo     = $this->_REQ->getF($sFile);
         $this->aConfig        = array_merge(array(
-            'ext'   => '*',
-            'max'   => 2*1024*1024
-        ),$this->parseExt($aConfig));
+            'ext' => '*',
+            'max' => 2*1024*1024
+        ), $this->parseExt($aConfig));
         $this->_aSaveFileName = $aSaveFileName;
     }
 
@@ -185,13 +185,14 @@ class File{
         return $iErrCode;
     }
 
-    const ERR_NOFILE            = 10001;
-    const ERR_UPLOAD_WAY_ERR    = 10002;
-    const ERR_FILE_NOT_ALLOWED  = 10003;
-    const ERR_FILE_BIG          = 10004;
-    const ERR_HTTP_FILE_PARTY   = 10005;
-    const ERR_FILE_UPLOAD_FAIL  = 10006;
-    const ERR_FILE_EXISTS       = 10007;
+    const ERR_NOFILE                = 10001;
+    const ERR_SAVE_DIR_NOT_EXISTS   = 10002;
+    const ERR_UPLOAD_WAY_ERR        = 10003;
+    const ERR_FILE_NOT_ALLOWED      = 10004;
+    const ERR_FILE_BIG              = 10005;
+    const ERR_HTTP_FILE_PARTY       = 10006;
+    const ERR_FILE_UPLOAD_FAIL      = 10007;
+    const ERR_FILE_EXISTS           = 10008;
 
     public function getErrorMsg($iErrCode=null)
     {
@@ -202,7 +203,8 @@ class File{
             self::ERR_FILE_BIG          => '上传文件过大',
             self::ERR_HTTP_FILE_PARTY   => '只有部分文件上传',
             self::ERR_FILE_UPLOAD_FAIL  => '上传文件错误',
-            self::ERR_FILE_EXISTS       => '文件已存在'
+            self::ERR_FILE_EXISTS       => '文件已存在',
+            self::ERR_SAVE_DIR_NOT_EXISTS => '上传目录不存在'
         );
         return Arr::get($aErrMsg, $iErrCode, '未知错误');
     }
@@ -210,6 +212,11 @@ class File{
     public function checkFile()
     {
         $iErrCode = 0;
+        #save path not exists or unwritable
+        if (!file_exists($this->_sSavePath) || !is_writeable($this->_sSavePath)) {
+            $iErrCode = self::ERR_SAVE_DIR_NOT_EXISTS;
+            goto END;
+        }
         #file exists
         if (file_exists($this->getSaveFilePath())) {
             $iErrCode = self::ERR_FILE_EXISTS;

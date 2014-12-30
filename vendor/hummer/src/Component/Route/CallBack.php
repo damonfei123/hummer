@@ -15,7 +15,7 @@
 namespace Hummer\Component\Route;
 
 use Hummer\Component\Helper\Arr;
-use Hummer\Component\Context\InvalidClassException;
+use Hummer\Component\Route\RouteErrorException;
 
 class CallBack{
 
@@ -32,7 +32,7 @@ class CallBack{
         $mClassOrObject = $this->mCallable[0];
         if (is_string($mClassOrObject)) {
             if (!class_exists($mClassOrObject)) {
-                throw new InvalidClassException("[class] : $mClassOrObject does not exsits");
+                throw new RouteErrorException("[class] : $mClassOrObject does not exsits");
             }
             $Ref = new \ReflectionClass($mClassOrObject);
             $this->mCallable[0] = $mClassOrObject = $Ref->newInstanceArgs();

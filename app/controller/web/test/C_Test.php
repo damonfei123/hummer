@@ -135,10 +135,19 @@ class C_Test extends Web_Base{
     {
         $File = new File(
             'file',
-            '/home/zhangyinfei/project/test/data/file/',
+            '/home/zhangyinfei/project/test/data/file',
             array('ext' => 'image,txt', 'max' => '4M')
+            //array(__NAMESPACE__.'\\C_Test','saveFileName')#自定义文件存储名称
         );
         //上传
         pr($File->upload());
+    }
+
+    /**
+     *  如果上传的文件需要自定义文件名，可以直接外部定义
+     **/
+    public static function saveFileName($aFileInfo)
+    {
+        return time();
     }
 }
