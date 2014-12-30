@@ -136,7 +136,7 @@ class C_Test extends Web_Base{
         $File = new File(
             'file',
             '/home/zhangyinfei/project/test/data/file/',
-            array('ext' => 'image,txt')
+            array('ext' => 'image,txt', 'max' => '4M')
         );
         //上传
         pr($File->upload());

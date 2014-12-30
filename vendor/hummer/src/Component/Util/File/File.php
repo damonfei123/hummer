@@ -51,7 +51,7 @@ class File{
         $this->_aFileInfo     = $this->_REQ->getF($sFile);
         $this->aConfig        = array_merge(array(
             'ext'   => '*',
-            'max'   => 200000
+            'max'   => 2*1024*1024
         ),$this->parseExt($aConfig));
         $this->_aSaveFileName = $aSaveFileName;
     }
@@ -63,6 +63,7 @@ class File{
     protected function parseExt(array $aConfig = array())
     {
         $_aConfig = array();
+        #Ext
         $sExt     = Arr::get($aConfig, 'ext', '');
         $aExt     = explode(',', $sExt);
         foreach ($aExt as &$ext) {
@@ -71,6 +72,14 @@ class File{
             }
         }
         $aConfig['ext'] = join(',', $aExt);
+        #max
+        $sMax   = Arr::get($aConfig, 'max', '');
+        $sUnit  = strtoupper($sMax[strlen($sMax) - 1]);
+        if ('M' == $sUnit) {
+            $aConfig['max'] = (int)$sMax * 1024 * 1024;
+        }elseif('K' == $sUnit){
+            $aConfig['max'] = (int)$sMax * 1024;
+        }
         return $aConfig;
     }
 
@@ -154,7 +163,7 @@ class File{
 
     public function isBigFile()
     {
-        return $this->aConfig['max'] && $this->_aFileInfo['size'] > $this->aConfig['max'];
+        return isset($this->aConfig['max']) && $this->_aFileInfo['size'] > $this->aConfig['max'];
     }
 
     public function checkHttpUpload()
@@ -222,7 +231,7 @@ class File{
             goto END;
         }
         #size
-        if (!$this->isBigFile()) {
+        if ($this->isBigFile()) {
             $iErrCode = self::ERR_FILE_BIG;
             goto END;
         }
