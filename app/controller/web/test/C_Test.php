@@ -4,6 +4,7 @@ namespace App\controller\web\test;
 use App\system\controller\Web_Base;
 use Hummer\Component\Util\Page\Page;
 use Hummer\Component\Util\File\File;
+use Hummer\Component\Util\Image\Image;
 
 class C_Test extends Web_Base{
 
@@ -121,6 +122,35 @@ class C_Test extends Web_Base{
         foreach ($aList as $data) {
             echo $data;
         }
+
+        /*
+        $image = new Image(
+            "/home/zhangyinfei/project/test/data/file/1419907292.jpg",
+            1,
+            "300",
+            "500",
+            "/home/zhangyinfei/project/test/data/file/resize.jpg"
+        ); //使用图片缩放功能
+        */
+        /*
+        $image = new Image(
+            "/home/zhangyinfei/project/test/data/file/1419907292.jpg",
+            2,
+            "0,0",
+            "50,50",
+            "/home/zhangyinfei/project/test/data/file/cop.jpg"
+        ); //图片裁剪
+        */
+        /*
+        $image = new Image(
+            "/home/zhangyinfei/project/test/data/file/1419907292.jpg",
+            3,
+            "/home/zhangyinfei/project/test/data/file/cop.jpg",
+            "0",
+            "/home/zhangyinfei/project/test/data/file/water.jpg"
+        ); //图片裁剪
+        $image->outimage();
+        */
 
         //echo $this->fetch('show');
         //echo $this->fetch('/test/test/show');
