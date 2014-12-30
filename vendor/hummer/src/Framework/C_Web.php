@@ -79,11 +79,17 @@ class C_Web extends C_Base{
     {
         $this->bEnableTpl = false;
     }
+    public function enableTpl()
+    {
+        $this->bEnableTpl = true;
+    }
 
     public function __destruct()
     {
-        if ($this->bEnableTpl && !$this->bCalledDisplay &&
-            $this->HttpRequest->getRequestURI() === 'GET'
+        if ($this->bEnableTpl &&
+            !$this->bCalledDisplay &&
+            !$this->HttpRequest->isAjax() &&
+            $this->HttpRequest->getRequestMethod() === 'GET'
         ) {
             $this->display();
         }

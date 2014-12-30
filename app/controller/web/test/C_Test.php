@@ -155,7 +155,8 @@ class C_Test extends Web_Base{
         //echo $this->fetch('show');
         //echo $this->fetch('/test/test/show');
 
-        $this->display('show');
+        //$this->display('show');
+        //$this->disableTpl(); #no display
         //$this->display('/test/test/show');
         //$this->display();         //test/test/default
         //$this->display(null);     //disable template
