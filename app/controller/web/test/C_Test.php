@@ -178,6 +178,9 @@ class C_Test extends Web_Base{
         $image->outimage();
         */
 
+        $this->assign('Name', 'damon');
+        $this->assign('FirstName', array('John', 'Mary', 'James', 'Henry'));
+        $this->assign('LastName', array('Doe', 'Smith', 'Johnson', 'Case'));
         //echo $this->fetch('show');
         //echo $this->fetch('/test/test/show');
 
@@ -187,9 +190,12 @@ class C_Test extends Web_Base{
         //$this->display('/test/test/show');
         //$this->display();         //自动模板 -> 路由  test/test/default
         //$this->display(null);     //不加载模板
-        $this->assign('Name', 'damon');
-        $this->assign('FirstName', array('John', 'Mary', 'James', 'Henry'));
-        $this->assign('LastName', array('Doe', 'Smith', 'Johnson', 'Case'));
+
+        /**
+         *  断开HTTP链接，响应完用户请求后可以做一些事后操作，比如日志
+         **/
+        //$this->HttpResponse->httpFastClose();
+        //这里写日志，防止日志影响用户响应速度.....
     }
 
     public function actionDefault_POST()

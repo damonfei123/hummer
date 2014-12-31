@@ -76,6 +76,14 @@ class HttpResponse{
         $this->BagHeader->set(array('Location' => $sURL), $bOverWrite);
     }
 
+    public function httpFastClose()
+    {
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+        return true;
+    }
+
     protected $aPreCookie = array();
     public function setCookie(
         $sName,
