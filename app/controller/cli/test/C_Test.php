@@ -21,7 +21,5 @@ class C_Test extends Cli_Base {
             echo $User->name;
         }
         pr($aParam);
-        echo $this->fetch('show');
-        echo $this->fetch('/test/test/show');
     }
 }

@@ -187,6 +187,9 @@ class C_Test extends Web_Base{
         //$this->display('/test/test/show');
         //$this->display();         //自动模板 -> 路由  test/test/default
         //$this->display(null);     //不加载模板
+        $this->assign('Name', 'damon');
+        $this->assign('FirstName', array('John', 'Mary', 'James', 'Henry'));
+        $this->assign('LastName', array('Doe', 'Smith', 'Johnson', 'Case'));
     }
 
     public function actionDefault_POST()
