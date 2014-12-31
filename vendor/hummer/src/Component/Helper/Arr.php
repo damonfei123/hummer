@@ -21,7 +21,7 @@ class Arr{
         return isset($aData[$sKey]) ? $aData[$sKey] : $sDefault;
     }
 
-    public function changeIndex(array $aArr, $sKey='id')
+    public static function changeIndex(array $aArr, $sKey='id')
     {
         $aRetArr = array();
         foreach ($aArr as $Arr) {
@@ -30,7 +30,7 @@ class Arr{
         return $aRetArr;
     }
 
-    public function changeIndexToKVMap(array $aArr, $sKey, $sVal)
+    public static function changeIndexToKVMap(array $aArr, $sKey, $sVal)
     {
         $aRetArr = array();
         foreach ($aArr as $Arr) {

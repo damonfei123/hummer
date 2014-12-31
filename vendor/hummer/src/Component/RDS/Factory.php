@@ -56,7 +56,7 @@ class Factory {
         array $_aModelConfig,  //Model config
         $_sAppModelNS        = '',
         $_sDefaultModelClass = 'Hummer\\Component\\RDS\\Model\\Model',
-        $_aAopCallBack
+        $_aAopCallBack = null
     ) {
         self::$_aDBConfig          = $_aDBConfig;
         self::$_aAopCallBack       = $_aAopCallBack;

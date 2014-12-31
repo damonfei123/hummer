@@ -525,7 +525,6 @@ class CURD {
     public function resetCondition()
     {
         $this->bTmpSelectPK = false;
-        $this->sPrimaryKey  = 'id';
 
         $this->aTableAsMap = array();
         $this->aWhere      = array();

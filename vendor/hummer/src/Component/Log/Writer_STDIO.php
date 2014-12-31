@@ -54,7 +54,7 @@ class Writer_STDIO implements IWriter {
             ) . PHP_EOL;
 
             #flush to STDIO
-            fprintf(STDOUT, sprintf('[%s]%s', $this->sGUID, $sLogMsg), null);
+            fprintf(STDOUT, sprintf('%s', $sLogMsg), null);
         }
     }
 

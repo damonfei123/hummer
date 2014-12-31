@@ -66,7 +66,7 @@ class Model{
 
         #primary key
         if (isset($aConfig['pk'])) {
-            $this->CURD->sPrimaryKey($aConfig['pk']);
+            $this->CURD->sPrimaryKey = $aConfig['pk'];
         }
     }
 
