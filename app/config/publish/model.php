@@ -1,7 +1,14 @@
 <?php
 return array(
-    'User' => array(
+    'ActionInfo' => array(
+        'table'       => 'action_info',
         'db'          => 'default',
+        'pk'          => 'auto_id',
+        'model_class' => 'Model_ActionInfo',
+        'item_class'  => 'Item_ActionInfo'
+    ),
+    'User' => array(
+        'db'          => 'slave',
         'model_class' => 'Model_User'
     ),
     'User2' => array(

@@ -4,9 +4,9 @@ return array(
     'db' => array(
         #Master
         'default' => array(
-            'dsn'       => 'mysql:host=172.17.181.135;dbname=damon',
-            'username'  => 'root',
-            'password'  => 'entsafe',
+            'dsn'       => 'mysql:host=10.58.185.13;dbname=anti_cheat',
+            'username'  => 'anti_lulina',
+            'password'  => 'read!anti@lulina',
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
@@ -15,10 +15,10 @@ return array(
             'aAopCallBack' => \Hummer\Component\RDS\AopPDO::$aAopPreExecCost
         ),
         #slave
-        'default_slave' => array(
-            'dsn'       => 'mysql:host=172.17.181.135;dbname=youqian',
-            'username'  => 'root',
-            'password'  => 'entsafe',
+        'slave' => array(
+            'dsn'       => 'mysql:host=10.212.117.53;dbname=youqian',
+            'username'  => 'dt_guest',
+            'password'  => 'read!dt@guest',
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,

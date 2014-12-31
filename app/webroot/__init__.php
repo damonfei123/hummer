@@ -7,6 +7,11 @@ function DB() {
     return CTX()->RDB;
 }
 
+function CFG()
+{
+    return CTX()->Config;
+}
+
 function Redis()
 {
     return CTX()->Redis;

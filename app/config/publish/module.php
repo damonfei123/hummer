@@ -23,8 +23,8 @@ return array(
         'class'  => 'Hummer\\Component\\Log\\Logger',
         'params' => array(
             array(
-                'File'   => array('\@File','/tmp/Hummer_cli_Log_{date}/hummer_{level}_{date}.log'),
-                'STDIO'  => array('\@STDIO')
+                'File'  => array('\@File','/tmp/Hummer_cli_Log_{date}/hummer_{level}_{date}.log'),
+                'STDIO' => array('\@STDIO')
             ),
             Logger::LEVEL_ALL
         ),
@@ -53,7 +53,7 @@ return array(
             '@model',
             'App\\model',
             'Hummer\\Component\\RDS\\Model\\Model',
-            \Hummer\Component\RDS\AopPDO::$aAopPreExecCost
+            //\Hummer\Component\RDS\AopPDO::$aAopPreExecCost
         ),
     ),
     array(
@@ -65,5 +65,13 @@ return array(
         'module' => 'Session',
         'class'  => 'Hummer\\Component\\Session\\Session',
         'params' => array(),
+    ),
+    array(
+        'module' => 'CacheFile',
+        'class'  => 'Hummer\\Component\\Cache\\Cache',
+        'params' => array(
+            '\@File',
+            '/home/zhangyinfei/project/test/data/HCache/'
+        )
     ),
 );
