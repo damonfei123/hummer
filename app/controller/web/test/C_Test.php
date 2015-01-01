@@ -92,6 +92,24 @@ class C_Test extends Web_Base{
         #添加
         //echo DB()->getData()->data(array('age' => rand(0,100)))->save();
         //echo DB()->getData()->add(array('age' => 12));
+        /*
+        //为了效率，这里采用values(?,?),(?,?),(?,?)的形式，多项数据一条sql插件
+        $aBatchData = array(
+            array(
+                'name' => "'data2'",
+                'age'  => 11
+            ),
+            array(
+                'name' => 'data',
+                'age'  => 12
+            ),
+            array(
+                'name' => "'data9'",
+                'age'  => 15
+            ),
+        );
+        DB()->getUser()->batchSave($aBatchData, 2);
+        */
 
         #删除
         //DB()->getData()->where(array('id BETWEEN' => array(7,9)))->delete();

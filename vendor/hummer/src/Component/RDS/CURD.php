@@ -286,6 +286,48 @@ class CURD {
         return $this->Instance->lastInsertId();
     }
 
+    /**
+     *  Batch Save Data
+     **/
+    public function batchSave(array $aSaveData=array(), $iChunk = 1)
+    {
+        if (count($aSaveData) == 0) {
+            return true;
+        }
+        //Column
+        $sBaseSQL = sprintf('INSERT INTO %s(%s) VALUES',
+            $this->getRealMapTable(),
+            join(',', array_keys($aSaveData[0]))
+        );
+        $iChunkNum = 0;
+        $iColumn   = count($aSaveData[0]);
+        $this->begin();
+        $bChunkSave = true;
+        while ($aChunkData=array_slice($aSaveData, $iChunkNum*$iChunk, $iChunk))
+        {
+            $aChunkBind = $aChunkColumn = array();
+            foreach ($aChunkData as $aCData) {
+                $aTmpColumn = array();
+                for ($i = 0; $i < $iColumn; $i++) {
+                    $aTmpColumn[] = '?';
+                }
+                $aChunkColumn[] = sprintf('(%s)', implode(',', $aTmpColumn));
+                foreach ($aCData as $mV) {
+                    $aChunkBind[]   = $mV;
+                }
+            }
+            $sChunkSQL = sprintf('%s%s',$sBaseSQL, implode(',', $aChunkColumn));
+            if(!($bChunkSave=$this->exec($sChunkSQL, $aChunkBind))){
+                goto END;
+            }
+            $iChunkNum++;
+        }
+
+        END:
+        $bChunkSave ? $this->commit() : $this->rollback();
+        return $bChunkSave;
+    }
+
     public function add($aSaveData=array())
     {
         return $this->save($aSaveData);

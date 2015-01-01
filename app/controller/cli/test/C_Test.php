@@ -7,10 +7,15 @@ use Hummer\Component\Helper\Arr;
 
 class C_Test extends Cli_Base {
 
+    public function actionBatch()
+    {
+    }
+
     public function actionCache()
     {
-        $Cache = CTX()->CacheFile;
-        $Cache->store('user',array(1,3), 86400);
+        //$Cache = CTX()->CacheFile;
+        //$Cache->store('user',array(1,3), 86400);
+        //$Cache->delete('user');
         //$Cache->store('user',CTX()->Redis);//存储一天
         //var_export($Cache->fetch('user'));
     }

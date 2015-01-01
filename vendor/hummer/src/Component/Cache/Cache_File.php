@@ -78,8 +78,8 @@ class Cache_File implements ICache{
      **/
     public function delete($sKey)
     {
-        if(file_exists($this->getStoreFile($sKey))){
-            @unlink($this->getStoreFile($sKey));
+        if(file_exists($sStoreFile=$this->getStoreFile($sKey))){
+            @unlink($sStoreFile);
         }
     }
 
@@ -92,7 +92,7 @@ class Cache_File implements ICache{
         $sSubDir       = substr(crc32($sKey), 0,2);
         $sCacheFullDir = sprintf('%s%s%s',$this->sCacheDir, $sSubDir, '/');
         if (!file_exists($sCacheFullDir) && !Dir::makeDir($sCacheFullDir)) {
-            throw new Exception('[Cache] : Store Dir not exists');
+            throw new \RuntimeException('[Cache] : Store Dir not exists And Make Fail');
         }
         return sprintf('%s%s',$sCacheFullDir, md5($sKey . self::__CACHE__KEY__));
     }

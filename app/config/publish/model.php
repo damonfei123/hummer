@@ -8,7 +8,6 @@ return array(
         'item_class'  => 'Item_ActionInfo'
     ),
     'User' => array(
-        'db'          => 'slave',
         'model_class' => 'Model_User'
     ),
     'User2' => array(

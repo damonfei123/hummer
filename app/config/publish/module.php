@@ -53,7 +53,7 @@ return array(
             '@model',
             'App\\model',
             'Hummer\\Component\\RDS\\Model\\Model',
-            //\Hummer\Component\RDS\AopPDO::$aAopPreExecCost
+            \Hummer\Component\RDS\AopPDO::$aAopPreExecCost
         ),
     ),
     array(
