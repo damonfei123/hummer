@@ -49,7 +49,7 @@ class Helper{
 
     public static function Mem()
     {
-        $size = memory_get_usage();
+        $size = memory_get_peak_usage(true);
         $unit = array('B','KB','MB','GB','TB','PB');
         return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
     }

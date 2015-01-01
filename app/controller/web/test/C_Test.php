@@ -144,6 +144,10 @@ class C_Test extends Web_Base{
         $User2->findMulti();
         DB()->getUser()->findMulti();
 
+
+        //$this->timeLimit(1);
+        //$this->memLimit();
+
         //Session
         $Session = CTX()->Session;
         $Session->set('name', 'damon');

@@ -40,6 +40,16 @@ class C_Base{
         }
     }
 
+    public function memLimit($iMem=-1)
+    {
+        ini_set('memory_limit', sprintf("%s",$iMem));
+    }
+
+    public function timeLimit($iTime=0)
+    {
+        set_time_limit($iTime);
+    }
+
     public function __destruct()
     {
     }

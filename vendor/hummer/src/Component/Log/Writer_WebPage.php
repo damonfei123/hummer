@@ -93,7 +93,7 @@ class Writer_WebPage implements IWriter{
     #Template_Log ul { list-style-type: none; zoom: 1; overflow: hidden; border-bottom: 1px dashed #ccc; }
     #Template_Log ul, #Template_Log .TPT_Detail { margin: 0 0px; padding: 0; }
     #Template_Log ul li{ float: left; height: 30px; line-height: 30px; padding: 2px 15px; background-color: #000; color: #FFF; cursor: pointer; }
-    #Template_Log .TPT_Detail { clear: both; padding: 0 10px; display: none; max-height: 650px; overflow-y: auto; overflow-x: hidden; }
+    #Template_Log .TPT_Detail { clear: both; padding: 0 10px; display: none; max-height: 550px; overflow-y: auto; overflow-x: hidden; }
     #Template_Log .TPT_Detail .TPT_Line { margin: 10px 0; border-bottom: 1px dashed #ccc; line-height: 30px; }
 
     <!-- CSS3 -->

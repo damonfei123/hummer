@@ -144,9 +144,18 @@ class Bootstrap{
             $Log->warn($E->getMessage());
         }
 
-        $Log->info(sprintf('RUN END: Time: %s ms, Mem: %s',
-            round(microtime(true) - $sTS, 6) * 1000,
+        $Log->info(sprintf('RUN END: Time: %s, Mem: %s',
+            self::humanTime(round(microtime(true) - $sTS, 6) * 1000),
             Helper::Mem()
         ));
     }
+
+    private static function humanTime($iMicsecond)
+    {
+        if ((int)$iMicsecond < 1000) {
+            return sprintf('%s%s', $iMicsecond, 'ms');
+        }
+        return gmstrftime('%H时%M分%S秒', $iMicsecond/1000);
+    }
+
 }
