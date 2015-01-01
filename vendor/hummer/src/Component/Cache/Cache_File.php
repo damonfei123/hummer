@@ -14,6 +14,7 @@
 **************************************************************************************/
 namespace Hummer\Component\Cache;
 
+use Hummer\Component\Helper\Dir;
 use Hummer\Component\Helper\Arr;
 use Hummer\Component\Helper\Helper;
 
@@ -34,7 +35,7 @@ class Cache_File implements ICache{
         if (!file_exists($sCacheDir) || !is_writable($sCacheDir)) {
             throw new \InvalidArgumentException('[cache] : File Error(not exists or unwritable)');
         }
-        $this->sCacheDir = $sCacheDir;
+        $this->sCacheDir = Helper::TrimEnd($sCacheDir, '/', 'r');
     }
 
     /**
@@ -84,12 +85,15 @@ class Cache_File implements ICache{
 
     /**
      *  Get Save File
+     *  Hash Storage
      **/
     protected function getStoreFile($sKey)
     {
-        return sprintf('%s%s',
-            Helper::TrimEnd($this->sCacheDir, '/', 'r'),
-            md5($sKey . self::__CACHE__KEY__)
-       );
+        $sSubDir       = substr(crc32($sKey), 0,2);
+        $sCacheFullDir = sprintf('%s%s%s',$this->sCacheDir, $sSubDir, '/');
+        if (!file_exists($sCacheFullDir) && !Dir::makeDir($sCacheFullDir)) {
+            throw new Exception('[Cache] : Store Dir not exists');
+        }
+        return sprintf('%s%s',$sCacheFullDir, md5($sKey . self::__CACHE__KEY__));
     }
 }
