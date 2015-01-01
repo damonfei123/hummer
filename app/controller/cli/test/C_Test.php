@@ -7,10 +7,6 @@ use Hummer\Component\Helper\Arr;
 
 class C_Test extends Cli_Base {
 
-    public function actionBatch()
-    {
-    }
-
     public function actionCache()
     {
         //$Cache = CTX()->CacheFile;

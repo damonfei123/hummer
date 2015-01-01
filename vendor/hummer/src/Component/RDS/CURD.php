@@ -289,7 +289,7 @@ class CURD {
     /**
      *  Batch Save Data
      **/
-    public function batchSave(array $aSaveData=array(), $iChunk = 1)
+    public function batchSave(array $aSaveData=array(), $iChunk = 1000)
     {
         if (count($aSaveData) == 0) {
             return true;
