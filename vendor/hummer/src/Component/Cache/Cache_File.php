@@ -40,7 +40,6 @@ class Cache_File implements ICache{
 
     /**
      *  Cache Data
-     *  Current Only For : array, int, string
      **/
     public function store($sKey, $mVal, $iExpire=null)
     {

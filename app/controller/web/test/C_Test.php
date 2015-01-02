@@ -16,6 +16,10 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
+        $User = DB()->getUser()->select('name')->findMulti();
+        foreach ($User as $user) {
+            echo $user;
+        }
         #查询
         /*
         DB()->get('user')->find();

@@ -8,6 +8,7 @@ return array(
         'item_class'  => 'Item_ActionInfo'
     ),
     'User' => array(
+        'pk'          => 'auto_id',
         'model_class' => 'Model_User'
     ),
     'User2' => array(

@@ -95,11 +95,13 @@ class Model{
 
     public function findMulti($mWhere=null)
     {
-        $aItems = $this->CURD->forceSelectPK()->querySmarty($mWhere);
+        $this->CURD   = $this->CURD->forceSelectPK();
+        $bTmpSelectPK = $this->CURD->bTmpSelectPK;
+        $aItems = $this->CURD->querySmarty($mWhere);
         $aGroup = array();
         foreach ($aItems as $aItem) {
             $mPK = $aItem[$this->sPrimaryKey];
-            //if ($this->CURD->bTmpSelectPK) unset($aItem[$this->sPrimaryKey]);
+            if ($bTmpSelectPK) unset($aItem[$this->sPrimaryKey]);
             $aGroup[$mPK] = new $this->sItemClassName($aItem, $this);
         }
         return $aGroup;
