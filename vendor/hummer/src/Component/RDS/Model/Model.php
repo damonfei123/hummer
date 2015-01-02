@@ -105,6 +105,50 @@ class Model{
         return $aGroup;
     }
 
+    /**
+     *  Batch Save Data
+     *  Use Transaction
+     **/
+    public function batchSave(array $aSaveData=array(), $iChunk = 1000)
+    {
+        if (count($aSaveData) == 0) {
+            return true;
+        }
+        $aColumnInfo = array_map(array($this->CURD, '_addQuote'), array_keys($aSaveData[0]));
+        //Column
+        $sBaseSQL = sprintf('INSERT INTO %s(%s) VALUES',
+            $this->CURD->getRealMapTable(),
+            join(',', $aColumnInfo)
+        );
+        $iChunkNum    = 0;
+        $bChunkSave   = true;
+        $sChunkColumn = sprintf('(%s)',
+            implode(',', array_pad(array(), count($aColumnInfo), '?'))
+        );
+        $this->CURD->begin();
+        while ($aChunkData=array_slice($aSaveData, $iChunkNum * $iChunk, $iChunk))
+        {
+            $aChunkBind   = array();
+            $aChunkColumn = array_pad(array(), count($aChunkData), $sChunkColumn);
+            foreach ($aChunkData as $aCData) {
+                $aChunkBind = array_merge($aChunkBind, array_values($aCData));
+            }
+            $sChunkSQL = sprintf('%s%s',$sBaseSQL, implode(',', $aChunkColumn));
+            if(!($bChunkSave=$this->CURD->exec($sChunkSQL, $aChunkBind))){
+                goto END;
+            }
+            $iChunkNum++;
+        }
+
+        END:
+        $bChunkSave ? $this->CURD->commit() : $this->CURD->rollback();
+        return $bChunkSave;
+    }
+    public function batchAdd(array $aSaveData=array(), $iChunk = 1000)
+    {
+        return $this->batchSave($aSaveData, $iChunk);
+    }
+
     public function __get($sVarName)
     {
         return property_exists($this->CURD, $sVarName) ?  $this->CURD->$sVarName : null;

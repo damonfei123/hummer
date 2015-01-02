@@ -286,54 +286,9 @@ class CURD {
         return $this->Instance->lastInsertId();
     }
 
-    /**
-     *  Batch Save Data
-     *  Use Transaction
-     **/
-    public function batchSave(array $aSaveData=array(), $iChunk = 1000)
-    {
-        if (count($aSaveData) == 0) {
-            return true;
-        }
-        $aColumnInfo = array_map(array($this, '_addQuote'), array_keys($aSaveData[0]));
-        //Column
-        $sBaseSQL = sprintf('INSERT INTO %s(%s) VALUES',
-            $this->getRealMapTable(),
-            join(',', $aColumnInfo)
-        );
-        $iChunkNum    = 0;
-        $bChunkSave   = true;
-        $sChunkColumn = sprintf('(%s)',
-            implode(',', array_pad(array(), count($aColumnInfo), '?'))
-        );
-        $this->begin();
-        while ($aChunkData=array_slice($aSaveData, $iChunkNum * $iChunk, $iChunk))
-        {
-            $aChunkBind   = array();
-            $aChunkColumn = array_pad(array(), count($aChunkData), $sChunkColumn);
-            foreach ($aChunkData as $aCData) {
-                $aChunkBind = array_merge($aChunkBind, array_values($aCData));
-            }
-            $sChunkSQL = sprintf('%s%s',$sBaseSQL, implode(',', $aChunkColumn));
-            if(!($bChunkSave=$this->exec($sChunkSQL, $aChunkBind))){
-                goto END;
-            }
-            $iChunkNum++;
-        }
-
-        END:
-        $bChunkSave ? $this->commit() : $this->rollback();
-        return $bChunkSave;
-    }
-
     public function add($aSaveData=array())
     {
         return $this->save($aSaveData);
-    }
-
-    public function batchAdd(array $aSaveData=array(), $iChunk = 1000)
-    {
-        return $this->batchSave($aSaveData, $iChunk);
     }
 
     public function findCount($mWhere=null)

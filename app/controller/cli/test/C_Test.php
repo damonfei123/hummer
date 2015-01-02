@@ -17,9 +17,17 @@ class C_Test extends Cli_Base {
             array(
                 'name' => 'data',
                 'age'  => 12
+            ),
+            array(
+                'name' => "'data2'",
+                'age'  => 11
+            ),
+            array(
+                'name' => 'data',
+                'age'  => 12
             )
         );
-        DB()->getUser()->batchSave($aBatchData, 20);
+        DB()->getUser()->batchSave($aBatchData, 3);
         //$Cache = CTX()->CacheFile;
         //$Cache->store('user',array(1,3), 86400);
         //$Cache->delete('user');
