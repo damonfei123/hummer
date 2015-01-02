@@ -513,7 +513,7 @@ class CURD {
         $iFetchMode=\PDO::FETCH_ASSOC,
         $bOnlyOne=false
     ) {
-        $STMT = $this->Instance->prepare($sSQL);
+        $STMT = $this->Instance->prepare(Helper::TrimInValidURI($sSQL, '  ', ' '));
         $STMT->execute($aArgs);
         $STMT->setFetchMode($iFetchMode ? $iFetchMode : \PDO::FETCH_ASSOC);
         if (!$this->bMulti) {

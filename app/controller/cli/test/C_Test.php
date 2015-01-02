@@ -9,6 +9,16 @@ class C_Test extends Cli_Base {
 
     public function actionCache()
     {
+        DB()->getUser()->find();
+        foreach(DB()->get('user u')
+            ->select('u.*')
+            ->where(array('u.auto_id between' => array(1,8)))
+            ->join('data d on u.auto_id = d.id')
+            ->findMulti() as $M
+        ){
+            echo $M->auto_id . '=>' . $M->name;
+            echo "<br/>";
+        }
         //$Cache = CTX()->CacheFile;
         //$Cache->store('user',array(1,3), 86400);
         //$Cache->delete('user');
