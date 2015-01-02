@@ -79,6 +79,18 @@ class C_Test extends Web_Base{
             echo "<br />";
         }
 
+        $Items = DB()->getUser()->findMulti();
+        foreach ($Items as $Item) {
+            if ($Item->isDamon()) {
+                echo 'Yes';
+            }
+        }
+
+        $Damons = DB()->getUser()->findDamon();
+        foreach ($Damons as $Damon) {
+            echo sprintf('%s->%s',$Damon->auto_id, $Damon->name);
+        }
+
         ///////程序读写分离,线上环境一定要注意从库不要有写权限///////////////
         //默认走配置的(主)库
         echo DB()->get('user')->find();

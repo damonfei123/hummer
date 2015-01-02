@@ -150,22 +150,22 @@ class CURD {
             !in_array($this->sPrimaryKey, $aSelect) &&
             false === strpos('.'.$this->sPrimaryKey, $this->sSelect)
         ) {
-            $aSelect[]          = $this->getTableAsMap() . '.' . $this->sPrimaryKey;
-            $this->bTmpSelectPK = true;
+            $aSelect[]          = sprintf('%s.%s', $this->getTableAsMap(), $this->sPrimaryKey);
             $this->sSelect      = join(',', $aSelect);
+            $this->bTmpSelectPK = true;
         }
         return $this;
     }
 
     public function limit($iStart, $iOffset=null)
     {
-        $this->sLimit = is_null($iOffset) ?
+        $this->sLimit = ($iOffset === null) ?
             sprintf(' LIMIT %d ', $iStart) :
             sprintf(' LIMIT %d, %d', $iStart, $iOffset);
         return $this;
     }
 
-    public function data($aData)
+    public function data(array $aData)
     {
         $this->aData = $aData;
         return $this;

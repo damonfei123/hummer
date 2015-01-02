@@ -157,5 +157,4 @@ class Bootstrap{
         }
         return gmstrftime('%H时%M分%S秒', $iMicsecond/1000);
     }
-
 }
