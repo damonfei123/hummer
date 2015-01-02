@@ -19,7 +19,8 @@ use Hummer\Component\Helper\Helper;
 
 spl_autoload_register(__NAMESPACE__.'\Autoload::autoload');
 
-define('TM_DIR', HM_DIR.'/Component/Template');
+!defined('APP_DIR') && trigger_error('[Autoload] : APP_DIR Not Defined');
+!defined('HM_DIR') && trigger_error('[Autoload]  : HM_DIR Not Defined');
 
 class Autoload{
 
@@ -79,4 +80,3 @@ class Autoload{
         END:
     }
 }
-

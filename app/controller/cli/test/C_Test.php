@@ -9,10 +9,21 @@ class C_Test extends Cli_Base {
 
     public function actionCache()
     {
+        $aBatchData = array(
+            array(
+                'name' => "'data2'",
+                'age'  => 11
+            ),
+            array(
+                'name' => 'data',
+                'age'  => 12
+            )
+        );
+        DB()->getUser()->batchSave($aBatchData, 20);
         //$Cache = CTX()->CacheFile;
         //$Cache->store('user',array(1,3), 86400);
         //$Cache->delete('user');
-        //$Cache->store('user',CTX()->Redis);//存储一天
+        //$Cache->store('user',CTX()->Redis);//默认存储一天
         //var_export($Cache->fetch('user'));
     }
 

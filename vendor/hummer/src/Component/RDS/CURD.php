@@ -288,33 +288,31 @@ class CURD {
 
     /**
      *  Batch Save Data
+     *  Use Transaction
      **/
     public function batchSave(array $aSaveData=array(), $iChunk = 1000)
     {
         if (count($aSaveData) == 0) {
             return true;
         }
+        $aColumnInfo = array_map(array($this, '_addQuote'), array_keys($aSaveData[0]));
         //Column
         $sBaseSQL = sprintf('INSERT INTO %s(%s) VALUES',
             $this->getRealMapTable(),
-            join(',', array_keys($aSaveData[0]))
+            join(',', $aColumnInfo)
         );
-        $iChunkNum = 0;
-        $iColumn   = count($aSaveData[0]);
+        $iChunkNum    = 0;
+        $bChunkSave   = true;
+        $sChunkColumn = sprintf('(%s)',
+            implode(',', array_pad(array(), count($aColumnInfo), '?'))
+        );
         $this->begin();
-        $bChunkSave = true;
-        while ($aChunkData=array_slice($aSaveData, $iChunkNum*$iChunk, $iChunk))
+        while ($aChunkData=array_slice($aSaveData, $iChunkNum * $iChunk, $iChunk))
         {
-            $aChunkBind = $aChunkColumn = array();
+            $aChunkBind   = array();
+            $aChunkColumn = array_pad(array(), count($aChunkData), $sChunkColumn);
             foreach ($aChunkData as $aCData) {
-                $aTmpColumn = array();
-                for ($i = 0; $i < $iColumn; $i++) {
-                    $aTmpColumn[] = '?';
-                }
-                $aChunkColumn[] = sprintf('(%s)', implode(',', $aTmpColumn));
-                foreach ($aCData as $mV) {
-                    $aChunkBind[]   = $mV;
-                }
+                $aChunkBind = array_merge($aChunkBind, array_values($aCData));
             }
             $sChunkSQL = sprintf('%s%s',$sBaseSQL, implode(',', $aChunkColumn));
             if(!($bChunkSave=$this->exec($sChunkSQL, $aChunkBind))){
@@ -331,6 +329,11 @@ class CURD {
     public function add($aSaveData=array())
     {
         return $this->save($aSaveData);
+    }
+
+    public function batchAdd(array $aSaveData=array(), $iChunk = 1000)
+    {
+        return $this->batchSave($aSaveData, $iChunk);
     }
 
     public function findCount($mWhere=null)

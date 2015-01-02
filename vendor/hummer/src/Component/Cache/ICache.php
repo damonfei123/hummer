@@ -16,10 +16,28 @@ namespace Hummer\Component\Cache;
 
 interface ICache{
 
+    /**
+     *  Store Data
+     *  @param $sKey
+     *  @param $mVal    Support except resource type
+     *  @param $iExpire Expire
+     *  @return boolean
+     **/
     public function store($sKey, $mVal, $iExpire = null);
 
-    public function fetch($sKey);
+    /**
+     *  Get Data
+     *  @param $sKey
+     *  @param $bGC Auto delete
+     *  @return null | val
+     **/
+    public function fetch($sKey, $bGC);
 
+    /**
+     *  delete Data
+     *  @param $sKey
+     *  @return boolean
+     **/
     public function delete($sKey);
 
 }

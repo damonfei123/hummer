@@ -15,7 +15,6 @@ define('CONTROLLER_DIR', APP_DIR  . '/controller/');
 
 require ROOT_DIR . '/vendor/autoload.php';
 
-
 Bootstrap::setHandle();
 $B = new Bootstrap(
     Configure::factory(
