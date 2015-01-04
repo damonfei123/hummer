@@ -9,6 +9,26 @@ class C_Test extends Cli_Base {
 
     public function actionCache()
     {
+        $Cache = CTX()->CacheFile;
+        $Cache->store('arr', array('张银飞',2,'Damon飞'));
+        //$Cache->store('arr', DB()->getUser()->findCustom(1));
+        pr($Cache->fetch('arr'));
+        /*
+        $aAllID   = unserialize(file_get_contents('id'));
+        $aChunkID = array_chunk($aAllID, 1000);
+        //找状态
+        $aUserInfo = array();
+        foreach ($aChunkID as $aUID) {
+            $aChunkInfo = DB()->getUser('u', 'backup')
+                ->select('id,name,status,channel_user_id,zone_user_id')
+                ->where(array('id in' => $aUID))
+                ->findCustom();
+            $aUserInfo += Arr::changeIndex($aChunkInfo);
+        }
+        foreach ($aUserInfo as $UserInfo) {
+            file_put_contents('idAllInfo.txt', implode(',', $UserInfo) . "\r\n", FILE_APPEND);
+        }
+        */
         //$Cache = CTX()->CacheFile;
         //$Cache->store('user',array(1,3), 86400);
         //$Cache->delete('user');

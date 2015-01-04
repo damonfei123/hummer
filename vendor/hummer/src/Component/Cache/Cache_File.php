@@ -46,9 +46,10 @@ class Cache_File implements ICache{
         if (is_resource($mVal)) {
             throw new \InvalidArgumentException('[Cache] : ERROR serialize can a resource');
         }
-        return !!file_put_contents($this->getStoreFile($sKey), sprintf('%s:%s',
+        return !!file_put_contents($this->getStoreFile($sKey), sprintf('%s:%s:%s',
             Helper::TOOP($iExpire, time() + $iExpire, time() + 86400),
-            serialize($mVal)
+            Helper::TOOP(is_object($mVal), 1, 2),
+            Helper::TOOP(is_object($mVal), serialize($mVal), json_encode($mVal))
         ));
     }
 
@@ -61,9 +62,16 @@ class Cache_File implements ICache{
         if (!file_exists($sStoreFile)) {
             return null;
         }
-        $sContent   = file_get_contents($sStoreFile);
-        $iExpire    = substr($sContent, 0, strpos($sContent, ':'));
-        $mStoreData = unserialize(substr($sContent, strpos($sContent, ':') + 1));
+        $sContent = file_get_contents($sStoreFile);
+        $iExpire  = substr($sContent, 0, strpos($sContent, ':'));
+        $sContent = substr($sContent, strpos($sContent, ':') + 1);
+        $iType    = substr($sContent, 0, strpos($sContent, ':'));
+        $sContent = substr($sContent, strpos($sContent, ':') + 1);
+        if (1 == $iType) {
+            $mStoreData = unserialize($sContent);
+        }else{
+            $mStoreData = json_decode($sContent,true);
+        }
         //expire
         if ($iExpire < time()) {
             if ($bGC) $this->delete($sKey);
