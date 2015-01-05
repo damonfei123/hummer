@@ -52,17 +52,17 @@ class Factory {
     private $_sDefaultDB = 'default';
 
     public function __construct(
-        array $_aDBConfig,     //DB config
-        array $_aModelConfig,  //Model config
-        $_sAppModelNS        = '',
-        $_sDefaultModelClass = 'Hummer\\Component\\RDS\\Model\\Model',
-        $_aAopCallBack = null
+        array $aDBConfig,     //DB config
+        array $aModelConfig,  //Model config
+        $sAppModelNS        = '',
+        $sDefaultModelClass = 'Hummer\\Component\\RDS\\Model\\Model',
+        $aAopCallBack = null
     ) {
-        self::$_aDBConfig          = $_aDBConfig;
-        self::$_aAopCallBack       = $_aAopCallBack;
-        self::$_aModelConf         = $_aModelConfig;
-        self::$_sAppModelNS        = $_sAppModelNS;
-        self::$_sDefaultModelClass = $_sDefaultModelClass;
+        self::$_aDBConfig          = $aDBConfig;
+        self::$_aModelConf         = $aModelConfig;
+        self::$_aAopCallBack       = $aAopCallBack;
+        self::$_sAppModelNS        = $sAppModelNS;
+        self::$_sDefaultModelClass = $sDefaultModelClass;
     }
 
     public function __call($sModel, $aArgs=array())
