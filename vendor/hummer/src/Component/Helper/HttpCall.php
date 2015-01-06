@@ -33,7 +33,10 @@ class HttpCall{
         array $aHeader = array(),
         array $aOptKV  = array()
     ) {
-        $sUrl = sprintf('%s&%s',$sUrl, Helper::TOOP($aParam,http_build_query($aParam),''));
+        $aUrlBlock = parse_url($sUrl);
+        $sQuery    = Arr::get($aUrlBlock,'query','');
+        parse_str($sQuery, $aQuery);
+        $sUrl = self::rebuildUrl($aUrlBlock, $aParam + $aQuery);
         if ($aHeader) {
             $aOptKV[CURLOPT_HTTPHEADER] = $aHeader;
         }
@@ -86,5 +89,19 @@ class HttpCall{
         $mResult = curl_exec($CURL);
         curl_close($CURL);
         return $mResult;
+    }
+
+    public static function rebuildUrl($aUrlBlock, array $aParam = array())
+    {
+        return sprintf('%s%s%s%s%s%s%s%s',
+            Arr::get($aUrlBlock, 'scheme', 'http') . '://',
+            isset($aUrlBlock['user']) ? $aUrlBlock['user'].':'   : '',
+            isset($aUrlBlock['pass']) ? $aUrlBlock['pass'].'@'   : '',
+            Arr::get($aUrlBlock, 'host', ''),
+            isset($aUrlBlock['port']) ? ':'.$aUrlBlock['port']   : '',
+            Arr::get($aUrlBlock, 'path', ''),
+            '?' . http_build_query($aParam),
+            isset($aUrlBlock['fragment'])? '#'.$aUrlBlock['fragment']   : ''
+        );
     }
 }
