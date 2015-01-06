@@ -18,12 +18,53 @@ class Dir{
 
     public static function makeDir($sDirName, $sPerm=0777)
     {
-        if (is_dir($sDirName) || is_file($sDirName)) {
+        if (File::Exists($sDirName)) {
             return true;
         }
         if (@mkdir($sDirName, $sPerm, true)) {
             return true;
         }
         return false;
+    }
+
+    /**
+     *  Get Dir File
+     *  @param $sDirName Dir Name
+     *  @param $bRecursion Get Dir File By Recursion
+     *  @param $aFile      Default File
+     *  @return array | null
+     **/
+    public static function showList($sDirName, $bRecursion=false, &$aFile=array())
+    {
+        if (self::Check($sDirName)) {
+            $Dir = opendir($sDirName);
+            while ($sFileName=readdir($Dir)) {
+                if (self::IsValidFileName($sFileName)) {
+                    if (is_dir($sDirName . '/' . $sFileName) && $bRecursion) {
+                        self::showList($sDirName . '/'. $sFileName, $bRecursion, $aFile);
+                    }else{
+                        array_push($aFile, $sFileName);
+                    }
+                }
+            }
+            return $aFile;
+        }
+        return null;
+    }
+
+    /**
+     *  Check Dir
+     **/
+
+    protected static function Check($sDirName){
+        return is_dir($sDirName) && is_readable($sDirName);
+    }
+
+    /**
+     *  Check Valid FileName
+     **/
+    protected static function IsValidFileName($sFileName)
+    {
+        return $sFileName != '.' && $sFileName != '..';
     }
 }

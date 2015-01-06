@@ -1,9 +1,12 @@
 <?php
 namespace App\controller\web\test;
 
+use Hummer\Component\Helper\File;
+use Hummer\Component\Helper\Dir;
+use Hummer\Component\Helper\Arr;
 use App\system\controller\Web_Base;
 use Hummer\Component\Util\Page\Page;
-use Hummer\Component\Util\File\File;
+use Hummer\Component\Util\File\FileUpload;
 use Hummer\Component\Util\Image\Image;
 
 class C_Test extends Web_Base{
@@ -216,6 +219,12 @@ class C_Test extends Web_Base{
         $image->outimage();
         */
 
+        //$a = File::getFileToArr('/home/zhangyinfei/project/hummer/app/webroot/index.php');
+        //$a = File::getCToArr('/home/zhangyinfei/project/hummer/app/webroot/index.php');
+        //$a   = Dir::showList('/home/zhangyinfei/project/hummer/app/webroot');
+        //$a   = Dir::showList('/home/zhangyinfei/project/hummer/app/webroot',true);
+        //pr($a);
+
         /**
          *  File Cache
          **/
@@ -248,7 +257,7 @@ class C_Test extends Web_Base{
     public function actionDefault_POST()
     {
         //文件上传处理
-        $File = new File(
+        $File = new FileUpload(
             'file',
             '/home/zhangyinfei/project/test/data/file',
             array('ext' => 'image,txt', 'max' => '4M')

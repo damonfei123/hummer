@@ -18,7 +18,7 @@ use Hummer\Component\Context\Context;
 use Hummer\Component\Helper\Arr;
 use Hummer\Component\Helper\Helper;
 
-class File{
+class FileUpload{
 
     /**
      *  @var $_REQ HttpRequest

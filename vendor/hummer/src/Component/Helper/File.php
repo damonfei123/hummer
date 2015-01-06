@@ -35,12 +35,27 @@ class File{
     /**
      *  Read File To Arr
      **/
-    public static function getFileToArr($sFilePath, $iLenth=1024)
+    public static function getLineToArr($sFilePath, $iLenth=1024)
     {
         if (self::Exists($sFilePath)) {
             $aRet = array();
             $File = fopen($sFilePath, 'r');
             while (!feof($File)) $aRet[] = fgets($File, $iLenth);
+            fclose($File);
+            return $aRet;
+        }
+        return null;
+    }
+
+    /**
+     *  Get File Data By Character To Arr
+     **/
+    public static function getCToArr($sFilePath)
+    {
+        if (self::Exists($sFilePath)) {
+            $aRet = array();
+            $File = fopen($sFilePath, 'r');
+            while (!feof($File)) $aRet[] = fgetc($File);
             fclose($File);
             return $aRet;
         }
