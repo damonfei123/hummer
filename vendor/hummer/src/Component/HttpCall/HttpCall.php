@@ -12,7 +12,10 @@
    +-----------------------------------------------------------------------------+
 
 **************************************************************************************/
-namespace Hummer\Component\Helper;
+namespace Hummer\Component\HttpCall;
+
+use Hummer\Component\Event\Event;
+use Hummer\Component\Helper\Arr;
 
 class HttpCall{
 
@@ -63,8 +66,9 @@ class HttpCall{
     /**
      *  CURL Call
      **/
-    public static function call($sUrl, array $aHeaderAndData=array())
+    public static function call($sUrl, array $aHeaderAndData=array(), $bEvent=true)
     {
+        Event_Register::register_All($bEvent);
         $CURL = self::initCURL();
         #URL
         $aHeaderAndData[CURLOPT_URL] = $sUrl;
@@ -86,7 +90,14 @@ class HttpCall{
             $aHeaderAndData[CURLOPT_RETURNTRANSFER] = 1;
         }
         curl_setopt_array($CURL, $aHeaderAndData);
+        Event::call(Event_Register::E_ALL_BEFORE);
         $mResult = curl_exec($CURL);
+        Event::call(
+            Event_Register::E_ALL_AFTER,
+            $sUrl,
+            Arr::get($aHeaderAndData, CURLOPT_POSTFIELDS, array()),
+            $mResult
+        );
         curl_close($CURL);
         return $mResult;
     }

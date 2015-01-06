@@ -2,11 +2,112 @@
 namespace App\controller\cli\data;
 
 use App\system\controller\Cli_Base;
+use Hummer\Component\Helper\File;
 use Hummer\Component\Helper\Arr;
 use Hummer\Component\Helper\Helper;
 
-
 class C_Data extends Cli_Base{
+
+    public function __before__()
+    {
+        $this->memLimit();
+    }
+
+    public static function getFilePath($sFile)
+    {
+        return sprintf('%s%s','/home/zhangyinfei/project/test/data/nohup_id/', $sFile);
+    }
+
+    public function actionGuidDataDetail()
+    {
+        $aGUID  = File::getLineToArr(self::getFilePath('guid.txt'));
+        $aClean = array();
+        foreach ($aGUID as $sGUID) {
+            $aClean[trim($sGUID)] = 0;
+        }
+        $aGUID  = array_keys($aClean);
+        $i      = 0;
+        $iTotal = count($aGUID);
+        $aFreeze= self::freeze();
+        $aTmpTT = array();
+        foreach ($aGUID as $sGUID) {
+            $this->Log->info(sprintf('已经开始处理第%d/%d个', $i++, $iTotal));
+            $aTmpTT = Arr::changeIndexToKVMap(DB()->getActionInfo('','cheat')
+                ->where(array('guid' => $sGUID))
+                ->select('distinct tt')
+                ->findCustom(),'tt','tt');
+            foreach ($aTmpTT as $tt) {
+                $sMsg = sprintf('%s,%d,%s', $sGUID, $tt, in_array($tt, $aFreeze) ? '冻结' : '解冻');
+                File::send(self::getFilePath('user_info_detail.txt'), $sMsg."\r\n");
+            }
+        }
+    }
+
+    public function actionGuidDataTotal()
+    {
+        $aGUID  = File::getLineToArr(self::getFilePath('guid.txt'));
+        foreach ($aGUID as $key => $sGUID) {
+            $aGUID[$key] = trim($sGUID);
+        }
+        $aChunkGUID = array_chunk($aGUID, 1000);
+        $i      = 0;
+        $iTotal = count($aChunkGUID);
+        $aFreeze= self::freeze();
+        $aTmpTT = array();
+        foreach ($aChunkGUID as $aG) {
+            $this->Log->info(sprintf('已经开始处理第%d/%d个', $i++, $iTotal));
+            $aTmpTT += Arr::changeIndexToKVMap(DB()->getActionInfo('','cheat')
+                ->where(array('guid in' => $aG))
+                ->select('distinct tt')
+                ->findCustom(),'tt','tt');
+        }
+        $iFreeze = 0;
+        foreach ($aTmpTT as $tt) {
+            if (in_array($tt, $aFreeze)) {
+                $iFreeze++;
+            }
+        }
+        $sMsg = sprintf('冻结人数:%d,正常人数%d', $iFreeze, count($aTmpTT) - $iFreeze);
+        File::send(self::getFilePath('guid_freeze_status_all'), $sMsg);
+    }
+
+    public function actionGuidData()
+    {
+        $aGUID  = File::getLineToArr(self::getFilePath('guid2.txt'));
+        $aFreeze= self::freeze();
+        //$aChunk = array_chunk($aGUID, 1000);
+        $iTotal = count($aGUID);
+        $i      = 0;
+        foreach ($aGUID as $sCGUID) {
+            $this->Log->info(sprintf('已经开始处理第%d/%d个', $i++, $iTotal));
+            $sCGUID = trim($sCGUID);
+            $aTmpTT = Arr::changeIndexToKVMap(DB()->getActionInfo('','cheat')
+                ->where(array('guid' => $sCGUID))
+                ->select('distinct tt')
+                ->findCustom(),'tt','tt');
+            $iFreeze = 0;
+            $this->Log->info('查库完成');
+            foreach ($aTmpTT as $tt) {
+                //if (in_array($tt, $aFreeze)) {
+                if (isset($aFreeze[$tt])) {
+                    $iFreeze++;
+                }
+            }
+            $aTmpRet = array();
+            $aTmpRet['guid']    = $sCGUID;
+            $aTmpRet['freeze']  = $iFreeze;
+            $aTmpRet['normal']  = count($aTmpTT) - $iFreeze;
+            File::send(self::getFilePath('guid_freeze_status2'), implode(',', $aTmpRet)."\r\n");
+        }
+    }
+
+    public static function freeze()
+    {
+        return Arr::changeIndexToKVMap(DB()->getUser('', 'slave')
+            ->where(array('status >' => 0))
+            ->select('id')
+            ->findCustom(),'id','id');
+    }
 
     public function actionLiYan()
     {

@@ -5,14 +5,14 @@ use App\system\controller\Cli_Base;
 use Hummer\Component\Helper\File;
 use Hummer\Component\Helper\Dir;
 use Hummer\Component\Helper\Arr;
-use Hummer\Component\Helper\HttpCall;
+use Hummer\Component\HttpCall\HttpCall;
 
 
 class C_Test extends Cli_Base {
 
     public function actionTest()
     {
-        pr(HttpCall::callGET('http://damon.baidu.com:8925/index.php?xx=ee',
+        pr(HttpCall::callGET('http://damon.baidu.com:8925/index.php',
             array('xx' => 'damon'),
             array('headersD:damon')
         ));
