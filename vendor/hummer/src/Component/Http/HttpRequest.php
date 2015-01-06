@@ -116,7 +116,7 @@ class HttpRequest{
 
     public function getHeader($sVar)
     {
-        $sKeyName = 'HTTP_'.strtolower($sVar);
+        $sKeyName = 'HTTP_'.strtoupper($sVar);
         return Arr::get($this->aSERVER, $sKeyName, null);
     }
 
