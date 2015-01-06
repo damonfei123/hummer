@@ -12,7 +12,7 @@
    +-----------------------------------------------------------------------------+
 
 **************************************************************************************/
-namespace Hummer\Component\HttpCall;
+namespace Hummer\Component\Util\HttpCall;
 
 use Hummer\Component\Event\Event;
 use Hummer\Component\Context\Context;

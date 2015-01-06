@@ -5,7 +5,7 @@ use App\system\controller\Cli_Base;
 use Hummer\Component\Helper\File;
 use Hummer\Component\Helper\Dir;
 use Hummer\Component\Helper\Arr;
-use Hummer\Component\HttpCall\HttpCall;
+use Hummer\Component\Util\HttpCall\HttpCall;
 
 
 class C_Test extends Cli_Base {
