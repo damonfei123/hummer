@@ -20,10 +20,12 @@ class C_Data extends Cli_Base{
 
     public function actionGuidDataDetail()
     {
-        $aGUID  = File::getLineToArr(self::getFilePath('guid.txt'));
+        $aGUID  = File::getLineToArr(self::getFilePath('guid_lost.txt'));
         $aClean = array();
         foreach ($aGUID as $sGUID) {
-            $aClean[trim($sGUID)] = 0;
+            if (trim($sGUID)) {
+                $aClean[trim($sGUID)] = 1;
+            }
         }
         $aGUID  = array_keys($aClean);
         $i      = 0;

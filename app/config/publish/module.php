@@ -64,7 +64,16 @@ return array(
     array(
         'module' => 'Session',
         'class'  => 'Hummer\\Component\\Session\\Session',
-        'params' => array(),
+        'params' => array(
+            '\@DB',
+            ':RDB',
+            'default',
+            array(
+                'db'    => 'session',
+                'key'   => 'k',
+                'value' => 'v',
+            )
+        ),
     ),
     array(
         'module' => 'CacheFile',

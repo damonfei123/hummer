@@ -19,10 +19,16 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
+        CTX()->Session;
+        $_SESSION['name'] = 'damon';
+        //$_SESSION['age']  = '12';
+        $_SESSION['age'];
+        /*
         $User = DB()->getUser()->select('name')->findMulti();
         foreach ($User as $user) {
             echo $user;
         }
+        */
         #查询
         /*
         DB()->get('user')->find();
@@ -149,6 +155,7 @@ class C_Test extends Web_Base{
 
         //同一Model调用多次方法，如分页需要用到  ---start
         //one
+        /*
         $User = DB()->getUser()->where(array('id between' => array(1,6)));
         $User->enableMulti();
         $User->findCount();
@@ -166,11 +173,6 @@ class C_Test extends Web_Base{
 
         //$this->timeLimit(1);
         //$this->memLimit();
-
-        //Session
-        $Session = CTX()->Session;
-        $Session->set('name', 'damon');
-        echo $Session->get('name');
 
         //Redis
         $Redis = Redis();

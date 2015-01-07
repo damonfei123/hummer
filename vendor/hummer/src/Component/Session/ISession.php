@@ -14,34 +14,36 @@
 **************************************************************************************/
 namespace Hummer\Component\Session;
 
-use Hummer\Component\Helper\Arr;
-use Hummer\Component\Helper\Suger;
-use Hummer\Component\Helper\Helper;
-
-class Session{
+interface ISession {
 
     /**
-     *  @var Instance
+     *  Open
      **/
+    public function open($sPath, $sSessionName);
 
-    public function __construct()
-    {
-        $this->Instance = Suger::createObjAdaptor(__NAMESPACE__, func_get_args(), 'Session_');
+    /**
+     *  close
+     **/
+    public function close();
 
-        session_set_save_handler(
-            array($this->Instance, 'open'),
-            array($this->Instance, 'close'),
-            array($this->Instance, 'read'),
-            array($this->Instance, 'write'),
-            array($this->Instance, 'destroy'),
-            array($this->Instance, 'gc')
-        );
-        //register_shutdown_function('session_write_close');
-        session_start();
+    /**
+     * Read
+     **/
+    public function read($sVar);
 
-    }
+    /**
+     *  write
+     **/
+    public function write($sVar, $mV);
 
-    public function __destruct()
-    {
-    }
+    /**
+     *  Destroy
+     **/
+    public function destroy($sVar);
+
+    /**
+     *  GC
+     **/
+    public function gc($maxlifetime);
+
 }

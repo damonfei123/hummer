@@ -14,6 +14,7 @@
 **************************************************************************************/
 namespace Hummer\Component\Configure;
 
+use Hummer\Component\Helper\Arr;
 use Hummer\Component\Helper\Helper;
 
 class Adaptor_PHP {
@@ -58,7 +59,6 @@ class Adaptor_PHP {
             return $mConfig;
         }
         $sKey = substr($sModule, $iPos+1);
-        $sKey = str_replace('.',"']['", $sKey);
-        return $mConfig["$sKey"];
+        return Arr::getBySmarty($mConfig, $sKey);
     }
 }

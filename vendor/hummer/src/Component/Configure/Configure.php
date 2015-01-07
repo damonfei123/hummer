@@ -15,6 +15,7 @@
 namespace Hummer\Component\Configure;
 
 use Hummer\Component\Helper\Suger;
+use Hummer\Component\Context\Context;
 
 class Configure{
 
@@ -32,6 +33,10 @@ class Configure{
                     break;
                 case '\\':
                     $mResult = substr($mResult, 1);
+                    break;
+                case ':':
+                    $sModel  = substr($mResult, 1);
+                    $mResult = Context::getInst()->$sModel;
                     break;
             }
         }elseif(is_array($mResult)){

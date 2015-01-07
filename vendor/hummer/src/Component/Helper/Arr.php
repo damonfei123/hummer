@@ -38,4 +38,20 @@ class Arr{
         }
         return $aRetArr;
     }
+
+    /**
+     *  Get Array Data By Smarty Way
+     **/
+    public static function getBySmarty($mArr, $sKey = '', $sSepetator='.')
+    {
+        while ($sKey &&
+               is_array($mArr) &&
+               false !== ($iPos=strpos($sKey, $sSepetator))
+        ){
+            $sTK  = substr($sKey, 0, $iPos);
+            $mArr = Arr::get($mArr, $sTK, null);
+            $sKey = substr($sKey, $iPos + 1);
+        }
+        return Helper::TOOP(is_array($mArr), Arr::get($mArr, $sKey, null), $mArr);
+    }
 }
