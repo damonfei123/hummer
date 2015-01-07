@@ -35,12 +35,15 @@ class File{
     /**
      *  Read File To Arr
      **/
-    public static function getLineToArr($sFilePath, $iLenth=1024)
-    {
+    public static function getFileToArr(
+        $sFilePath,
+        $iLenth=1024,
+        $aCallable=array('\\Hummer\\Component\\Helper\\File', 'Handle')
+    ) {
         if (self::Exists($sFilePath)) {
             $aRet = array();
             $File = fopen($sFilePath, 'r');
-            while (!feof($File)) $aRet[] = fgets($File, $iLenth);
+            while (!feof($File)) $aRet[] = call_user_func($aCallable, fgets($File, $iLenth));
             fclose($File);
             return $aRet;
         }
@@ -68,5 +71,10 @@ class File{
     public static function Exists($sFilePath)
     {
         return file_exists($sFilePath);
+    }
+
+    public static function Handle($mValue)
+    {
+        return trim($mValue);
     }
 }
