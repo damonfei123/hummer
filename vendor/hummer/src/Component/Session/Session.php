@@ -36,12 +36,12 @@ class Session{
             array($this->Instance, 'destroy'),
             array($this->Instance, 'gc')
         );
-        //register_shutdown_function('session_write_close');
+        register_shutdown_function('session_write_close');
         session_start();
-
     }
 
     public function __destruct()
     {
+        session_unset();
     }
 }

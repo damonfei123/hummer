@@ -43,6 +43,7 @@ class Session_DB implements ISession {
         $this->sDBName   = Arr::get($aDBConfig, 'db', 'session');
         $this->k         = Arr::get($aDBConfig, 'key', 'k');
         $this->v         = Arr::get($aDBConfig, 'value', 'v');
+        $this->t         = Arr::get($aDBConfig, 'time', 't');
         $this->DB        = $Module->get($this->sDBName, $this->sDBConfig);
     }
 
@@ -76,12 +77,11 @@ class Session_DB implements ISession {
      **/
     public function write($id, $mV)
     {
+        $aData = array($this->k => $id, $this->v => $mV, $this->t => time());
         if ($this->DB->find(array($this->k => $id))) {
-            return $this->DB->where(array($this->k => $id))
-                ->data(array($this->k => $id, $this->v => $mV))
-                ->update();
+            return $this->DB->where(array($this->k => $id))->data($aData)->update();
         }else{
-            return $this->DB->data(array($this->k => $id, $this->v => $mV))->save();
+            return $this->DB->data($aData)->save();
         }
     }
 
@@ -98,6 +98,7 @@ class Session_DB implements ISession {
      **/
     public function gc($maxlifetime)
     {
-        return true;
+        Context::getInst()->HttpResponse->httpFastClose();
+        $this->DB->where(array($this->t.' <' => time() - $maxlifetime))->delete();
     }
 }

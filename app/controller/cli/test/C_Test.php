@@ -14,7 +14,7 @@ class C_Test extends Cli_Base {
     {
         CTX()->Session;
         $_SESSION['name'] = 'damon';
-        $_SESSION['name'];
+        echo $_SESSION['name'];
         //$a = File::getFileToArr('/home/zhangyinfei/project/hummer/app/webroot/index.php');
         /*
         pr(HttpCall::callGET('http://damon.baidu.com:8925/index.php',
