@@ -40,6 +40,30 @@ class Session{
         session_start();
     }
 
+    /**
+     *  Session set
+     **/
+    public static function set($sKey, $mVal)
+    {
+        return $_SESSION[$sKey] = $mVal;
+    }
+
+    /**
+     *  Session delete
+     **/
+    public static function del($sKey)
+    {
+        unset($_SESSION[$sKey]);
+    }
+
+    /**
+     *  Get Session
+     **/
+    public static function get($sKey)
+    {
+        return $_SESSION[$sKey];
+    }
+
     public function __destruct()
     {
         session_unset();

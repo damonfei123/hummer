@@ -6,6 +6,7 @@ use Hummer\Component\Helper\Dir;
 use Hummer\Component\Helper\Arr;
 use App\system\controller\Web_Base;
 use Hummer\Component\Util\Page\Page;
+use Hummer\Component\Util\File\Download;
 use Hummer\Component\Util\File\FileUpload;
 use Hummer\Component\Util\Image\Image;
 
@@ -19,10 +20,12 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
-        CTX()->Session;
-        $_SESSION['name'] = 'damon';
-        //$_SESSION['age']  = '12';
-        $_SESSION['age'];
+        //Download::download('/home/zhangyinfei/project/test/data/excel.xlsx');
+        //Download::download('/home/zhangyinfei/project/hummer/app/webroot/index.php');
+        //$Session = CTX()->Session;
+        //$Session::set('name', 'damon_fei');
+        //$Session::get('name');
+        //$Session::del('name');
         /*
         $User = DB()->getUser()->select('name')->findMulti();
         foreach ($User as $user) {
@@ -248,6 +251,9 @@ class C_Test extends Web_Base{
         //$this->display('/test/test/show');
         //$this->display();         //自动模板 -> 路由  test/test/default
         //$this->display(null);     //不加载模板
+
+        //告诉浏览器内部出错
+        //$this->HttpResponse->setStatus(500);
 
         /**
          *  断开HTTP链接，响应完用户请求后可以做一些事后操作，比如日志

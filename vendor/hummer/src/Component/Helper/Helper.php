@@ -23,6 +23,11 @@ class Helper{
         return $sV === $sSeperator ? '' : $sV;
     }
 
+    public function lang($sVar, $FLang='UTF-8', $TLang='GBK')
+    {
+        return iconv($sVar, $FLang, $TLang);
+    }
+
     public static function TrimInValidURI($sURI, $sInvalid = '//', $sReplace='/')
     {
         while (strpos($sURI, $sInvalid)) {
