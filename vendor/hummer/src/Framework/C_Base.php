@@ -34,7 +34,7 @@ class C_Base{
 
     public function assign($mKey, $mValue=null)
     {
-        $aAssign = Helper::TOOP(is_array($mKey), $mKey, array($mKey => $mValue));
+        $aAssign = is_array($mKey) ? $mKey : array($mKey => $mValue);
         foreach ($aAssign as $sKey => $mV) {
             $this->template->assign($sKey, $mV);
         }

@@ -4,6 +4,13 @@
 
 <b>{$Name|upper}</b>
 
+{if $age eq 1}
+damon age is 1
+{else}
+<b>damon age is not 1</b>
+{/if}
+<br />
+
 {section name=outer loop=$FirstName}
 {if $smarty.section.outer.index is odd by 2}
     {$smarty.section.outer.rownum} . {$FirstName[outer]} {$LastName[outer]}
@@ -13,3 +20,5 @@
 {sectionelse}
     none
 {/section}
+
+{include file='./show.html'}

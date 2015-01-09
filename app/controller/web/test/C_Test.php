@@ -239,10 +239,15 @@ class C_Test extends Web_Base{
         //var_export($Cache->fetch('user'));
         //var_export(unserialize(serialize(CTX()->Redis)));
 
-        $this->assign('Name', 'damon');
-        $this->assign('FirstName', array('John', 'Mary', 'James', 'Henry'));
+        //multi assign
+        $this->assign(array(
+            'Name' => 'damon',
+            'age'  => 1,
+            'FirstName' => array('John', 'Mary', 'James', 'Henry')
+        ));
+        //assign single
         $this->assign('LastName', array('Doe', 'Smith', 'Johnson', 'Case'));
-        //echo $this->fetch('show');
+        //echo $this->fetch('show');//don't display
         //echo $this->fetch('/test/test/show');
 
         //$this->display('show');
