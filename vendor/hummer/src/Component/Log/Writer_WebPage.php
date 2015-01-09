@@ -31,8 +31,8 @@ class Writer_WebPage implements IWriter{
         if ($this->bEnable) {
             $sLevelName = Logger::getLogNameByLevelID($aRow['iLevel']);
             $sLogMsg = str_replace(
-                array('{iLevel}', '{sTime}', '{sContent}'),
-                array($sLevelName, $aRow['sTime'], $aRow['sMessage']),
+                array('{sGUID}', '{iLevel}', '{sTime}', '{sContent}'),
+                array($this->sGUID, $sLevelName, $aRow['sTime'], $aRow['sMessage']),
                 $this->sContentFormat
             ) . PHP_EOL;
 

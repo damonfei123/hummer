@@ -48,8 +48,8 @@ class Writer_STDIO implements IWriter {
         if ($this->bEnable) {
             $sLevelName = Logger::getLogNameByLevelID($aRow['iLevel']);
             $sLogMsg = str_replace(
-                array('{iLevel}', '{sTime}', '{sContent}'),
-                array($sLevelName, $aRow['sTime'], $aRow['sMessage']),
+                array('{sGUID}', '{iLevel}', '{sTime}', '{sContent}'),
+                array($this->sGUID, $sLevelName, $aRow['sTime'], $aRow['sMessage']),
                 $this->sContentFormat
             ) . PHP_EOL;
 
@@ -62,6 +62,5 @@ class Writer_STDIO implements IWriter {
     {
         #GUID should be same for one request
         $this->sGUID  = $sGUID;
-
     }
 }
