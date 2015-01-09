@@ -12,6 +12,12 @@ class C_Test extends Cli_Base {
 
     public function actionTest()
     {
+        //DB()->getUser()->find();
+        //DB()->getTest()->where(array('damon',14))->find();
+        //DB()->getTest()->where(array('damon', 12))->select('age,name,detail')->find();
+        //DB()->getTest()->where(array('damon', 12))->delete();
+        //$M->delete();
+        //$M->delete();
         //$Session = CTX()->Session;
         //$Session::set('name', 'damon_fei');
         //$a = File::getFileToArr('/home/zhangyinfei/project/hummer/app/webroot/index.php');

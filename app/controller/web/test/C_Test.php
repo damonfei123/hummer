@@ -103,6 +103,11 @@ class C_Test extends Web_Base{
             echo sprintf('%s->%s',$Damon->auto_id, $Damon->name);
         }
 
+        //当一张表主键为多列时，可以用下面这种形式以主键形式查找
+        $M = DB()->getTest()->where(array('damon', 12))->select('age,name,detail')->find();
+        DB()->getTest()->where(array('damon', 12))->select('age,name,detail')->find();
+        DB()->getTest()->where(array('damon', 12))->delete();
+
         ///////程序读写分离,线上环境一定要注意从库不要有写权限///////////////
         //默认走配置的(主)库
         echo DB()->get('user')->find();

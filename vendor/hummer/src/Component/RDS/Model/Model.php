@@ -97,11 +97,14 @@ class Model{
     {
         $this->CURD   = $this->CURD->forceSelectPK();
         $bTmpSelectPK = $this->CURD->bTmpSelectPK;
-        $aItems = $this->CURD->querySmarty($mWhere);
-        $aGroup = array();
-        foreach ($aItems as $aItem) {
-            $mPK = $aItem[$this->sPrimaryKey];
-            if ($bTmpSelectPK) unset($aItem[$this->sPrimaryKey]);
+        $aItems   = $this->CURD->querySmarty($mWhere);
+        $aGroup   = array();
+        $bMultiPK = false !== strpos($this->sPrimaryKey, ',');
+        foreach ($aItems as $iK => $aItem) {
+            $mPK = $bMultiPK ? $iK : $aItem[$this->sPrimaryKey];
+            if ($bTmpSelectPK) foreach($this->CURD->getPrimaryKey(true) as $iK => $sPK) {
+                unset($aItem[$iK]);
+            }
             $aGroup[$mPK] = new $this->sItemClassName($aItem, $this);
         }
         return $aGroup;

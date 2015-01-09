@@ -56,11 +56,22 @@ class Item implements \ArrayAccess {
             return true;
         }
         $M       = $this->Model;
-        $bUpdate = $M->CURD->where($this->aData[$M->sPrimaryKey])->data($aUpdateData)->update();
+        $bUpdate = $M->CURD
+            ->where(array_intersect_key($this->aData, array_flip($M->CURD->getPrimaryKey(true))))
+            ->data($aUpdateData)
+            ->update();
         if ($bUpdate) {
             $this->aNewData = array();
         }
         return $bUpdate;
+    }
+
+    public function delete()
+    {
+        $M = $this->Model;
+        return $M->CURD
+            ->where(array_intersect_key($this->aData, array_flip($M->CURD->getPrimaryKey(true))))
+            ->delete();
     }
 
     public function __get($sVarName)

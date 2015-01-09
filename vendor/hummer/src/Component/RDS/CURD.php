@@ -82,6 +82,31 @@ class CURD {
         return $this->Instance;
     }
 
+    /**
+     *  Get PK
+     **/
+    public function getPrimaryKey($bSplit=false)
+    {
+        return Helper::TOOP($bSplit, explode(',', $this->sPrimaryKey), $this->sPrimaryKey);
+    }
+    /**
+     *  Parse PK Where
+     **/
+    public function getPKWhere($mWhere)
+    {
+        $aRetWhere = array();
+        if (strpos($this->sPrimaryKey, ',')) {
+            $aPK = $this->getPrimaryKey(true);
+            if (!is_array($mWhere) || count($aPK) != count($mWhere)) {
+                throw new \InvalidArgumentException('[CURD] : Primary Key Params Error');
+            }
+            $aRetWhere = array_combine($aPK, $mWhere);
+        }else{
+            $aRetWhere[$this->sPrimaryKey] = $mWhere;
+        }
+        return $aRetWhere;
+    }
+
     public function enableMulti()
     {
         $this->bMulti = true;
@@ -102,8 +127,8 @@ class CURD {
     {
         if (!is_null($mWhere) && $mWhere) {
             $this->aWhere = Helper::TOOP(
-                is_int($mWhere),
-                array($this->sPrimaryKey => $mWhere),
+                is_int($mWhere) || isset($mWhere[0]),
+                $this->getPKWhere($mWhere),
                 $mWhere
             );
         }
@@ -146,14 +171,12 @@ class CURD {
     public function forceSelectPK()
     {
         $aSelect = explode(',', $this->sSelect);
-        if ($this->sSelect != '*' &&
-            !in_array($this->sPrimaryKey, $aSelect) &&
-            false === strpos('.'.$this->sPrimaryKey, $this->sSelect)
-        ) {
-            $aSelect[]          = sprintf('%s.%s', $this->getTableAsMap(), $this->sPrimaryKey);
-            $this->sSelect      = join(',', $aSelect);
-            $this->bTmpSelectPK = true;
+        foreach ($this->getPrimaryKey(true) as $iK => $sPK) {
+            $sPK = trim($sPK);
+            if ($sPK) $aSelect[]  = sprintf('%s.%s as \'%d\'', $this->getTableAsMap(), $sPK, $iK);
         }
+        $this->sSelect      = join(',', $aSelect);
+        $this->bTmpSelectPK = true;
         return $this;
     }
 
@@ -378,7 +401,6 @@ class CURD {
     }
 
     public function update($mWhere=null) {
-
         if (!is_null($mWhere)) $this->where($mWhere);
         $aArgs       = $aUpdateData = array();
         $sSQLPrepare = $this->buildUpdateSQL($aUpdateData, $aArgs);
@@ -496,8 +518,7 @@ class CURD {
      **/
     public static function buildEndSQL($sSQL, $aArgs)
     {
-        while (strpos($sSQL, '?'))
-        {
+        while (strpos($sSQL, '?')) {
             $mParam = array_shift($aArgs);
             if (!is_int($mParam)) {
                 $mParam = sprintf('"%s"', $mParam);
