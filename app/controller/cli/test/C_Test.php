@@ -12,10 +12,12 @@ class C_Test extends Cli_Base {
 
     public function actionTest()
     {
-        foreach(DB()->getData('')->select('*')->findMulti() as $M){
-            echo $M->id;
-        };
-        //DB()->getTest()->findMulti();
+        //$M = DB()->getTest()->select('name,age')->find();
+        //$M->delete();
+        //foreach(DB()->getData()->select('age')->findMulti() as $key => $M){
+            ////echo $M->delete();
+            //echo $key;
+        //};
         //DB()->getTest()->where(array('damon',14))->findMulti();
         //DB()->getTest()->where(array('damon', 12))->select('age,name,detail')->find();
         //DB()->getTest()->where(array('damon', 12))->delete();

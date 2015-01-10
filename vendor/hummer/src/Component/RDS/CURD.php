@@ -105,7 +105,7 @@ class CURD {
         if ($this->isPKMulti()) {
             $aPK = $this->getPrimaryKey(true);
             if (!is_array($mWhere) || count($aPK) != count($mWhere)) {
-                throw new \InvalidArgumentException('[CURD] : Primary Key Params Error');
+                throw new \InvalidArgumentException('[CURD] : Primary Key Params Error, Query Column Must Be All Primary key');
             }
             $aRetWhere = array_combine($aPK, $mWhere);
         }else{
@@ -188,11 +188,7 @@ class CURD {
         ) {
             foreach ($this->getPrimaryKey(true) as $iK => $sPK) {
                 $sPK = trim($sPK);
-                if ($sPK) $aSelect[] = sprintf('%s.%s as \'%d\'',
-                    $this->getTableAsMap(),
-                    $sPK,
-                    $iK
-                );
+                if ($sPK) $aSelect[] = sprintf('%s.%s', $this->getTableAsMap(), $sPK, $iK);
             }
             $this->sSelect      = join(',', $aSelect);
             $this->bTmpSelectPK = true;

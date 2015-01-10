@@ -99,7 +99,7 @@ class Model{
         $bTmpSelectPK = $this->CURD->bTmpSelectPK;
         $aItems   = $this->CURD->querySmarty($mWhere);
         $aGroup   = array();
-        $bMultiPK = false !== strpos($this->sPrimaryKey, ',');
+        $bMultiPK = $this->CURD->isPKMulti();
         foreach ($aItems as $iK => $aItem) {
             $mPK = $bMultiPK ? $iK : $aItem[$this->sPrimaryKey];
             if ($bTmpSelectPK) foreach($this->CURD->getPrimaryKey(true) as $iK => $sPK) {
