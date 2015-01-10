@@ -90,12 +90,19 @@ class CURD {
         return Helper::TOOP($bSplit, explode(',', $this->sPrimaryKey), $this->sPrimaryKey);
     }
     /**
+     *  Is PK Multi
+     **/
+    public function isPKMulti()
+    {
+        return false !== strpos($this->getPrimaryKey(), ',');
+    }
+    /**
      *  Parse PK Where
      **/
     public function getPKWhere($mWhere)
     {
         $aRetWhere = array();
-        if (strpos($this->sPrimaryKey, ',')) {
+        if ($this->isPKMulti()) {
             $aPK = $this->getPrimaryKey(true);
             if (!is_array($mWhere) || count($aPK) != count($mWhere)) {
                 throw new \InvalidArgumentException('[CURD] : Primary Key Params Error');
@@ -168,15 +175,28 @@ class CURD {
         return $this->sSelect ? $this->sSelect : '*';
     }
 
+    /**
+     *  Only Single PK Be Forced
+     **/
     public function forceSelectPK()
     {
+        $sPK     = $this->getPrimaryKey();
         $aSelect = explode(',', $this->sSelect);
-        foreach ($this->getPrimaryKey(true) as $iK => $sPK) {
-            $sPK = trim($sPK);
-            if ($sPK) $aSelect[]  = sprintf('%s.%s as \'%d\'', $this->getTableAsMap(), $sPK, $iK);
+        if (!$this->isPKMulti() && !in_array($sPK, $aSelect) && $this->sSelect !== '*' &&
+            false === strpos($this->sSelect, sprintf('%s.*', $this->getTableAsMap())) &&
+            false === strpos($this->sSelect, sprintf('%s.%s', $this->getTableAsMap(), $sPK))
+        ) {
+            foreach ($this->getPrimaryKey(true) as $iK => $sPK) {
+                $sPK = trim($sPK);
+                if ($sPK) $aSelect[] = sprintf('%s.%s as \'%d\'',
+                    $this->getTableAsMap(),
+                    $sPK,
+                    $iK
+                );
+            }
+            $this->sSelect      = join(',', $aSelect);
+            $this->bTmpSelectPK = true;
         }
-        $this->sSelect      = join(',', $aSelect);
-        $this->bTmpSelectPK = true;
         return $this;
     }
 
