@@ -44,7 +44,7 @@ class FileUpload{
         $sFile,
         $sSavePath,
         $aConfig = array(),
-        $aSaveFileName = array('\\Hummer\\Component\\Util\\File\\File', 'getFileName')
+        $aSaveFileName = array('\\Hummer\\Component\\Util\\File\\FileUpload', 'getFileName')
     ) {
         $this->_REQ           = Context::getInst()->HttpRequest;
         $this->_sSavePath     = Helper::TrimEnd($sSavePath,'/', 'r');
