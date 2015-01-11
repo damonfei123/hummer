@@ -158,4 +158,14 @@ class Factory {
         }
         return self::$_aCURD[$sModelDB];
     }
+
+    public function isModelDataEmpty($Model)
+    {
+        if ($Model === null ||
+            (is_array($Model) && count($Model) == 0)
+        ) {
+            return true;
+        }
+        return false;
+    }
 }

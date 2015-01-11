@@ -95,17 +95,10 @@ class Model{
 
     public function findMulti($mWhere=null)
     {
-        $this->CURD   = $this->CURD->forceSelectPK();
-        $bTmpSelectPK = $this->CURD->bTmpSelectPK;
         $aItems   = $this->CURD->querySmarty($mWhere);
         $aGroup   = array();
-        $bMultiPK = $this->CURD->isPKMulti();
-        foreach ($aItems as $iK => $aItem) {
-            $mPK = $bMultiPK ? $iK : $aItem[$this->sPrimaryKey];
-            if ($bTmpSelectPK) foreach($this->CURD->getPrimaryKey(true) as $iK => $sPK) {
-                unset($aItem[$iK]);
-            }
-            $aGroup[$mPK] = new $this->sItemClassName($aItem, $this);
+        foreach ($aItems as $aItem) {
+            $aGroup[] = new $this->sItemClassName($aItem, $this);
         }
         return $aGroup;
     }
@@ -167,7 +160,7 @@ class Model{
     public function __call($sMethod, $aArgv)
     {
         if (!method_exists($this->CURD, $sMethod)) {
-            throw new \BadMethodCallException('[CURD] : method{'.$sMethod.'} error !!! ');
+            throw new \BadMethodCallException('[Model] : method{'.$sMethod.'} error !!! ');
         }
         $mResult = call_user_func_array(array($this->CURD, $sMethod), $aArgv);
         if (is_object($mResult) && $mResult instanceof CURD) {

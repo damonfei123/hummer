@@ -12,12 +12,26 @@ class C_Test extends Cli_Base {
 
     public function actionTest()
     {
+        $M = DB()->getTest()->select('name,age')->find(array('damon',12));
+        if (MEmpty($M)) {
+            echo 'empty';
+        }else{
+            $M->delete();
+        }
+        /*
+        $D = DB()->getData('d')
+            ->select('d.id as d_id,d2.id as d2_id')
+            ->left('data d2 on d.id = d2.id')
+            ->findCustom();
+        */
         //$M = DB()->getTest()->select('name,age')->find();
         //$M->delete();
-        //foreach(DB()->getData()->select('age')->findMulti() as $key => $M){
-            ////echo $M->delete();
-            //echo $key;
-        //};
+        //foreach(DB()->getData()->select('age')->findMulti() as $M){
+            //echo $M->delete();
+            //$M->age = 50;
+            //$M->update();
+            //echo $M;
+            //};
         //DB()->getTest()->where(array('damon',14))->findMulti();
         //DB()->getTest()->where(array('damon', 12))->select('age,name,detail')->find();
         //DB()->getTest()->where(array('damon', 12))->delete();

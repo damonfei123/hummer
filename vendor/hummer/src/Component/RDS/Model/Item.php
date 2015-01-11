@@ -56,10 +56,7 @@ class Item implements \ArrayAccess {
             return true;
         }
         $M       = $this->Model;
-        $bUpdate = $M->CURD
-            ->where(array_intersect_key($this->aData, array_flip($M->CURD->getPrimaryKey(true))))
-            ->data($aUpdateData)
-            ->update();
+        $bUpdate = $M->CURD->where($this->getPrimaryKeyWhere())->data($aUpdateData)->update();
         if ($bUpdate) {
             $this->aNewData = array();
         }
@@ -68,10 +65,25 @@ class Item implements \ArrayAccess {
 
     public function delete()
     {
-        $M = $this->Model;
-        return $M->CURD
-            ->where(array_intersect_key($this->aData, array_flip($M->CURD->getPrimaryKey(true))))
-            ->delete();
+        return $this->Model->CURD->where($this->getPrimaryKeyWhere())->delete();
+    }
+
+    /**
+     *  Get Primary Key Where
+     *  All Primary Key Must In Data
+     **/
+    public function getPrimaryKeyWhere()
+    {
+        $M     = $this->Model;
+        $aPK   = $M->CURD->getPrimaryKey(true);
+        $aData = array_intersect_key($this->aData, array_flip($aPK));
+        if (count($aData) != count($aPK)) {
+            throw new \InvalidArgumentException(sprintf(
+                '[Item] : Primary column[%s] Must Be Selected!!!',
+                $M->CURD->getPrimaryKey())
+            );
+        }
+        return $aData;
     }
 
     public function __get($sVarName)

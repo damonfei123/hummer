@@ -45,6 +45,11 @@ function View()
     return CTX()->Template;
 }
 
+function MEmpty($Model)
+{
+    return CTX()->RDB->isModelDataEmpty($Model);
+}
+
 function pr($mVar) {
     if (php_sapi_name() != 'cli') { echo "<pre>"; }
     if (is_object($mVar)) {

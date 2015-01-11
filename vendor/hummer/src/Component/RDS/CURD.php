@@ -105,7 +105,10 @@ class CURD {
         if ($this->isPKMulti()) {
             $aPK = $this->getPrimaryKey(true);
             if (!is_array($mWhere) || count($aPK) != count($mWhere)) {
-                throw new \InvalidArgumentException('[CURD] : Primary Key Params Error, Query Column Must Be All Primary key');
+                throw new \InvalidArgumentException(sprintf(
+                    '[CURD] : Primary column[%s] Must Be Need !!!',
+                    $this->getPrimaryKey())
+                );
             }
             $aRetWhere = array_combine($aPK, $mWhere);
         }else{
