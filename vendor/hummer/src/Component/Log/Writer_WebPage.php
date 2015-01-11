@@ -14,6 +14,7 @@
 **************************************************************************************/
 namespace Hummer\Component\Log;
 
+use Hummer\Component\Helper\Helper;
 use Hummer\Component\Context\Context;
 
 class Writer_WebPage implements IWriter{
@@ -23,7 +24,21 @@ class Writer_WebPage implements IWriter{
 
     public function __construct($sContentFormat=null)
     {
-        $this->sContentFormat = $sContentFormat === null ? '[{sTime}] : {sContent}' : $sContentFormat;
+        $this->sContentFormat = Helper::TOOP(
+            $sContentFormat === null,
+            '[{sTime}] : {sContent}',
+            $sContentFormat
+        );
+    }
+
+    public function disable()
+    {
+        $this->bEnable = false;
+    }
+
+    public function enable()
+    {
+        $this->bEnable = true;
     }
 
     public function acceptData($aRow)

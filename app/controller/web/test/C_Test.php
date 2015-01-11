@@ -20,6 +20,7 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
+        //CTX()->getInst()->Log->aWriter['WebDeBug']->disable();//disable web debug
         //Download::download('/home/zhangyinfei/project/test/data/excel.xlsx');
         //Download::download('/home/zhangyinfei/project/hummer/app/webroot/index.php');
         //$Session = CTX()->Session;
