@@ -12,6 +12,7 @@ class C_Test extends Cli_Base {
 
     public function actionTest()
     {
+        DB()->getUser()->find();
         $M = DB()->getTest()->select('name,age')->find(array('damon',12));
         if (MEmpty($M)) {
             echo 'empty';

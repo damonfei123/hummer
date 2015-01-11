@@ -49,7 +49,10 @@ class Writer_WebPage implements IWriter{
 
     public function __destruct()
     {
-        if (!$this->bEnable || Context::getInst()->HttpRequest->isAjax()) {
+        if (!$this->bEnable ||
+            Context::getInst()->HttpRequest->isAjax() ||
+            Context::getInst()->HttpRequest->getRequestMethod() !== 'GET'
+        ) {
             return;
         }
         $sLight      = 'TPT_Info';

@@ -285,6 +285,11 @@ class C_Test extends Web_Base{
         pr($File->upload());
     }
 
+    public function actionAjax_POST()
+    {
+        echo 'Ajax Post';
+    }
+
     /**
      *  如果上传的文件需要自定义文件名，可以直接外部定义
      **/

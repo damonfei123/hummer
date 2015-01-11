@@ -4,6 +4,8 @@ namespace Hummer;
 use Hummer\Framework\Bootstrap;
 use Hummer\Component\Configure\Configure;
 
+header('Access-Control-Allow-Origin: *');
+
 define('ROOT_DIR',       dirname(dirname(__DIR__)));
 define('APP_DIR',        ROOT_DIR . '/app/');
 define('FW_DIR',         ROOT_DIR . '/vendor/');
