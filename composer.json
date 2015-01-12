@@ -1,0 +1,28 @@
+{
+    "name": "Hummer",
+    "description": "Hummer",
+    "require": {
+        "hummer/hummer": "1.0",
+        "phpoffice/phpexcel": "1.8.0",
+        "phpmailer/phpmailer": "5.2.7"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/damonfei123/Core.git"
+        },
+        {
+            "type": "git",
+            "url": "http://gitlab.baidu.com/blueray_web/phpexcel.git"
+        },
+        {
+            "type": "git",
+            "url": "http://gitlab.baidu.com/blueray_web/phpmailer.git"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
