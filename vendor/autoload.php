@@ -47,36 +47,4 @@ class Autoload{
 
         END:
     }
-
-    public static function getAutoSmarty($class, $sBaseDir)
-    {
-        if (file_exists($sFilePath=($sBaseDir.$class.'.php'))) {
-            include $sFilePath;
-            goto END;
-        }
-
-        $_class = strtolower($class);
-        static $_classes = array(
-            'smarty_config_source'               => true,
-            'smarty_config_compiled'             => true,
-            'smarty_security'                    => true,
-            'smarty_cacheresource'               => true,
-            'smarty_cacheresource_custom'        => true,
-            'smarty_cacheresource_keyvaluestore' => true,
-            'smarty_resource'                    => true,
-            'smarty_resource_custom'             => true,
-            'smarty_resource_uncompiled'         => true,
-            'smarty_resource_recompiled'         => true,
-        );
-
-        if (!strncmp($_class, 'smarty_internal_', 16) || isset($_classes[$_class])) {
-            $sIncFile = $sBaseDir . '/sysplugins/' . $_class . '.php';
-            if (file_exists($sIncFile)) {
-                include_once($sIncFile);
-            }
-            goto END;
-        }
-
-        END:
-    }
 }

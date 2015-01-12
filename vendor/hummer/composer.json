@@ -1,0 +1,15 @@
+{
+    "name": "hummer",
+    "license": "GNU GENERAL PUBLIC LICENSE V2.0",
+    "authors": [
+        {
+            "name": "Damon",
+            "email": "zhangyinfei313com@163.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Hummer\\": "src/"
+        }
+    }
+}
