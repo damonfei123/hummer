@@ -26,6 +26,7 @@ $B = new Bootstrap(
     ),
     'development'
 );
+Bootstrap::setDefaultErrorPage();
 require '__init__.php';
 
 try{

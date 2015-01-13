@@ -10,6 +10,9 @@ use Hummer\Component\Util\File\Download;
 use Hummer\Component\Util\File\FileUpload;
 use Hummer\Component\Util\Image\Image;
 
+use Hummer\Component\Route\RouteErrorException;
+use Hummer\Component\Context\InvalidClassException;
+
 class C_Test extends Web_Base{
 
     public function __before__()
@@ -20,6 +23,7 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
+        //throw new InvalidClassException('xx');
         //CTX()->getInst()->Log->aWriter['WebDeBug']->disable();//disable web debug
         //Download::download('/home/zhangyinfei/project/test/data/excel.xlsx');
         //Download::download('/home/zhangyinfei/project/hummer/app/webroot/index.php');
