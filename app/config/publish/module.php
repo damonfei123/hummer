@@ -1,11 +1,11 @@
 <?php
-use Hummer\Component\Log\Logger;
+use Hummer\Component\Log\LogFactory;
 use Hummer\Framework\Bootstrap;
 
 return array(
     array(
         'module' => 'Log',
-        'class'  => 'Hummer\\Component\\Log\\Logger',
+        'class'  => 'Hummer\\Component\\Log\\LogFactory',
         'params' => array(
             array(
                 'WebDeBug' => array('\@WebPage'),
@@ -14,19 +14,19 @@ return array(
                     '/tmp/Hummer_http_Log_{date}/hummer_{level}_{date}.log'
                 )
             ),
-            Logger::LEVEL_ALL
+            LogFactory::LEVEL_ALL
         ),
         'run_mode' => Bootstrap::S_RUN_HTTP
     ),
     array(
         'module' => 'Log',
-        'class'  => 'Hummer\\Component\\Log\\Logger',
+        'class'  => 'Hummer\\Component\\Log\\LogFactory',
         'params' => array(
             array(
                 'File'  => array('\@File','/tmp/Hummer_cli_Log_{date}/hummer_{level}_{date}.log'),
                 'STDIO' => array('\@STDIO')
             ),
-            Logger::LEVEL_ALL
+            LogFactory::LEVEL_ALL
         ),
         'run_mode' => Bootstrap::S_RUN_CLI
     ),
@@ -47,23 +47,23 @@ return array(
     ),
     array(
         'module' => 'RDB',
-        'class'  => 'Hummer\\Component\\RDS\\Factory',
+        'class'  => 'Hummer\\Component\\RDB\\ORM\\Factory',
         'params' => array(
             '@database.db',
             '@model',
             'App\\model',
-            'Hummer\\Component\\RDS\\Model\\Model',
-            \Hummer\Component\RDS\AopPDO::$aAopPreExecCost
+            'Hummer\\Component\\RDB\\ORM\\Model\\Model',
+            \Hummer\Component\RDB\ORM\AopPDO::$aAopPreExecCost
         ),
     ),
     array(
         'module' => 'Redis',
-        'class'  => 'Hummer\\Component\\Redis\\Redis',
+        'class'  => 'Hummer\\Component\\NoSQL\\Redis\\Redis',
         'params' => array('@database.redis'),
     ),
     array(
         'module' => 'Session',
-        'class'  => 'Hummer\\Component\\Session\\Session',
+        'class'  => 'Hummer\\Component\\Session\\SessionFactory',
         'params' => array(
             '\@DB',
             ':RDB',
@@ -77,7 +77,7 @@ return array(
     ),
     array(
         'module' => 'CacheFile',
-        'class'  => 'Hummer\\Component\\Cache\\Cache',
+        'class'  => 'Hummer\\Component\\Cache\\CacheFactory',
         'params' => array(
             '\@File',
             '/home/zhangyinfei/project/test/data/HCache/'

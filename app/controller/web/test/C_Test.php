@@ -23,6 +23,16 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
+        $Session = CTX()->Session;
+        $Session::set('name', 'damon_feixx');
+        echo $Session::get('name');
+        //echo DB()->get('user u')->select('id')->find();
+        /**
+         *  File Cache
+         **/
+        $Cache = CTX()->CacheFile;
+        //$Cache->store('user',array(1,3), 86400);
+        //pr($Cache->fetch('user'));
         //throw new InvalidClassException('xx');
         //CTX()->getInst()->Log->aWriter['WebDeBug']->disable();//disable web debug
         //Download::download('/home/zhangyinfei/project/test/data/excel.xlsx');
