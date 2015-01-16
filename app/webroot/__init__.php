@@ -3,6 +3,11 @@ function CTX(){
     return end($GLOBALS['__SELF__CONTEXT']);
 }
 
+function L($sMsg,$sLevel = 'info')
+{
+    call_user_func(array(CTX()->Log, $sLevel), $sMsg);
+}
+
 function DB() {
     return CTX()->RDB;
 }

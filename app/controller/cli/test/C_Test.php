@@ -1,10 +1,10 @@
 <?php
 namespace App\controller\cli\test;
 
-use App\system\controller\Cli_Base;
-use Hummer\Component\Helper\File;
-use Hummer\Component\Helper\Dir;
 use Hummer\Component\Helper\Arr;
+use App\system\controller\Cli_Base;
+use Hummer\Component\Filesystem\File;
+use Hummer\Component\Filesystem\Dir;
 use Hummer\Component\Util\HttpCall\HttpCall;
 
 
@@ -19,6 +19,7 @@ class C_Test extends Cli_Base {
         }else{
             $M->delete();
         }
+        $this->Log->error('这里有错误，请显示红色底');
         /*
         $D = DB()->getData('d')
             ->select('d.id as d_id,d2.id as d2_id')

@@ -1,15 +1,15 @@
 <?php
 namespace App\controller\web\test;
 
-use Hummer\Component\Helper\File;
-use Hummer\Component\Helper\Dir;
 use Hummer\Component\Helper\Arr;
 use App\system\controller\Web_Base;
+use Hummer\Component\Filesystem\Dir;
 use Hummer\Component\Util\Page\Page;
+use Hummer\Component\Filesystem\File;
 use Hummer\Component\Util\File\Download;
 use Hummer\Component\Util\File\FileUpload;
 use Hummer\Component\Util\Image\Image;
-
+use Hummer\Component\Util\Image\Verify;
 use Hummer\Component\Route\RouteErrorException;
 use Hummer\Component\Context\InvalidClassException;
 
@@ -21,24 +21,43 @@ class C_Test extends Web_Base{
         $this->HttpResponse->charset();
     }
 
+    /**
+     *  验证码
+     **/
+    public function actionV()
+    {
+        $V = new Verify();
+        $V->setFontSize(20);
+        $V->setCodeType(2);
+        $V->setCodeLen(6);
+        $V->setWidth(130);
+        $V->setHeight(50);
+        $V->setLineCount(13);
+        $V->setStringPad('++');
+        $V->create();
+        CTX()->Log->aWriter['WebDeBug']->setDisable();
+        $this->display(null);
+    }
+
+    public function __after_actionV__()
+    {
+    }
+
+
     public function actionDefault()
     {
-        $Session = CTX()->Session;
-        $Session::set('name', 'damon_feixx');
-        echo $Session::get('name');
-        //echo DB()->get('user u')->select('id')->find();
+        echo DB()->get('user u','slave')->select('*')->find();
         /**
          *  File Cache
          **/
-        $Cache = CTX()->CacheFile;
+        //$Cache = CTX()->CacheFile;
         //$Cache->store('user',array(1,3), 86400);
         //pr($Cache->fetch('user'));
-        //throw new InvalidClassException('xx');
         //CTX()->getInst()->Log->aWriter['WebDeBug']->disable();//disable web debug
         //Download::download('/home/zhangyinfei/project/test/data/excel.xlsx');
         //Download::download('/home/zhangyinfei/project/hummer/app/webroot/index.php');
         //$Session = CTX()->Session;
-        //$Session::set('name', 'damon_fei');
+        //$Session::set('name', 'yinfei_damon_fei');
         //$Session::get('name');
         //$Session::del('name');
         /*

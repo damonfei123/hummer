@@ -1,7 +1,7 @@
 <?php
 return array(
     'ActionInfo' => array(
-        'db'          => 'cheat',
+        'db'          => 'cheat_slave',
         'table'       => 'action_info',
         'pk'          => 'auto_id',
         'model_class' => 'Model_ActionInfo',

@@ -1,7 +1,7 @@
 <?php
 namespace App\System\controller;
 
-use Hummer\Framework\C_Cli;
+use Hummer\Bundle\Framework\Controller\C_Cli;
 
 class Cli_Base extends C_Cli{
 

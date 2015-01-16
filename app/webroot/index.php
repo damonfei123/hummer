@@ -1,7 +1,9 @@
 <?php
 namespace Hummer;
 
-use Hummer\Framework\Bootstrap;
+//xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
+
+use Hummer\Bundle\Framework\Bootstrap;
 use Hummer\Component\Configure\Configure;
 
 header('Access-Control-Allow-Origin: *');
@@ -34,3 +36,6 @@ try{
 }catch(\SmartyException $E){
     CTX()->Log->fatal($E->getMessage());
 }
+
+//$data = xhprof_disable();
+//pr($data);

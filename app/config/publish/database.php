@@ -35,20 +35,11 @@ return array(
                 \PDO::ATTR_TIMEOUT            => 3
             )
         ),
-        'backup' => array(
-            'dsn'       => 'mysql:host=10.212.117.53;dbname=youqian',
-            'username'  => 'dt_guest',
-            'password'  => 'read!dt@guest',
-            'option'    => array(
-                \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
-                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
-                \PDO::ATTR_TIMEOUT            => 3
-            )
-        ),
-        'youqian' => array(
-            'dsn'       => 'mysql:host=10.205.33.16;dbname=youqian',
-            'username'  => 'dt_guest',
-            'password'  => 'read!dt@guest',
+        #反作弊从库
+        'cheat_slave' => array(
+            'dsn'       => 'mysql:host=10.58.185.13;dbname=anti_cheat',
+            'username'  => 'RD_zhangyinfei',
+            'password'  => 'rd_zyf_select',
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,

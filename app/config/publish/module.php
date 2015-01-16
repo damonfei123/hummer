@@ -1,6 +1,6 @@
 <?php
 use Hummer\Component\Log\LogFactory;
-use Hummer\Framework\Bootstrap;
+use Hummer\Bundle\Framework\Bootstrap;
 
 return array(
     array(
@@ -80,7 +80,7 @@ return array(
         'class'  => 'Hummer\\Component\\Cache\\CacheFactory',
         'params' => array(
             '\@File',
-            '/home/zhangyinfei/project/test/data/HCache/'
+            '/tmp/damon/'
         )
     ),
 );
