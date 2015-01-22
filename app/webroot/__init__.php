@@ -22,17 +22,21 @@ function Redis()
     return CTX()->Redis;
 }
 
-function C($sCookie) {
+function C($sCookie=null) {
     return CTX()->HttpRequest->getC($sCookie);
 }
-function P($mKeyOrKeys){
+function P($mKeyOrKeys=null){
     return CTX()->HttpRequest->getP($mKeyOrKeys);
 }
-function G($mKeyOrKeys) {
+function G($mKeyOrKeys=null) {
     return CTX()->HttpRequest->getG($mKeyOrKeys);
 }
-function GP($mKeyOrKeys){
+function GP($mKeyOrKeys=null){
     return CTX()->HttpRequest->getGP($mKeyOrKeys);
+}
+function SRV($mKeyOrKeys=null)
+{
+    return CTX()->HttpRequest->getSRV($mKeyOrKeys);
 }
 
 function go($sUrl=null)

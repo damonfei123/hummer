@@ -24,6 +24,16 @@ return array(
                 \PDO::ATTR_TIMEOUT            => 3
             )
         ),
+        'yq_cms' => array(
+            'dsn'       => 'mysql:host=172.17.181.135;dbname=youqian_cms',
+            'username'  => 'root',
+            'password'  => 'entsafe',
+            'option'    => array(
+                \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
+                \PDO::ATTR_TIMEOUT            => 3
+            )
+        ),
         #反作弊
         'cheat' => array(
             'dsn'       => 'mysql:host=cq02-sw-dtdb01.cq02;dbname=anti_cheat',
@@ -46,6 +56,19 @@ return array(
                 \PDO::ATTR_TIMEOUT            => 3
             )
         ),
+        #hf
+        'hf' => array(
+            'dsn'       => 'mysql:host=172.17.181.135;dbname=hf',
+            'username'  => 'root',
+            'password'  => 'entsafe',
+            'option'    => array(
+                \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'latin1'",
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
+                \PDO::ATTR_TIMEOUT            => 3
+            )
+        ),
+
+
     ),
 
     #Redis

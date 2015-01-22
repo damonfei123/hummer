@@ -5,6 +5,7 @@ namespace Hummer;
 
 use Hummer\Bundle\Framework\Bootstrap;
 use Hummer\Component\Configure\Configure;
+use Hummer\Component\Route\RouteErrorException;
 
 header('Access-Control-Allow-Origin: *');
 
@@ -31,11 +32,13 @@ $B = new Bootstrap(
 Bootstrap::setDefaultErrorPage();
 require '__init__.php';
 
+$B->run();
+/*
 try{
     $B->run();
 }catch(\SmartyException $E){
     CTX()->Log->fatal($E->getMessage());
 }
-
+*/
 //$data = xhprof_disable();
 //pr($data);

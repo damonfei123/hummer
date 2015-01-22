@@ -8,4 +8,12 @@ class Web_Base extends C_Web {
     public function __before__()
     {
     }
+
+    public function ajaxReturn($iStatus, $sRetMsg='', $aData=array())
+    {
+        return json_encode(array(
+            'status'    => $iStatus,
+            'info'      => $sRetMsg
+        ));
+    }
 }

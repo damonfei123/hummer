@@ -21,6 +21,11 @@ class C_Test extends Web_Base{
         $this->HttpResponse->charset();
     }
 
+    public function actionXx()
+    {
+        pr(SRV());
+    }
+
     /**
      *  验证码
      **/
@@ -46,7 +51,6 @@ class C_Test extends Web_Base{
 
     public function actionDefault()
     {
-        echo DB()->get('user u','slave')->select('*')->find();
         /**
          *  File Cache
          **/
@@ -67,7 +71,6 @@ class C_Test extends Web_Base{
         }
         */
         #查询
-        /*
         DB()->get('user')->find();
 
         DB()->get('user u')->find();
@@ -79,9 +82,10 @@ class C_Test extends Web_Base{
         DB()->getUser('u')->left('user u2 on u.id = u2.id')->findMulti();
 
         foreach(DB()->getUser()->where(array('name like' => '%d%'))->findMulti() as $D){
-            echo $D;
+            echo 'name:' . $D;
         };
 
+        /*
         pr(DB()->getUser()->where(array('id BETWEEN' => array(1,4)))->explain());
 
         DB()->getUser()->where("name = 'damon'")->find();

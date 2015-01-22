@@ -14,7 +14,7 @@ class Cli_Base extends C_Cli{
     {
         file_put_contents(
             '/home/zhangyinfei/project/test/data/nohup_id/'.$sFile,
-            $sContent,
+            $sContent . PHP_EOL,
             $bAppend ? FILE_APPEND : ''
         );
     }

@@ -41,7 +41,7 @@ return array(
             'options' => array(
                 'force_compile'    => true,
                 'caching'          => true,
-                'cache_lifetime'   => 120,
+                'cache_lifetime'   => 120
             )
         ),
     ),
@@ -53,7 +53,7 @@ return array(
             '@model',
             'App\\model',
             'Hummer\\Component\\RDB\\ORM\\Model\\Model',
-            \Hummer\Component\RDB\ORM\AopPDO::$aAopPreExecCost
+            //\Hummer\Component\RDB\ORM\AopPDO::$aAopPreExecCost
         ),
     ),
     array(
