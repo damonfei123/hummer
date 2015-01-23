@@ -1,12 +1,18 @@
 <?php
 return array(
     'http' => array(
-        array(
+        '#index.php#' => array(
             array('Hummer\Component\Route\Mode', 'Http_Page'),
             'App\\controller\\web\\',
             'C_',
             'action'
-        )
+        ),
+        '#api.php#' => array(
+            array('Hummer\Component\Route\Mode', 'Http_Page'),
+            'App\\controller\\api\\',
+            'C_',
+            ''
+        ),
     ),
     'cli' => array(
         array(
