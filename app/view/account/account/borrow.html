@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><!-- InstanceBegin template="/Templates/account.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta charset="utf-8">
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>汇富e家-我的借款</title>
+<!-- InstanceEndEditable -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<link rel="shortcut icon" href="__PUBLIC__/images/favicon.ico">
+<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="__PUBLIC__/bootstrap/css/flat-ui.min.css" rel="stylesheet">
+<link href="__PUBLIC__/css/Public/nav.css" rel="stylesheet">
+<link href="__PUBLIC__/css/base.css" rel="stylesheet">
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+<!--[if lt IE 9]>
+  <script src="__PUBLIC__bootstrap/js/html5shiv.js"></script>
+  <script src="__PUBLIC__bootstrap/js/respond.min.js"></script>
+<![endif]-->
+<!-- InstanceBeginEditable name="css" -->
+<link rel="stylesheet" href="__PUBLIC__/webix/webix.css">
+<style type="text/css">
+.container{
+	margin-top:2%;
+	padding-top:0%;
+	padding-bottom:1%;
+}
+#aside{
+	width:19%;
+	float:left;
+}
+#aside a{
+	text-align:center;
+	font-size:130%;
+	padding-left:6%;
+	padding-bottom:6%;
+}
+#main{
+	width:80%;
+	float:right;
+	background:#FFF;
+	padding:2%;
+	min-height:520px;
+}
+#borrowhistory{
+	width:85%;
+	margin:0 auto;
+}
+.webix_style .webix_hcell{
+	text-align:center;
+	font-size:90%;
+	background-color:#F0F1F2;
+}
+.webix_style .webix_column{
+	font-size:80%;
+	text-align:center;
+}
+</style>
+<!-- InstanceEndEditable -->
+</head>
+<body>
+    <header>
+       <include file="Public:nav"/>
+    </header>
+    
+    <!-- InstanceBeginEditable name="body" -->
+    <div class="container">
+    
+        <div class="list-group" id="aside">
+              <a href="__APP__/Account/fund" class="list-group-item" id="funda">
+              	<span class="glyphicon glyphicon-home"></span> &nbsp;&nbsp;资金管理</a>
+              <a href="__APP__/Account/invest" class="list-group-item" id="investa">
+              	<span class="glyphicon glyphicon-list"></span> &nbsp;&nbsp;我的投资</a>
+              <a href="__APP__/Account/borrow" class="list-group-item active" id="borrowa" style="color:#FFF;">
+              	<span class="glyphicon glyphicon-list"></span> &nbsp;&nbsp;我的借款</a>
+              <a href="__APP__/Account/profile" class="list-group-item" id="profilea">
+              	<span class="glyphicon glyphicon-user"></span> &nbsp;&nbsp;个人资料</a>
+        </div><!--end aside-->
+
+        <div class="row" id="main">
+        	 <div id="borrowhistory">
+                <p style="font-weight:bold;">我的借款</p>
+          		<div id="borrowtable"></div>
+          </div>	
+        </div><!--endmain-->
+        
+    </div><!--end container-->
+        
+    
+    <!-- InstanceEndEditable -->
+     <footer>
+       <include file="Public:footer"/>
+    </footer>
+<script src="__PUBLIC__/bootstrap/js/jquery.min.js"></script>
+<script src="__PUBLIC__/bootstrap/js/flat-ui.min.js"></script>
+<!-- InstanceBeginEditable name="js" -->
+<script type="text/javascript" src="__PUBLIC__/webix/webix.js"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+	 webix.protoUI({
+				name:"mytable", 
+				$init:function(config){
+					config.autowidth = true;
+					config.autoheight = true;
+					config.minHeight =  50;
+					this.attachEvent("onAfterLoad", function(){
+						if (!this.count())
+							this.showOverlay("您暂时还没有记录");
+					});
+				}
+			}, webix.ui.datatable);
+	gridb=new webix.ui({
+					container:"borrowtable",
+					css:"webix_style",
+					//margin:2,
+					rows:[
+						{
+							view:"pager", 
+							id:"pager",
+							animate:{
+								direction:"top"
+							},
+							size:10,
+							group:5,
+						},
+						{
+							view:"mytable",
+							//height:"200",
+							columns:[
+								{ id:"num",header:"序号", width:50,},
+								{ id:"time",header:"申请时间" , width:180,},
+								{ id:"pid",	header:"借款项目" , width:220,},	
+								{ id:"amount",	header:"借款金额" , width:150,},	
+								{ id:"status",	header:"项目状态" , width:100,},	
+								//{ id:"deal",	header:"操作" , width:100,},	
+							],
+							pager:"pager",
+							scroll:false,
+							url:"__APP__/Account/borrowhistory"
+						},
+						
+						{}
+					]
+	})
+});
+</script>
+<!-- InstanceEndEditable -->
+</body>
+<!-- InstanceEnd --></html>

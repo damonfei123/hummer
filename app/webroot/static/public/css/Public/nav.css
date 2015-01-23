@@ -1,0 +1,41 @@
+@charset "utf-8";
+/* CSS Document */
+#top{
+	font-size:120%;
+	padding-top:0.8%;
+	/*background:#003550;*/
+	background:#003550;
+	background:-moz-linear-gradient(left,#45417C,#2C8BA5);/*火狐*/
+	FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#45417C,endColorStr=#2C8BA5); /*IE*/ 
+	background:-webkit-gradient(linear, 0% 100%, 100% 0%,from(#45417C), to(#2C8BA5));/*谷歌*/
+	color:#FFF;
+}
+#topmain{
+	width:70%;
+	margin:0 auto;
+}
+#top span{
+}
+#top-right{
+	float:right;
+}
+#top-right li{
+	display:block;
+	float:right;
+	padding-left:20px;
+}
+#top-right li a{
+	color:#FFF;
+}
+nav{
+	width:100%;
+	padding:1%;
+	background:#FFF;
+}
+#navmain{
+	width:80%;
+	margin:0 auto;
+}
+#bs-example-navbar-collapse-1 ul li a{
+	letter-spacing:1px;
+}

@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	background-color:#F0F1F2;
+	/*font-family: "Microsoft YaHei","微软雅黑","Helvetica Neue", Helvetica, Arial, sans-serif;*/
+	font-family: STHeiti,"Microsoft Yahei","微软雅黑",tahoma,arial,"Hiragino Sans GB",宋体,sans-serif;
+	color:#333;
+	font-size:120%;
+}
+.container{
+	width:80%;
+	margin:0 auto;
+}
+img { max-width: 100%; padding:0; margin:0;}
+.navbar-brand{padding:0; margin:0;}

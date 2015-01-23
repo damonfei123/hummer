@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><!-- InstanceBegin template="/Templates/start.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta charset="utf-8">
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>汇富e家-我要借款</title>
+<!-- InstanceEndEditable -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="/static/public/images/favicon.ico">
+<link href="/static/public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static/public/bootstrap/css/flat-ui.min.css" rel="stylesheet">
+<link href="/static/public/css/Public/nav.css" rel="stylesheet">
+<link href="/static/public/css/base.css" rel="stylesheet">
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+<!--[if lt IE 9]>
+  <script src="/static/publicbootstrap/js/html5shiv.js"></script>
+  <script src="/static/publicbootstrap/js/respond.min.js"></script>
+<![endif]-->
+<!-- InstanceBeginEditable name="css" -->
+<style type="text/css">
+.container{
+	background:#FFF;
+	padding-top:2%;
+}
+span.red{
+	color:#F00;
+	padding:0 1%;
+}
+input#btc{
+	color:#03F;
+}
+input#rpway{
+	color:#03F;
+}
+input#rpdate{
+	color:#03F;
+}
+input#interest{
+	color:#03F;
+}
+#tip{
+	display:none;
+	font-size:100%;
+}
+#rate1{
+	padding:0 10px;
+	color:#F00;
+}
+</style>
+<!-- InstanceEndEditable -->
+</head>
+<body>
+    <header>
+       {include file='public/nav.html'}
+    </header>
+
+    <!-- InstanceBeginEditable name="body" -->
+    <div class="container">
+
+       <div id="step2">
+          <form class="form-horizontal" role="form" id="applyform">
+          	  <input type="hidden" id="status" value="{$p['status']}">
+
+              <div class="page-header" style=" padding-left:10%;margin-top:0%;">
+                  <span style="font-size:150%;">汇富e家 | 比特币质押标申请
+                  	<small id="tip">
+                  		<div class="alert alert-warning alert-dismissible" role="alert"  style="display:inline-block; font-size:60%; margin:0 0 -5% 5%;">
+                            <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <span class="glyphicon glyphicon-warning-sign"></span>
+                            &nbsp;亲，您之前已经提交过借款申请了哦，请继续完善她吧，谢谢！
+                        </div>
+                    </small>
+              	</span>
+              </div>
+
+              <div class="form-group">
+                  <label for="amount" class="col-sm-3 control-label">借款金额（单位：万元）</label>
+                  <div class="col-sm-4">
+                    <div class="input-group">
+                      <input type="text" name="amount" class="form-control" id="amount" value="{$p['amount']}">
+                      <span class="input-group-addon">万元</span>
+                    </div>
+                  </div>
+                  <label class="col-sm-5 control">1万~200万人民币</label>
+              </div><!--endform-group-->
+
+              <div class="form-group">
+                  <label for="btc" class="col-sm-3 control-label">需质押比特币数量</label>
+                  <div class="col-sm-4">
+                    <div class="input-group">
+                      <input type="text" name="btc" class="form-control" id="btc" value="{$p['btc']}" readonly>
+                      <span class="input-group-addon">BTC</span>
+                    </div>
+                  </div>
+                  <label class="col-sm-5 control">每个比特币可抵押<span class="red">1500</span>元（当前抵押率）</label>
+              </div><!--endform-group-->
+
+              <div class="form-group">
+                  <label for="period" class="col-md-3 control-label">借款期限</label>
+                  <div class="col-md-4">
+                       <select name="period" id="period"  class="form-control" data-toggle="select">
+                          <option value="1" id="r1" selected>1 个月</option>
+                          <option value="2" id="r2">2 个月</option>
+                          <option value="3" id="r3">3 个月</option>
+                          <option value="4" id="r4">4 个月</option>
+                          <option value="5" id="r5">5 个月</option>
+                          <option value="6" id="r6">6 个月</option>
+                      </select>
+                  </div>
+                  <label class="col-md-5 control">借款期限在<span class="red">半年</span>之内</label>
+              </div><!--endform-group-->
+
+               <div class="form-group">
+                  <label for="rate" class="col-sm-3 control-label"> 借款年利率（单位：%）</label>
+                  <div class="col-sm-4">
+                    <div class="input-group">
+                      <input type="text" name="rate" class="form-control" id="rate" value="{$p['rate']}">
+                      <span class="input-group-addon">%</span>
+                    </div>
+                  </div>
+                  <label class="col-sm-5 control">年利率在<span class="red">15%~30%</span>之间</label>
+              </div><!--endform-group-->
+
+              <span class="help-block" style="margin:-15px 0 6px 26%;">
+              	<span class="glyphicon glyphicon-info-sign"></span> 其中<span id="rate1"></span>将支付给投资者
+              </span>
+
+               <div class="form-group">
+                  <label for="rpdate" class="col-sm-3 control-label">每月还款日</label>
+                  <div class="col-sm-4">
+                      <input type="text" name="rpdate" class="form-control" id="rpdate" value="满标日" readonly>
+                  </div>
+                  <label class="col-sm-5 control">每月还款日以满标日为准</label>
+              </div><!--endform-group-->
+
+               <div class="form-group">
+                  <label for="rpway" class="col-sm-3 control-label">还款方式</label>
+                  <div class="col-sm-4">
+                      <input type="text" name="rpway" class="form-control" id="rpway" value="每月付息，到期还本" readonly>
+                  </div>
+                  <label class="col-sm-5 control"></label>
+              </div><!--endform-group-->
+
+               <div class="form-group">
+                  <label for="interest" class="col-sm-3 control-label">每月利息（单位：元）</label>
+                  <div class="col-sm-4">
+                  	<div class="input-group">
+                      <input type="text" name="interest" class="form-control" id="interest" value="{$p['interest']}" readonly>
+                      <span class="input-group-addon">元</span>
+                    </div>
+                  </div>
+                  <label class="col-sm-5 control"></label>
+              </div><!--endform-group-->
+
+              <div class="form-group">
+                  <label for="ps" class="col-sm-3 control-label">备注说明</label>
+                  <div class="col-sm-4">
+                      <textarea class="form-control" rows="2" name="ps" id="ps" placeholder="备注不得超过50字">{$p['ps']}</textarea>
+                  </div>
+                  <label class="col-sm-5 control"></label>
+              </div><!--endform-group-->
+
+              <div class="form-group has-warning has-feedback">
+                  <label for="ps" class="col-sm-3 control-label"></label>
+                  <div class="col-sm-9">
+                     <input type="checkbox" name="agreement" id="agreement" value="1" style="margin-right:5px;"/>
+                     <label class="control-label" for="agreement">我已阅读并同意签署
+                     	<a href="__APP__/Public/investAgreement" target="_blank">《投资协议》</a>
+                     </label>
+                  </div>
+              </div><!--endform-group-->
+
+              <div class="form-group">
+                  <label for="ps" class="col-sm-3 control-label"></label>
+                  <div class="col-sm-4">
+                     <input type="submit" class="btn btn-primary btn-lg btn-block" id="submit2" value="立 即 申 请">
+                  </div>
+                  <label class="col-sm-5 control"></label>
+              </div><!--endform-group-->
+
+            </form>
+
+        </div><!--endstep2-->
+    </div><!--endcontainer-->
+    <!-- InstanceEndEditable -->
+     <footer>
+       {include file='public/footer.html'}
+    </footer>
+<script src="/static/public/bootstrap/js/jquery.min.js"></script>
+<script src="/static/public/bootstrap/js/flat-ui.min.js"></script>
+<!-- InstanceBeginEditable name="js" -->
+<script src="/static/public/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$(document).ready(function(e) {
+		if($("#status").val()==0){
+            $("#tip").show();
+        }
+        var rate=$("input#rate").val();
+		$("#rate1").html(rate-6+" %");
+		//根据借款金额计算质押比特币数量和每月利息
+		var price=1500.00;
+		$("input#amount").keyup(function(){
+			var amount=10000*$("input#amount").val();
+			var btc=Math.ceil(100*amount/price)/100;
+			var rate=$("input#rate").val();
+			var interest=Math.ceil(amount*rate/12)/100;
+			$("input#btc").val(btc);
+			$("input#interest").val(interest);
+		})
+		$("input#rate").keyup(function(){
+			var amount=10000*$("input#amount").val();
+			var rate=$("input#rate").val();
+			if(rate>=15){
+				$("#rate1").html(rate-6+" %");
+			}else{	$("#rate1").html(" %");}
+			var interest=Math.ceil(amount*rate/12)/100;
+			$("input#interest").val(interest);
+		})
+
+		//提交表单数据
+		$("#submit2").click(function(event){
+			//判断申请表单的数据有效性
+			if(amountCheck()==false){ return false; };
+			if(rateCheck()==false){ return false; };
+			if(psCheck()==false){ return false; };
+			if(agreementCheck()==false){ return false; };
+			//提交表单数据
+			var status=$("#status").val();
+			var str=$("form").serialize();
+			if(status==1){
+				$.ajax({
+					url:"/project/project/add",
+					data:str,
+					type:"post",
+					dataType:"json",
+					success: function(data){
+						if(data.status==1){
+							window.location.href="/project/project/paybtc";
+						};
+					},
+					error: function(){}
+				});
+			}
+			if(status==0){
+				$.ajax({
+					url:"/project/project/update",
+					data:str,
+					type:"post",
+					dataType:"json",
+					success: function(data){
+						if(data.status==1){
+							window.location.href="/project/project/paybtc";
+						};
+					},
+					error: function(){}
+				});
+			}
+			event.preventDefault();
+			});
+    });
+</script>
+<!-- InstanceEndEditable -->
+</body>
+<!-- InstanceEnd --></html>

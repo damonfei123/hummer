@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><!-- InstanceBegin template="/Templates/account.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta charset="utf-8">
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>汇富e家-个人资料</title>
+<!-- InstanceEndEditable -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<link rel="shortcut icon" href="__PUBLIC__/images/favicon.ico">
+<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="__PUBLIC__/bootstrap/css/flat-ui.min.css" rel="stylesheet">
+<link href="__PUBLIC__/css/Public/nav.css" rel="stylesheet">
+<link href="__PUBLIC__/css/base.css" rel="stylesheet">
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+<!--[if lt IE 9]>
+  <script src="__PUBLIC__bootstrap/js/html5shiv.js"></script>
+  <script src="__PUBLIC__bootstrap/js/respond.min.js"></script>
+<![endif]-->
+<!-- InstanceBeginEditable name="css" -->
+<style type="text/css">
+.container{
+	margin-top:2%;
+	padding-top:0%;
+	padding-bottom:1%;
+}
+#aside{
+	width:19%;
+	float:left;
+}
+#aside a{
+	text-align:center;
+	font-size:130%;
+	padding-left:6%;
+	padding-bottom:6%;
+}
+#main{
+	width:80%;
+	float:right;
+	background:#FFF;
+	padding-top:2%;
+	min-height:450px;
+}
+</style>
+<!-- InstanceEndEditable -->
+</head>
+<body>
+    <header>
+       <include file="Public:nav"/>
+    </header>
+    
+    <!-- InstanceBeginEditable name="body" -->
+    <div class="container">
+    
+        <div class="list-group" id="aside">
+              <a href="__APP__/Account/fund" class="list-group-item">
+              	<span class="glyphicon glyphicon-home"></span> &nbsp;&nbsp;资金管理</a>
+              <a href="__APP__/Account/invest" class="list-group-item">
+              	<span class="glyphicon glyphicon-list"></span> &nbsp;&nbsp;我的投资</a>
+              <a href="__APP__/Account/borrow" class="list-group-item">
+              	<span class="glyphicon glyphicon-list"></span> &nbsp;&nbsp;我的借款</a>
+              <a href="__APP__/Account/profile" class="list-group-item active" style="color:#FFF;">
+              	<span class="glyphicon glyphicon-user"></span> &nbsp;&nbsp;个人资料</a>
+        </div><!--end aside-->
+        
+        <div class="row" id="main">
+        	<p style="font-weight:bold; margin-left:6%;">个人资料设置</p>
+            <form class="form-horizontal" role="form" id="registerform">
+            	<div class="form-group">
+                    <label class="col-sm-2 control-label">手机</label>
+                    <div class="col-sm-6">                
+                       <p style="padding-top:3px;" class="form-control-static">{$u['phone']}</p>
+                    </div>       
+                    <label class="col-sm-2 control">                     
+                        <if condition="$u['phone']">
+                           <small style="color:#85D134;"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;已认证</small>
+                        <else /><small style="color:#F00;"><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;未绑定</small>
+                        </if>                     
+                    </label>
+                    <label class="col-sm-2 control">
+                    	 <a href="#" data-toggle="modal" data-target="#phonechange">修改</a>
+                    </label>          
+                </div><!--endform-group-->          	
+                
+                <div class="form-group">
+                    <label for="rpdate" class="col-sm-2 control-label">邮箱</label>
+                    <div class="col-sm-6">                 
+                        <p style="padding-top:3px;" class="form-control-static">
+                        	<if condition="$u['email']">$u['email']
+                        	<else /><small style="font-size:80%;">绑定邮箱后，您可及时了解交易情况及汇富e家最新动态</small>
+                       		</if>                     
+                        </p>
+                    </div>
+                     <label class="col-sm-2 control">                     
+                        <if condition="$u['email']">
+                           <small style="color:#85D134;"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;已认证</small>
+                        <else /><small style="color:#F00;"><span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;未绑定</small>
+                        </if>                     
+                    </label>
+                    <label class="col-sm-2 control">修改</label>          
+                </div><!--endform-group-->
+                
+                <div class="form-group">
+                    <label for="rpdate" class="col-sm-2 control-label">密码</label>
+                    <div class="col-sm-6">                 
+                        <p style="padding-top:3px;" class="form-control-static">{$u['password']}</p>
+                    </div>
+                    <label class="col-sm-2 control">
+                    	<small style="color:#85D134;"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;已设置</small>
+                    </label>    
+                    <label class="col-sm-2 control">
+                    	<a href="#" data-toggle="modal" data-target="#pwchange">修改</a>
+                    </label>          
+                </div><!--endform-group-->
+            </form>
+        </div><!--end main-->
+        
+         <!-- phonechangeModal -->
+           <div class="modal fade" id="phonechange" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <p class="modal-title" id="myModalLabel">汇富e家 | 修改手机</p>
+                  </div>
+                  <div class="modal-body">
+                  	  <form class="form-horizontal" role="form" id="" style="width:75%; margin:0 auto;">
+                      	<div class="form-group">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="col-sm-3 control-label">新手机</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="phone" class="form-control login-field" id="phone" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="msg" class="col-sm-3 control-label">短信验证码</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="msg" class="form-control" id="msg" placeholder="">
+                            </div>
+                            <div class="col-sm-5">
+                                <button class="btn btn-block btn-info" id="getmsg">获取验证码</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-6">
+                                <input type="submit" class="btn btn-primary btn-block" id="phonebtn" value="确 认 修 改">
+                            </div>
+                        </div>
+                      </form>                	 
+                  </div><!--en dmodal-body-->    
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                  </div>           
+                </div>
+              </div>
+            </div><!--end myModal-->
+                      
+         <!-- pwchangeModal -->
+           <div class="modal fade" id="pwchange" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <p class="modal-title" id="myModalLabel">汇富e家 | 修改密码</p>
+                  </div>
+                  <div class="modal-body">
+                  	  <form class="form-horizontal" role="form" id="" style="width:75%; margin:0 auto;">
+                      	<div class="form-group">
+                        </div>
+                        <div class="form-group">
+                            <label for="oldpassword" class="col-sm-3 control-label">原密码</label>
+                            <div class="col-sm-9">
+                                <input type="password" name="oldpassword" class="form-control login-field" id="oldpassword">
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label for="password" class="col-sm-3 control-label">新密码</label>
+                            <div class="col-sm-9">
+                             	<input type="password" name="password" class="form-control login-field" id="password">
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label for="repassword" class="col-sm-3 control-label">确认密码</label>
+                            <div class="col-sm-9">
+                             	<input type="password" name="repassword" class="form-control login-field" id="repassword">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-6">
+                                <input type="submit" class="btn btn-primary btn-block" id="passwordbtn" value="确 认 修 改">
+                            </div>
+                        </div>
+                      </form>                	 
+                  </div><!--en dmodal-body-->    
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                  </div>           
+                </div>
+              </div>
+            </div><!--end myModal-->
+ 
+    </div><!--end container-->
+    <!-- InstanceEndEditable -->
+     <footer>
+       <include file="Public:footer"/>
+    </footer>
+<script src="__PUBLIC__/bootstrap/js/jquery.min.js"></script>
+<script src="__PUBLIC__/bootstrap/js/flat-ui.min.js"></script>
+<!-- InstanceBeginEditable name="js" -->
+<script src="__PUBLIC__/js/validate.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+	//修改手机
+	var phoneCheckUrl = "__APP__/Validate/phoneCheck";
+	var msgCheckUrl = "__APP__/Validate/msgCheck";
+	
+	$("#getmsg").click(function(event){		
+		if(phoneCheck(phoneCheckUrl)==false){return false;};
+		var phone=$("#phone").val();
+		$.ajax({
+			url:"__APP__/Validate/msg?"+Math.random(),
+			data:"phone="+phone,
+			type:"post",
+			dataType:"text",
+			success: function(data){},
+		});
+		event.preventDefault();
+		var count = 120;
+		BtnCount();
+		function BtnCount() {
+		     if (count == 0) {
+				$("#getmsg").attr('disabled',false).html("获取验证码");
+				clearTimeout();              
+			}else {
+				$("#getmsg").html(count+"秒后重新获取");
+				$("#getmsg").attr("disabled",true);
+		          count--;
+		          setTimeout(function(){
+					BtnCount();
+				}, 1000);
+		     }
+		}
+	});
+	$("#phonebtn").click(function(event){
+		if(phoneCheck(phoneCheckUrl)==false){return false;};
+		if(msgCheck(msgCheckUrl)==false){return false;};
+		var phone=$("#phone").val();
+		$.ajax({
+			url:"__APP__/Account/change",
+			data:"phone="+phone,
+			type:"post",
+			dataType:"json",
+			success: function(data){    
+				if(data.status==1){	alert("恭喜您,手机修改成功!");location.reload(true);}
+				if(data.status==0){	alert("抱歉,系统繁忙，请稍后重试");location.reload(true);} 
+			},
+			error: function(){  }
+			
+		});
+		event.preventDefault();
+	});
+	//修改密码
+	function oldpwCheck(){
+		var oldpw=$("#oldpassword").val();
+		if(oldpw==''){
+			$('#oldpassword').popover('destroy');
+			$("#oldpassword").popover({
+				"container": "body",
+				"trigger": "click",
+				"content": "请输入您的原密码"
+			});
+			$("#oldpassword").focus();
+			$("#oldpassword").popover('show');
+			return false;
+		}
+		var flag = true;
+		$.ajax({
+			url:"__APP__/Validate/oldpwCheck",
+			data:"oldpw="+oldpw,
+			type:"post",
+			async:false,  // 设置同步方式
+			cache:false,
+			dataType:"json",
+			success: function(data){
+				if(data.status==0){
+					$('#oldpassword').popover('destroy');
+					$("#oldpassword").popover({
+						"container": "body",
+						"trigger": "click",
+						"content": "您输入的原密码不正确"
+					});
+					$("#oldpassword").focus();
+					$("#oldpassword").popover('show');
+					flag = false;
+				}
+			},
+		});
+		if(!flag){return false;}
+		$('#oldpassword').popover('destroy');
+		return true;
+	}
+	$("#passwordbtn").click(function(event){
+		if(oldpwCheck()==false){return false;};
+		if(pwCheck()==false){return false;};
+		if(repwCheck()==false){return false;};
+		var password=$("#password").val();
+		$.ajax({
+			url:"__APP__/Account/change",
+			data:"password="+password,
+			type:"post",
+			dataType:"json",
+			success: function(data){    
+				if(data.status==1){	alert("恭喜您,密码修改成功!");location.reload(true);}
+				if(data.status==0){	alert("抱歉,系统繁忙，请稍后重试");location.reload(true);} 
+			},
+			error: function(){  }
+			
+		});
+		event.preventDefault();
+	});
+});
+</script>
+<!-- InstanceEndEditable -->
+</body>
+<!-- InstanceEnd --></html>

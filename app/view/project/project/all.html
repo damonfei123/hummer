@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><!-- InstanceBegin template="/Templates/start.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta charset="utf-8">
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>汇富e家-我要投资</title>
+<!-- InstanceEndEditable -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="/static/public//images/favicon.ico">
+<link href="/static/public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static/public/bootstrap/css/flat-ui.min.css" rel="stylesheet">
+<link href="/static/public/css/Public/nav.css" rel="stylesheet">
+<link href="/static/public/css/base.css" rel="stylesheet">
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+<!--[if lt IE 9]>
+  <script src="/static/public/bootstrap/js/html5shiv.js"></script>
+  <script src="/static/public/bootstrap/js/respond.min.js"></script>
+<![endif]-->
+<!-- InstanceBeginEditable name="css" -->
+<link rel="stylesheet" href="/static/public//css/Project/jquery.circliful.css">
+<link rel="stylesheet" href="/static/public//css/page.css">
+<style type="text/css">
+.container{
+	margin-top:2%;
+	background:#FFF;
+	padding-top:1%;
+	padding-bottom:1%;
+}
+td{
+	font-size:120%;
+}
+#btcimg{
+	width:28px;
+	height:22px;
+	margin-top:-4px;
+}
+.title{
+	font-size:120%;
+	font-weight:bold;
+}
+.help-block{
+	font-size:80%;
+}
+.bignum{
+	font-family:Georgia;
+	font-size:300%;
+	font-weight:bolder;
+	display:inline;
+}
+</style>
+<!-- InstanceEndEditable -->
+</head>
+<body>
+    <header>
+       {include file='public/nav.html'}
+    </header>
+
+    <!-- InstanceBeginEditable name="body" -->
+    <div class="container">
+        <div class="panel" id="main">
+           <div class="panel-heading">
+            	 <h4 class="panel-title">汇富e家 | 项目浏览</h4>
+           </div>
+           <div class="table-responsive">
+           <table class="table">
+           	  <tr class="success">
+              	 <th></th>
+            	 <th>项目名称</th>
+                 <th>借款金额</th>
+                 <th>年化利率</th>
+                 <th>借款期限</th>
+                 <th></th>
+              </tr>
+              {foreach from=$aList item=p}
+                    <tr>
+                    	<td style="padding:0;vertical-align:middle;">
+                        	{if $p->status eq 1}
+                            	<div class="radio" data-dimension="75" data-text="{100 * $p->invest/$p->amount|round:2}%" data-info="" data-width="8" data-fontsize='10' data-percent="{100 * $p->invest/$p->amount|round:2}" data-fgcolor='#E74C3C' data-bgcolor='#eee'></div>
+                            {elseif $p->status eq 2}
+                              	<div class="radio" data-dimension="75" data-text="还" data-info="" data-width="8" data-fontsize='14' data-percent="100" data-fgcolor='#57D68C' data-bgcolor='#eee'></div>
+                            {else}
+                               	<div class="radio" data-dimension="75" data-text="完" data-info="" data-width="8" data-fontsize='14' data-percent="100" data-fgcolor='#eee' data-bgcolor='#eee'></div>
+                            {/if}
+                        </td>
+                        <td style="vertical-align:middle;">
+                        	<div class="title">
+                            	<img src="/static/public//images/btc_32.png" title="BTC" id="btcimg">
+                                <a href="/Project/detail/pid/{$p->id}">{$p->title}</a>
+                            </div>
+                            <span class="help-block">编号：{$p->aptime}-{$p->id}</span>
+                        </td>
+                        <td style="vertical-align:middle;">
+                        	<div class="bignum">{$p->amount/10000}</div> 万
+                        </td>
+                        <td style="vertical-align:middle;">
+                        	<div class="bignum" style="color:#E74C3C;">{$p->rate1}</div> %
+                        </td>
+                        <td style="vertical-align:middle;">
+                        	<div class="bignum">{$p->period}</div> 个月
+                        </td>
+                        <td style="vertical-align:middle;">
+                        	{if $p->status eq 1}
+                            <a class="btn btn-danger btn-sm btn-block" href="/project/project/detail?pid={$p->id}">立 即 投 资</a>
+                            {elseif $p->status eq 2}
+                           <a class="btn btn-success btn-sm btn-block" href="/project/project/detail?pid={$p->id}">查 看 详 情</a>
+                            {else}
+                           <a class="btn btn-default btn-sm btn-block" href="/project/project/detail?pid={$p->id}">查 看 详 情</a>
+                            {/if}
+                        </td>
+                    </tr>
+                {/foreach}
+        	</table>
+            <div class="scott">{$page}</div>
+          	</div><!--endresponsive-->
+        </div><!--endmain-->
+
+    </div><!--endcontainer-->
+    <!-- InstanceEndEditable -->
+     <footer>
+       {include file='public/footer.html'}
+    </footer>
+<script src="/static/public//bootstrap/js/jquery.min.js"></script>
+<script src="/static/public//bootstrap/js/flat-ui.min.js"></script>
+<!-- InstanceBeginEditable name="js" -->
+<script type="text/javascript" src="/static/public//js/jquery.circliful.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+	$(".radio").circliful();
+});
+</script>
+<!-- InstanceEndEditable -->
+</body>
+<!-- InstanceEnd --></html>
