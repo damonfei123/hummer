@@ -71,7 +71,8 @@ class C_Test extends Web_Base{
         }
         */
         #查询
-        DB()->get('user')->find();
+        DB()->get('user')->where(array('id' => 2));
+        echo DB()->get('user')->find();
 
         DB()->get('user u')->find();
 
