@@ -7,7 +7,7 @@ class C_Test extends Api_Base{
 
     public function get()
     {
-        //$this->success(0,'哈哈',array(1,2,3));
+        $this->success(0,'哈哈',array(1,2,3));
         //$this->error(-1,'哈哈',array(1,2,3));
     }
 }

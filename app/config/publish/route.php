@@ -1,7 +1,7 @@
 <?php
 return array(
     'http' => array(
-        '#index.php#' => array(
+        '#index.php|dev.php#' => array(
             array('Hummer\Component\Route\Mode', 'Http_Page'),
             'App\\controller\\web\\',
             'C_',
