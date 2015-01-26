@@ -8,14 +8,14 @@
          <div class="col-md-5">
               <ul id="top-right">
               	<li id="userright">
-                    <if condition="$_SESSION['islogin']"><a href='/User/logout'>退出</a>
-                        <else /> <a href='/User/register'>注册</a>
+                    <if condition="$_SESSION['islogin']"><a href='/user/user/logout'>退出</a>
+                        <else /> <a href='/user/user/register'>注册</a>
                    </if>
                 </li>
                 <li>|</li>
                 <li id="userleft">
-                    <if condition="$_SESSION['islogin']"><a href='/Account/fund'>欢迎您：<?php echo $_SESSION['username']; ?></a>
-                        <else /> <a href='/User/login'>登陆</a>
+                    <if condition="$_SESSION['islogin']"><a href='/account/account/fund'>欢迎您：<?php echo $_SESSION['username']; ?></a>
+                        <else /> <a href='/user/user/login'>登陆</a>
                    </if>
                 </li>
               </ul>
@@ -44,7 +44,7 @@
             <li><a href="/project/project/all">我要投资</a></li>
             <li><a href="/project/project/apply">我要借款</a></li>
             <li><a href="/account/account/fund">我的账户</a></li>
-            <li><a href="/Static/aboutus">关于我们</a></li>
+            <li><a href="/statics/statics/aboutus">关于我们</a></li>
           </ul>
     	</div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->

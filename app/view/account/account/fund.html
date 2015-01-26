@@ -62,16 +62,7 @@
     <!-- InstanceBeginEditable name="body" -->
     <div class="container">
 
-        <div class="list-group" id="aside">
-              <a href="__APP__/Account/fund" class="list-group-item active" style="color:#FFF;">
-              	<span class="glyphicon glyphicon-home"></span> &nbsp;&nbsp;资金管理</a>
-              <a href="__APP__/Account/invest" class="list-group-item">
-              	<span class="glyphicon glyphicon-list"></span> &nbsp;&nbsp;我的投资</a>
-              <a href="__APP__/Account/borrow" class="list-group-item">
-              	<span class="glyphicon glyphicon-list"></span> &nbsp;&nbsp;我的借款</a>
-              <a href="__APP__/Account/profile" class="list-group-item">
-              	<span class="glyphicon glyphicon-user"></span> &nbsp;&nbsp;个人资料</a>
-        </div><!--end aside-->
+       {include file='./left_side.html'}
 
         <div class="row" id="main">
         	<p style="font-weight:bold; margin-left:6%;">账户资金</p>
@@ -92,15 +83,15 @@
                 </div><!--end row-->
                 <div class="row">
                 	<div class="col-sm-3">
-                    	<a class="btn btn-success btn-sm btn-block" href="__APP__/Account/recharge">
+                    	<a class="btn btn-success btn-sm btn-block" href="recharge">
                         	<span class="glyphicon glyphicon-usd"></span> 充 值</a>
                     </div>
                     <div class="col-sm-3">
-                    	<a class="btn btn-info btn-sm btn-block" href="__APP__/Project/all">
+                    	<a class="btn btn-info btn-sm btn-block" href="/project/project/all">
                         	<span class="glyphicon glyphicon-send"></span> 投 资</a>
                     </div>
                     <div class="col-sm-3">
-                    	<a class="btn btn-danger btn-sm btn-block" href="__APP__/Account/withdrawn">
+                    	<a class="btn btn-danger btn-sm btn-block" href="withdrawn">
                         	<span class="glyphicon glyphicon-share-alt"></span> 提 现</a>
                     </div>
                 </div>

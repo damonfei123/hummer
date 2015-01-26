@@ -1,0 +1,27 @@
+<div class="list-group" id="aside">
+  <a href="fund" class="list-group-item
+    {if $active == 'fund'}
+    active
+    {/if}
+  ">
+    <span class="glyphicon glyphicon-home"></span> &nbsp;&nbsp;资金管理</a>
+  <a href="invest" class="list-group-item
+    {if $active == 'invest'}
+    active
+    {/if}
+  ">
+    <span class="glyphicon glyphicon-list"></span> &nbsp;&nbsp;我的投资</a>
+  <a href="borrow" class="list-group-item
+    {if $active == 'borrow'}
+    active
+    {/if}
+  ">
+    <span class="glyphicon glyphicon-list"></span> &nbsp;&nbsp;我的借款</a>
+  <a href="profile" class="list-group-item
+    {if $active == 'profile'}
+    active
+    {/if}
+  ">
+    <span class="glyphicon glyphicon-user"></span> &nbsp;&nbsp;个人资料</a>
+</div><!--end aside-->
+

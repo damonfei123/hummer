@@ -41,10 +41,12 @@ class C_Account extends Web_Base {
 		}
         $this->assign(array(
             'interest'  => $list,
+            'active'    => 'fund',
             'page'      => $show
         ));
     }
-	public function profile(){
+	public function actionProfile(){
+        /*
 		if(!$_SESSION['islogin']){$this->redirect('__APP__/User/login');}
 		$id = $_SESSION['userid'];
 		$u = M('user');
@@ -52,6 +54,10 @@ class C_Account extends Web_Base {
 		$u['password'] = '******';
 		$this->u = $u;
 		$this->display();
+        */
+        $this->assign(array(
+            'active' => 'profile'
+        ));
     }
 	public function change(){
 		if(!$_SESSION['islogin']){$this->redirect('__APP__/User/login');}
@@ -75,9 +81,15 @@ class C_Account extends Web_Base {
 			$this->ajaxReturn(0,'error',0);
 		}
 	}
-	public function invest(){
-		if(!$_SESSION['islogin']){$this->redirect('__APP__/User/login');}
-		$this->display();
+	public function actionInvest(){
+        /*
+		if(!$_SESSION['islogin']){
+            $this->redirect('__APP__/User/login');
+        }
+        */
+        $this->assign(array(
+            'active'    => 'invest',
+        ));
 	}
 	public function investhistory(){
 		if(!$_SESSION['islogin']){$this->redirect('__APP__/User/login');}
@@ -98,9 +110,13 @@ class C_Account extends Web_Base {
 		}
 		$this->ajaxReturn($array,'JSON');
 	}
-	public function borrow(){
+	public function actionBorrow(){
+        /*
 		if(!$_SESSION['islogin']){$this->redirect('__APP__/User/login');}
-		$this->display();
+        */
+        $this->assign(array(
+            'active'    => 'borrow',
+        ));
 	}
 	public function borrowhistory(){
 		if(!$_SESSION['islogin']){$this->redirect('__APP__/User/login');}

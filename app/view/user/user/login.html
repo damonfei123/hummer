@@ -5,16 +5,16 @@
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>汇富e家-会员登陆</title>
 <!-- InstanceEndEditable -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<link rel="shortcut icon" href="__PUBLIC__/images/favicon.ico">
-<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="__PUBLIC__/bootstrap/css/flat-ui.min.css" rel="stylesheet">
-<link href="__PUBLIC__/css/Public/nav.css" rel="stylesheet">
-<link href="__PUBLIC__/css/base.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="/static/public/images/favicon.ico">
+<link href="/static/public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static/public/bootstrap/css/flat-ui.min.css" rel="stylesheet">
+<link href="/static/public/css/Public/nav.css" rel="stylesheet">
+<link href="/static/public/css/base.css" rel="stylesheet">
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
 <!--[if lt IE 9]>
-  <script src="__PUBLIC__bootstrap/js/html5shiv.js"></script>
-  <script src="__PUBLIC__bootstrap/js/respond.min.js"></script>
+  <script src="/static/publicbootstrap/js/html5shiv.js"></script>
+  <script src="/static/publicbootstrap/js/respond.min.js"></script>
 <![endif]-->
 <!-- InstanceBeginEditable name="css" -->
 <style type="text/css">
@@ -22,20 +22,20 @@
 	margin-top:5%;
 	background:#1ABC9C;
 }
-#main{	
+#main{
 	padding:4% 2% 2% 0;
 }
 .login-form{
-	
+
 }
 </style>
 <!-- InstanceEndEditable -->
 </head>
 <body>
     <header>
-       <include file="Public:nav"/>
+       {include file='public/nav.html'}
     </header>
-    
+
     <!-- InstanceBeginEditable name="body" -->
     <div class="container">
     	 <div class="col-md-5" id="main">
@@ -47,12 +47,12 @@
                   <input type="text" class="form-control login-field" value="" placeholder="手机" id="username" name="username" />
                   <label class="login-field-icon fui-user" for="username"></label>
                 </div>
-    
+
                 <div class="form-group">
                   <input type="password" class="form-control login-field" value="" placeholder="密码" id="password" name="password" />
                   <label class="login-field-icon fui-lock" for="password"></label>
                 </div>
-                
+
                 <div class="form-group">
                 	<div class="row">
                         <div class="col-md-6">
@@ -63,37 +63,37 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                 </div>
     			<div class="form-group">
                 	<input type="submit" class="btn btn-primary btn-lg btn-block" value="登  陆">
                 </div>
-              
+
             </form><!--endloginform-->
      	</div><!--endmain-->
-        
+
         <div class="col-md-7" id="aside">
-      		<img src="__PUBLIC__/images/login-bg.png" height="99%;">
+      		<img src="/static/public/images/login-bg.png" height="99%;">
         </div><!--endaside-->
     </div><!--endcontainer-->
     <!-- InstanceEndEditable -->
      <footer>
-       <include file="Public:footer"/>
+       {include file='public/footer.html'}
     </footer>
-<script src="__PUBLIC__/bootstrap/js/jquery.min.js"></script>
-<script src="__PUBLIC__/bootstrap/js/flat-ui.min.js"></script>
+<script src="/static/public/bootstrap/js/jquery.min.js"></script>
+<script src="/static/public/bootstrap/js/flat-ui.min.js"></script>
 <!-- InstanceBeginEditable name="js" -->
-<script src="__PUBLIC__/js/validate.js" type="text/javascript"></script>
+<script src="/static/public/js/validate.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function(e) {
-  
+
 	$("#codeimg").click(function(){
 			$(this).attr("src","__APP__/Validate/vyCode?"+Math.random());
 	});
-	
-	var vyCodeCheckUrl = "__APP__/Validate/vyCodeCheck";	
-	
+
+	var vyCodeCheckUrl = "__APP__/Validate/vyCodeCheck";
+
 	function usernameCheck(){
 		var username=$("#username").val();
 		if(username==""){
@@ -105,7 +105,7 @@ $(document).ready(function(e) {
 			});
 			$("#username").focus();
 			$("#username").popover('show');
-			return false; 
+			return false;
 		}
 		$('#username').popover('destroy');
 		return true;
@@ -121,12 +121,12 @@ $(document).ready(function(e) {
 			});
 			$("#password").focus();
 			$("#password").popover('show');
-			return false; 
+			return false;
 		}
 		$('#password').popover('destroy');
 		return true;
 	}
-	
+
 	//$("#username").blur(function(){
 //		usernameCheck();
 //	})
@@ -136,19 +136,19 @@ $(document).ready(function(e) {
 //	$("#vycode").blur(function(){
 //		vyCodeCheck(vyCodeCheckUrl);
 //	})
-	
+
 	$("input:submit").click(function(event){
-		if(usernameCheck()==false){return false;};
-		if(pwCheck()==false){return false;};
-		if(vyCodeCheck(vyCodeCheckUrl)==false){return false;};
+		if(usernameCheck()==false){ return false;};
+		if(pwCheck()==false){ return false;};
+		if(vyCodeCheck(vyCodeCheckUrl)==false){ return false;};
 		var str=$("form").serialize();
 		$.ajax({
 			url:"__APP__/User/loginCheck",
 			data:str,
 			type:"post",
 			dataType:"text",
-			success: function(data){    
-				var data=eval(data);  
+			success: function(data){
+				var data=eval(data);
 				if(data){
 					window.location.href = "__APP__";
 				}else{
@@ -160,11 +160,11 @@ $(document).ready(function(e) {
 					});
 					$("#username").focus();
 					$("#username").popover('show');
-					return false; 
+					return false;
 				}
 			},
 			error: function(){  }
-			
+
 		});
 		event.preventDefault();
 	})
