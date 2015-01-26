@@ -71,7 +71,8 @@ class C_Test extends Web_Base{
         }
         */
         #查询
-        DB()->get('user')->find();
+        DB()->get('user')->where(array('id' => 2));
+        echo DB()->get('user')->find();
 
         DB()->get('user u')->find();
 
@@ -79,7 +80,7 @@ class C_Test extends Web_Base{
         DB()->getUser()->where(array('id BETWEEN' => array(1,12)))->findMulti();
         DB()->getUser()->where(array('id BETWEEN' => array(1,12)))->findCustom();
         DB()->getUser()->where(array('id in' => array(1,2)))->findMulti();
-        DB()->getUser('u')->left('user u2 on u.id = u2.id')->findMulti();
+        DB()->getUser('u')->left('hf_user u2 on u.id = u2.id')->findMulti();
 
         foreach(DB()->getUser()->where(array('name like' => '%d%'))->findMulti() as $D){
             echo 'name:' . $D;
