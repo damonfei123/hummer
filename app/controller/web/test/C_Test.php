@@ -27,28 +27,33 @@ class C_Test extends Web_Base{
     {
         $validator = new Validator(
             array(
-                'name'=>true,
-                'age' => 100,
-                'sex'=>'0',
-                'school' => '江南大学',
-                'type' => 1,
-                'number'=>112312,
-                'mobile'=>18621719751,
-                'email' =>'xxe317030876@qq.com',
-                'unique' => '1'
+                'name'      => true,
+                'age'       => 100,
+                'sex'       => '0',
+                'school'    => '江南大学',
+                'type'      => 1,
+                'isnumber'  => 112312,
+                'mobile'    => 18621719751,
+                'email'     => 'xxe317030876@qq.com',
+                'unique'    => '1',
+                'qq'        => '123123',
             ),
             array(
                 array('name','boolean'),
+                array('qq','qq'),
                 array('school','string', 'max' => 100, 'min' => 2),
                 array('sex','require'),
                 array('age','int', 'max'=>100, 'min' => 10),
                 array('type','enum', array(1,2)),
-                array('number','regex','#^1\d+$#'),
+                array('isnumber','regex','#^1\d+$#'),
                 array('mobile','mobile'),
                 array('email','email'),
                 array('unique','express', MEmpty(DB()->getUser()->find(1))),
             ),
             array(
+                'qq'  => array(
+                    'qq' => '{key}:{value}不是一个QQ号码'
+                ),
                 'unique'  => array(
                     'express' => '{key}要求唯一，但在数据库里已经存在:{value}'
                 ),
