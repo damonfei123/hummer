@@ -32,7 +32,7 @@ class C_Test extends Web_Base{
                 'sex'       => '0',
                 'school'    => '江南大学',
                 'type'      => 1,
-                'isnumber'  => 112312,
+                'isnumber'  => '112312e10',
                 'mobile'    => 18621719751,
                 'email'     => 'xxe317030876@qq.com',
                 'unique'    => '1',
@@ -41,16 +41,20 @@ class C_Test extends Web_Base{
             array(
                 array('name','boolean'),
                 array('qq','qq'),
-                array('school','string', 'max' => 100, 'min' => 2),
+                array('school','string', 'max' => 100, 'min' => 2),//string的max和min代表长度
                 array('sex','require'),
-                array('age','int', 'max'=>100, 'min' => 10),
+                array('age','int', 'max'=>100, 'min' => 10),//int的max,min代表大小
                 array('type','enum', array(1,2)),
+                array('isnumber','number'),
                 array('isnumber','regex','#^1\d+$#'),
                 array('mobile','mobile'),
                 array('email','email'),
                 array('unique','express', MEmpty(DB()->getUser()->find(1))),
             ),
             array(
+                'isnumber'  => array(
+                    'number' => '{key}:{value}不是number'
+                ),
                 'qq'  => array(
                     'qq' => '{key}:{value}不是一个QQ号码'
                 ),
