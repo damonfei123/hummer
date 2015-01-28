@@ -2,6 +2,7 @@
 namespace App\controller\web\test;
 
 use Hummer\Component\Helper\Arr;
+use Hummer\Component\Helper\Str;
 use App\system\controller\Web_Base;
 use Hummer\Component\Filesystem\Dir;
 use Hummer\Component\Util\Page\Page;
@@ -37,7 +38,7 @@ class C_Test extends Web_Base{
             ),
             array(
                 array('name','boolean'),
-                array('school','string', 'max' => 100, 'min' => 10),
+                array('school','string', 'max' => 100, 'min' => 2),
                 array('sex','require'),
                 array('age','int', 'max'=>100, 'min' => 10),
                 array('type','enum', array(1,2)),
@@ -402,5 +403,6 @@ class C_Test extends Web_Base{
     public function __after__()
     {
         echo "<br>After...</br>";
+        echo Str::sub('我是中国a人人人人', 5);
     }
 }
