@@ -35,6 +35,7 @@ class C_Test extends Web_Base{
                 'number'=>112312,
                 'mobile'=>18621719751,
                 'email' =>'xxe317030876@qq.com',
+                'unique' => '1'
             ),
             array(
                 array('name','boolean'),
@@ -45,8 +46,12 @@ class C_Test extends Web_Base{
                 array('number','regex','#^1\d+$#'),
                 array('mobile','mobile'),
                 array('email','email'),
+                array('unique','express', MEmpty(DB()->getUser()->find(1))),
             ),
             array(
+                'unique'  => array(
+                    'express' => '{key}要求唯一，但在数据库里已经存在:{value}'
+                ),
                 'email'  => array(
                     'email' => '{key}不是一个有效的邮箱帐号:{value}'
                 ),
