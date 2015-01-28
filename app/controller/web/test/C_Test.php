@@ -23,7 +23,7 @@ class C_Test extends Web_Base{
         $this->HttpResponse->charset();
     }
 
-    public function actionXx()
+    public function actionValidator()
     {
         $validator = new Validator(
             array(
