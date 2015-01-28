@@ -10,6 +10,7 @@ use Hummer\Component\Util\File\Download;
 use Hummer\Component\Util\File\FileUpload;
 use Hummer\Component\Util\Image\Image;
 use Hummer\Component\Util\Image\Verify;
+use Hummer\Component\Util\Validator\Validator;
 use Hummer\Component\Route\RouteErrorException;
 use Hummer\Component\Context\InvalidClassException;
 
@@ -23,7 +24,65 @@ class C_Test extends Web_Base{
 
     public function actionXx()
     {
-        pr(SRV());
+        $validator = new Validator(
+            array(
+                'name'=>true,
+                'age' => 100,
+                'sex'=>'0',
+                'school' => '江南大学',
+                'type' => 1,
+                'number'=>112312,
+                'mobile'=>18621719751,
+                'email' =>'xxe317030876@qq.com',
+            ),
+            array(
+                array('name','boolean'),
+                array('school','string', 'max' => 100, 'min' => 10),
+                array('sex','require'),
+                array('age','int', 'max'=>100, 'min' => 10),
+                array('type','enum', array(1,2)),
+                array('number','regex','#^1\d+$#'),
+                array('mobile','mobile'),
+                array('email','email'),
+            ),
+            array(
+                'email'  => array(
+                    'email' => '{key}不是一个有效的邮箱帐号:{value}'
+                ),
+                'number' => array(
+                    'regex' => '{key}非数字格式,{value}',
+                ),
+                'mobile' => array(
+                    'mobile' => '手机号{value}格式不对',
+                ),
+                'type'   => array(
+                    'enum'  => '{key}的值不对,传的值为{value}'
+                ),
+                'school' => array(
+                    'string' => '学校必须为字符串',
+                    'max'    => '{key}最大长度为{rule}, 现在长度为{value}',
+                    'min'    => '{key}最小长度为{rule}, 现在长度为{value}',
+                ),
+                'name' => array(
+                    'boolean' => '姓名必须为boolean类型'
+                ),
+                'sex'   => array(
+                    'require' => '{key}不得为空'
+                ),
+                'age'   => array(
+                    'int'   => '{key}必须为整形',
+                    'max'   => '{key}不得大于{rule},传的值为{value}',
+                    'min'   => '{key}不得小于{rule},传的值为{value}'
+                )
+            )
+        );
+        echo $validator->validate();
+    }
+
+    public function actionGetUser()
+    {
+        echo 1;
+        $this->display(null);
     }
 
     /**

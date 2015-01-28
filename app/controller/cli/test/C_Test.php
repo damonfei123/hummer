@@ -10,6 +10,12 @@ use Hummer\Component\Util\HttpCall\HttpCall;
 
 class C_Test extends Cli_Base {
 
+    public function actionGetUser()
+    {
+        $User = DB()->getData()->find();
+        echo $User['id'];
+    }
+
     public function actionT()
     {
         echo DB()->getData()->data(array('age' => rand(0,100)))->save(null, true);
