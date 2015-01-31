@@ -1,17 +1,17 @@
 <?php
 namespace App\controller\web\test;
 
+use Hummer\Util\Page\Page;
+use Hummer\Util\Image\Image;
+use Hummer\Util\Image\Verify;
+use Hummer\Util\File\Download;
+use Hummer\Util\File\FileUpload;
 use Hummer\Component\Helper\Arr;
 use Hummer\Component\Helper\Str;
 use App\system\controller\Web_Base;
 use Hummer\Component\Filesystem\Dir;
-use Hummer\Component\Util\Page\Page;
+use Hummer\Util\Validator\Validator;
 use Hummer\Component\Filesystem\File;
-use Hummer\Component\Util\File\Download;
-use Hummer\Component\Util\File\FileUpload;
-use Hummer\Component\Util\Image\Image;
-use Hummer\Component\Util\Image\Verify;
-use Hummer\Component\Util\Validator\Validator;
 use Hummer\Component\Route\RouteErrorException;
 use Hummer\Component\Context\InvalidClassException;
 
@@ -23,11 +23,18 @@ class C_Test extends Web_Base{
         $this->HttpResponse->charset();
     }
 
+    public function actionTest()
+    {
+        echo CTX()->sControllerName;
+        echo '<br />';
+        echo CTX()->sActionName;
+    }
+
     public function actionValidator()
     {
         $validator = new Validator(
             array(
-                'name'      => true,
+                'yesOrNo'   => true,
                 'age'       => 100,
                 'sex'       => '0',
                 'school'    => '江南大学',
@@ -39,17 +46,17 @@ class C_Test extends Web_Base{
                 'qq'        => '123123',
             ),
             array(
-                array('name','boolean'),
-                array('qq','qq'),
-                array('school','string', 'max' => 100, 'min' => 2),//string的max和min代表长度
-                array('sex','require'),
-                array('age','int', 'max'=>100, 'min' => 10),//int的max,min代表大小
-                array('type','enum', array(1,2)),
+                array('yesOrNo','boolean'),
+                array('qq',     'qq'),
+                array('sex',    'require'),
                 array('isnumber','number'),
+                array('mobile', 'mobile'),
+                array('email',  'email'),
+                array('type',   'enum', array(1,2)),
+                array('age',    'int', 'max'=>100, 'min' => 10),//int的max,min代表大小
+                array('school', 'string', 'max' => 100, 'min' => 2),//string的max和min代表长度
+                array('unique', 'express', MEmpty(DB()->getUser()->find(1))),
                 array('isnumber','regex','#^1\d+$#'),
-                array('mobile','mobile'),
-                array('email','email'),
-                array('unique','express', MEmpty(DB()->getUser()->find(1))),
             ),
             array(
                 'isnumber'  => array(
@@ -78,7 +85,7 @@ class C_Test extends Web_Base{
                     'max'    => '{key}最大长度为{rule}, 现在长度为{value}',
                     'min'    => '{key}最小长度为{rule}, 现在长度为{value}',
                 ),
-                'name' => array(
+                'yesOrNo' => array(
                     'boolean' => '姓名必须为boolean类型'
                 ),
                 'sex'   => array(
@@ -92,12 +99,6 @@ class C_Test extends Web_Base{
             )
         );
         echo $validator->validate();
-    }
-
-    public function actionGetUser()
-    {
-        echo 1;
-        $this->display(null);
     }
 
     /**
@@ -145,7 +146,7 @@ class C_Test extends Web_Base{
         }
         */
         #查询
-        DB()->get('user')->where(array('id' => 2));
+        DB()->get('user')->where(['id' => 2]);
         echo DB()->get('user')->find();
 
         DB()->get('user u')->find();

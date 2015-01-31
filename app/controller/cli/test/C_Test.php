@@ -2,10 +2,10 @@
 namespace App\controller\cli\test;
 
 use Hummer\Component\Helper\Arr;
+use Hummer\Util\HttpCall\HttpCall;
 use App\system\controller\Cli_Base;
 use Hummer\Component\Filesystem\File;
 use Hummer\Component\Filesystem\Dir;
-use Hummer\Component\Util\HttpCall\HttpCall;
 
 
 class C_Test extends Cli_Base {
