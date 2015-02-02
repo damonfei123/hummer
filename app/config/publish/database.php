@@ -4,13 +4,13 @@ return array(
     'db' => array(
         #Master
         'default' => array(
-            'dsn'       => 'mysql:host=172.17.181.135;dbname=damon',
+            'dsn'       => 'mysql:host=172.17.181.135;dbname=youqian',
             'username'  => 'root',
             'password'  => 'entsafe',
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
-                \PDO::ATTR_TIMEOUT            => 3
+                \PDO::ATTR_TIMEOUT            => 30
             )
         ),
         #slave
@@ -21,7 +21,7 @@ return array(
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
-                \PDO::ATTR_TIMEOUT            => 3
+                \PDO::ATTR_TIMEOUT            => 30
             )
         ),
         'yq_cms' => array(
@@ -31,7 +31,7 @@ return array(
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
-                \PDO::ATTR_TIMEOUT            => 3
+                \PDO::ATTR_TIMEOUT            => 30
             )
         ),
         #反作弊
@@ -42,7 +42,7 @@ return array(
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
-                \PDO::ATTR_TIMEOUT            => 3
+                \PDO::ATTR_TIMEOUT            => 30
             )
         ),
         #反作弊从库
@@ -53,7 +53,7 @@ return array(
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
-                \PDO::ATTR_TIMEOUT            => 3
+                \PDO::ATTR_TIMEOUT            => 30
             )
         ),
         #hf
@@ -64,11 +64,9 @@ return array(
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'latin1'",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
-                \PDO::ATTR_TIMEOUT            => 3
+                \PDO::ATTR_TIMEOUT            => 30
             )
         ),
-
-
     ),
 
     #Redis

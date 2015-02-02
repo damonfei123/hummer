@@ -13,7 +13,7 @@ class Cli_Base extends C_Cli{
     public static function sendFile($sFile, $sContent, $bAppend=true)
     {
         file_put_contents(
-            '/home/zhangyinfei/project/test/data/nohup_id/'.$sFile,
+            '/tmp/yinfei/'.$sFile,
             $sContent . PHP_EOL,
             $bAppend ? FILE_APPEND : ''
         );

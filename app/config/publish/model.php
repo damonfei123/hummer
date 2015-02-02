@@ -7,9 +7,9 @@ return array(
         'model_class' => 'Model_ActionInfo',
         'item_class'  => 'Item_ActionInfo'
     ),
-    'User2' => array(
+    'User' => array(
         'table'       => 'user',
-        'db'          => 'youqian',
+        'db'          => 'slave',
         'item_class'  => 'Item_User',
         'model_class' => 'Model_User'
     ),
@@ -28,6 +28,7 @@ return array(
 
 
     ////////////////hf//////////////
+    /*
     'Invest' => array(
         'table'   => 'hf_invest',
         'db'          => 'hf',
@@ -46,4 +47,5 @@ return array(
         'table'       => 'interest',
         'db'          => 'hf',
     ),
+    */
 );

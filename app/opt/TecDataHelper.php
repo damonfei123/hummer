@@ -151,5 +151,4 @@ class TecDataHelper{
             $bAppend ? FILE_APPEND : ''
         );
     }
-
 }
