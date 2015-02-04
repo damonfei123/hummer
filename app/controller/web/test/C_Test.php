@@ -25,9 +25,13 @@ class C_Test extends Web_Base{
 
     public function actionTest()
     {
-        echo CTX()->sControllerName;
+        //pr(DB()->getUser()->find()->id);
+        echo CTX()->_sControllerName;
         echo '<br />';
-        echo CTX()->sActionName;
+        echo CTX()->_sActionName;
+        //$this->display();//加载
+        //$this->display('');//不加载
+        //$this->display(null);//不加载
     }
 
     public function actionValidator()
@@ -122,7 +126,6 @@ class C_Test extends Web_Base{
     public function __after_actionV__()
     {
     }
-
 
     public function actionDefault()
     {
@@ -369,12 +372,16 @@ class C_Test extends Web_Base{
         //echo $this->fetch('show');//don't display
         //echo $this->fetch('/test/test/show');
 
+        //控制模板
+        //self::disableTpl();
+        //self::enableTpl();
         //$this->display('show');
-        //$this->disableTpl(); #不加载模板
-        //$this->enableTpl(); #开启模板
         //$this->display('/test/test/show');
         //$this->display();         //自动模板 -> 路由  test/test/default
-        //$this->display(null);     //不加载模板
+
+        //$this->display();//加载
+        //$this->display('');//不加载
+        //$this->display(null);//不加载
 
         //告诉浏览器内部出错
         //$this->HttpResponse->setStatus(500);

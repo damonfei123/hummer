@@ -47,6 +47,7 @@ class C_YQ extends Cli_Base{
         L('查找技术员');
         $i = 0; $iChunk = 1000;
         while ($aRows=DB()->getUser('u', 'slave')->where(array(
+            'u.level' => 4,
             'u.zone_user_id in' =>
                 [ 10007, 10006, 17491, 27562, 87403, 58401, 54294, 60454, 73112, 123596 ]
             )
@@ -75,7 +76,7 @@ class C_YQ extends Cli_Base{
                 $aFileLine[] = $Row->city;
                 $aFileLine[] = $Row->county;
                 //系统自动匹配市区县
-                $sAutoIP = $TecLoginLog->getAutoPC(Arr::get($aData, $Row->id, array()));
+                $sAutoIP = $TecLoginLog->getAutoPC(Arr::get($aData, $Row->id, ''));
                 $aAutoPC = $sAutoIP ? IP::IPToArea($sAutoIP) : array();
                 $aAutoPC = array_shift($aAutoPC);
                 //系统匹配省份

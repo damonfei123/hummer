@@ -20,6 +20,7 @@ return array(
             'password'  => 'read!dt@guest',
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+                \PDO::MYSQL_ATTR_INIT_COMMAND => "SET interactive_timeout=24*3600",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
                 \PDO::ATTR_TIMEOUT            => 30
             )

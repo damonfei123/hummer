@@ -18,16 +18,8 @@ class C_Test extends Cli_Base {
 
     public function actionT()
     {
-        echo DB()->getData()->data(array('age' => rand(0,100)))->save(null, true);
-        echo "<br />";
-        echo DB()->getTest()->data(array(
-            'age' => rand(0,1000),
-            'name' => 'damon',
-            'detail' => 'xx')
-        )->save(null, false);
-        //$a = Dir::showList('/home/zhangyinfei/project/hummer/app/webroot', true);
-        //pr($a);
-        //Dir::makeDir('/tmp/hummerDir/dir');
+        $Redis = Redis();
+        $Redis->set('name', 'damon');
     }
 
     public function actionTest()

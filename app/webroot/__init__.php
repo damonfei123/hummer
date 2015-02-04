@@ -1,5 +1,12 @@
 <?php
 /**
+ *  Register Event
+ **/
+\Hummer\Util\HttpCall\Event_Register::register_All(true);
+\Hummer\Component\NoSQL\Redis\Event_Register::register_All(true);
+\Hummer\Component\NoSQL\Memcache\Event_Register::register_All(true);
+
+/**
  *  所有模块挂在Context下面，使用CTX方法可以获取module.php里定义的模块
  **/
 function CTX(){
