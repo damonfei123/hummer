@@ -13,6 +13,139 @@ class C_YQ extends Cli_Base{
         $this->memLimit();
     }
 
+
+    /**
+     *  拉周玲渠道经理有效活跃数据
+     **/
+    public function actionZL()
+    {
+        $i = 0; $iChunk = 100;
+        L('1月有效技术员(去冻结)');
+        //1月有效技术员(去冻结)
+        $aEffectCount = Arr::changeIndexToKVMap(DB()->get('tec_daily_combine_data t')
+            ->where(array(
+                't.is_effect >'   => 0,
+                'u.level'         => 4,
+                'u.status'        => 0,
+                array(
+                    -1                => 'or',
+                    'u.belong_type'   => 0,
+                    array(
+                        'u.belong_type'   => 2,
+                        'u.belong_time <='=> '2015-01-01'
+                    )
+                ),
+                't.date_time between' => ['2015-01-01', '2015-01-31']
+            ))
+            ->left('user u on t.user_id = u.id')
+            ->select('u.parent_id, count(1) as total')
+            ->group('u.parent_id')
+            ->findCustom(), 'parent_id', 'total');
+        L('1月活跃技术员(去冻结)');
+        //1月活跃技术员(去冻结)
+        $aActiveCount = Arr::changeIndexToKVMap(DB()->get('tec_daily_combine_data t')
+            ->where(array(
+                't.is_active >'   => 0,
+                'u.level'         => 4,
+                'u.status'        => 0,
+                array(
+                    -1                => 'or',
+                    'u.belong_type'   => 0,
+                    array(
+                        'u.belong_type'   => 2,
+                        'u.belong_time <='=> '2015-01-01'
+                    )
+                ),
+                't.date_time between' => ['2015-01-01', '2015-01-31']
+            ))
+            ->left('user u on t.user_id = u.id')
+            ->select('u.parent_id, count(1) as total')
+            ->group('u.parent_id')
+            ->findCustom(), 'parent_id', 'total');
+        L('1月份划转技术员个数(总共)');
+        //1月划转技术员个数(总共)
+        $aRebelongAll = Arr::changeIndexToKVMap(DB()->getUser()
+            ->where(array(
+                'level'         => 4,
+                'belong_type'   => 2,
+                'belong_time >' => '2015-01-01',
+            ))
+            ->select('parent_id, count(1) as total')
+            ->group('parent_id')
+            ->findCustom(), 'parent_id', 'total');
+        L('1月划转技术员个数(去冻结)');
+        //1月划转技术员个数(去冻结)
+        $aRebelong = Arr::changeIndexToKVMap(DB()->getUser()
+            ->where(array(
+                'level'         => 4,
+                'status'        => 0,
+                'belong_type'   => 2,
+                'belong_time >' => '2015-01-01',
+            ))
+            ->select('parent_id, count(1) as total')
+            ->group('parent_id')
+            ->findCustom(), 'parent_id', 'total');
+        L('1月划转技术员中产生的有效技术员(去冻结)');
+        //1月划转技术员中产生的有效技术员(去冻结)
+        $aReEffectCount = Arr::changeIndexToKVMap(DB()->get('tec_daily_combine_data t')
+            ->where(array(
+                't.is_effect >'   => 0,
+                'u.level'         => 4,
+                'u.status'        => 0,
+                'u.belong_type'   => 2,
+                'u.belong_time >' => '2015-01-01',
+                't.date_time between' => ['2015-01-01', '2015-01-31']
+            ))
+            ->left('user u on t.user_id = u.id')
+            ->select('u.parent_id, count(1) as total')
+            ->group('u.parent_id')
+            ->findCustom(), 'parent_id', 'total');
+        L('1月划转技术员中产生的活跃技术员(去冻结)');
+        //1月划转技术员中产生的活跃技术员(去冻结)
+        $aReActiveCount = Arr::changeIndexToKVMap(DB()->get('tec_daily_combine_data t')
+            ->where(array(
+                't.is_active >'   => 0,
+                'u.level'         => 4,
+                'u.status'        => 0,
+                'u.belong_type'   => 2,
+                'u.belong_time >' => '2015-01-01',
+                't.date_time between' => ['2015-01-01', '2015-01-31']
+            ))
+            ->left('user u on t.user_id = u.id')
+            ->select('u.parent_id, count(1) as total')
+            ->group('u.parent_id')
+            ->findCustom(), 'parent_id', 'total');
+
+        while (
+            $Channels=DB()->getUser('u')
+            ->select('u.id, u.name, u1.name as zname')
+            ->where(array('u.level' => '2'))
+            ->left('user u1 on u.parent_id = u1.id')
+            ->limit(($i++) * $iChunk, $iChunk)
+            ->findMulti()
+        ) {
+            foreach ($Channels as $Channel) {
+                $aData   = array();
+                $aData[] = $Channel->zname;//大区
+                $aData[] = $Channel->id;//渠道经理ID
+                $aData[] = $Channel->name;//渠道经理姓名
+                //1月有效技术员(去冻结),
+                $aData[] = Arr::get($aEffectCount, $Channel->id, 0);
+                //1月活跃技术员(去冻结),
+                $aData[] = Arr::get($aActiveCount, $Channel->id, 0);
+                //1月划转技术员个数(总共)
+                $aData[] = Arr::get($aRebelongAll, $Channel->id, 0);
+                //1月划转技术员个数(去冻结)
+                $aData[] = Arr::get($aRebelong, $Channel->id, 0);
+                //1月划转技术员中产生的有效技术员(去冻结)
+                $aData[] = Arr::get($aReEffectCount, $Channel->id, 0);
+                //1月划转技术员中产生的活跃技术员(去冻结)
+                $aData[] = Arr::get($aReActiveCount, $Channel->id, 0);
+                parent::sendFile('zhoulin.csv', implode(',', $aData));
+            }
+        }
+    }
+
     public function actionLV()
     {
         L('开始查LV下的技术员和渠道经理');

@@ -83,4 +83,24 @@ return array(
             '/tmp/damon/'
         )
     ),
+    #Lock With Redis
+    array(
+        'module' => 'Lock',
+        'class'  => 'Hummer\\Component\\Lock\\LockFactory',
+        'params' => array(
+            '\@Redis',
+            ':Redis'
+        )
+    ),
+    #Lock With Cache -> File
+    /*
+    array(
+        'module' => 'Lock',
+        'class'  => 'Hummer\\Component\\Lock\\LockFactory',
+        'params' => array(
+            '\@Cache',
+            ':CacheFile'
+        )
+    ),
+    */
 );

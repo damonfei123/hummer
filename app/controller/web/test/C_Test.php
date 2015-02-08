@@ -30,7 +30,9 @@ class C_Test extends Web_Base{
         echo '<br />';
         echo CTX()->_sActionName;
         //$this->display();//加载
-        //$this->display('');//不加载
+        $this->display('');//不加载
+        //echo $this->fetch('/test/test/default');
+        echo $this->fetch(null);
         //$this->display(null);//不加载
     }
 
@@ -38,22 +40,28 @@ class C_Test extends Web_Base{
     {
         $validator = new Validator(
             array(
+                'ip'        => '10.1.1.1',
+                'url'       => 'http://www.baidu.com',
+                'salary'    => '1.4234123412342e10',
                 'yesOrNo'   => true,
                 'age'       => 100,
                 'sex'       => '0',
                 'school'    => '江南大学',
                 'type'      => 1,
-                'isnumber'  => '112312e10',
+                'isnumber'  => 112312,
                 'mobile'    => 18621719751,
                 'email'     => 'xxe317030876@qq.com',
                 'unique'    => '1',
                 'qq'        => '123123',
             ),
             array(
+                array('ip','ip'),
+                array('url','url'),
                 array('yesOrNo','boolean'),
                 array('qq',     'qq'),
                 array('sex',    'require'),
                 array('isnumber','number'),
+                array('salary','float'),
                 array('mobile', 'mobile'),
                 array('email',  'email'),
                 array('type',   'enum', array(1,2)),
@@ -63,6 +71,15 @@ class C_Test extends Web_Base{
                 array('isnumber','regex','#^1\d+$#'),
             ),
             array(
+                'ip'  => array(
+                    'ip' => '{key}:{value}不是ip'
+                ),
+                'url'  => array(
+                    'url' => '{key}:{value}不是url'
+                ),
+                'salary'  => array(
+                    'float' => '{key}:{value}不是float'
+                ),
                 'isnumber'  => array(
                     'number' => '{key}:{value}不是number'
                 ),

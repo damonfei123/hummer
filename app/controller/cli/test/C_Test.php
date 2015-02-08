@@ -10,6 +10,17 @@ use Hummer\Component\Filesystem\Dir;
 
 class C_Test extends Cli_Base {
 
+    public function actionLock()
+    {
+        $Lock = Lock();
+        $Lock->lock();
+        //$Lock->unlock();
+        if ($Lock->locked()) {
+            L('已经lock了');
+            return false;
+        }
+    }
+
     public function actionGetUser()
     {
         $User = DB()->getData()->find();

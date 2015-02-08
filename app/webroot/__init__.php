@@ -41,6 +41,11 @@ function Redis()
     return CTX()->Redis;
 }
 
+function Lock()
+{
+    return CTX()->Lock;
+}
+
 function C($sCookie=null) {
     return CTX()->HttpRequest->getC($sCookie);
 }
