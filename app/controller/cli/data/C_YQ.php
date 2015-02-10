@@ -56,6 +56,72 @@ class C_YQ extends Cli_Base{
         }
     }
 
+    /**
+     *  拉hao123数据
+     **/
+    static $aRuleType = array();
+    public function actionHao123()
+    {
+        $sDate = '2015-02-02';
+        #所有被打hao123网推用户
+        L('所有被打hao123网推用户');
+        $aHao123WangTui = array_keys(Arr::changeIndex(
+                DB()->get('user_invalidate')->select('user_id')->findCustom() ,
+        'user_id'));
+        #所有安装量
+        L('所有安装量');
+        $OriData = DB()->get('tec_daily_data')
+            ->where(array('soft_id' => 12,'date >=' => $sDate))
+            ->select('user_id, date, effect_org')
+            ->findCustom();
+        $aOriData = array();
+        foreach ($OriData as $Data) {
+            $iUID  = $Data['user_id'];
+            $sDate = $Data['date'];
+            $aOriData[$iUID . '_' . $sDate] = $Data['effect_org'];
+        }
+        #用户被打hao123网推标签
+        /*
+        L('用户被打hao123网推标签');
+        $aCheatAction = Arr::changeIndexToKVMap(DB()->get('cheat_action', 'hao123')
+            ->where(array('soft' => 12))
+            ->select('tt, group_concat(distinct type  Separator "|") as gtype')
+            ->group('tt')
+            ->findCustom(), 'tt', 'gtype');
+        */
+
+        $i = 0; $iChunk = 1000;
+        L('开始读数据....');
+        while($aRecord=DB()->get('hao123_compare')
+            ->where(array('date >=' => $sDate))
+            ->select('tt, tn, date, source_hao123, source_db')
+            ->limit(($i++) * $iChunk, $iChunk)
+            ->findMulti()){
+            L('处理1000个用户完成');
+            foreach ($aRecord as $Record) {
+                $aData = array();
+                $aData[] = $Record->tt;
+                $aData[] = $Record->tn;
+                $aData[] = $Record->date;
+                $aData[] = $Record->source_db;
+                $aData[] = $Record->source_hao123;
+                $aData[] = isset($aOriData[$Record->tt . '_' . $Record->date]) ?
+                    $aOriData[$Record->tt . '_' . $Record->date] : 0;
+                $aData[] = in_array($Record->tt, $aHao123WangTui) ? '是' : '否';
+                #规则
+                if (in_array($Record->tt, $aHao123WangTui) && !isset($aRuleType[$Record->tt])) {
+                    $aRuleType[$Record->tt] = implode('|', array_keys(Arr::changeIndex(
+                        DB()->get('cheat_action', 'hao123')
+                        ->where(array('soft' => 12, 'tt' => $Record->tt))
+                        ->select('distinct type')
+                        ->findCustom(), 'type')));
+                }
+                $aData[] = isset($aRuleType[$Record->tt]) ? $aRuleType[$Record->tt] : '';
+                parent::sendFile('hao123.csv', implode(',', $aData));
+            }
+        }
+    }
+
 
     /**
      *  拉周玲渠道经理有效活跃数据

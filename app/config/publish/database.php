@@ -46,6 +46,17 @@ return array(
                 \PDO::ATTR_TIMEOUT            => 30
             )
         ),
+        #hao123
+        'hao123' => array(
+            'dsn'       => 'mysql:host=hz01-sw-dtapp01.hz01;dbname=anti_fraud',
+            'username'  => 'anti_youqian',
+            'password'  => 'anti_123',
+            'option'    => array(
+                \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
+                \PDO::ATTR_TIMEOUT            => 30
+            )
+        ),
         #反作弊从库
         'cheat_slave' => array(
             'dsn'       => 'mysql:host=10.58.185.13;dbname=anti_cheat',

@@ -58,6 +58,17 @@ return array(
                 \PDO::ATTR_TIMEOUT            => 30
             )
         ),
+        #hao123
+        'hao123' => array(
+            'dsn'       => 'mysql:host=hz01-sw-dtapp01.hz01;dbname=anti_fraud',
+            'username'  => 'anti_youqian',
+            'password'  => 'anti_123',
+            'option'    => array(
+                \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
+                \PDO::ATTR_TIMEOUT            => 30
+            )
+        ),
         #hf
         'hf' => array(
             'dsn'       => 'mysql:host=172.17.181.135;dbname=hf',
