@@ -13,6 +13,49 @@ class C_YQ extends Cli_Base{
         $this->memLimit();
     }
 
+    /**
+     *  划转技术
+     **/
+    public function actionHuazhuang()
+    {
+        foreach(DB()->get('t_channel_apply')
+            ->where(array('apply_time between' => array('2015-02-02', '2015-02-09'), 'status' => 2))
+            ->select('user_id, channel_userid, zone_user_id, status, apply_time')
+            ->findMulti() as $Record){
+            $aData   = array();
+            $User    = DB()->getUser('u')->left('user u2 on u.parent_id = u2.id')
+                ->left('user u3 on u2.parent_id = u3.id')
+                ->select('u.id, u.name, u2.id as cid, u2.name as cname, u3.id as zid, u3.name as zname')
+                ->where(array('u.id' => $Record->user_id))
+                ->find();
+            $aData[] = $Record->user_id;//ID
+            $aData[] = $User->name;//Name
+            //原来
+            $iOldPID = DB()->get('t_user_belong_change_log')
+                ->where(array(
+                    'new_parent_id' => $Record->channel_userid,
+                    'user_id' => $Record->user_id)
+                )->find()->old_parent_id;
+            if (!$iOldPID) {
+                L('错误:'.$Record->user_id);
+                die;
+            }
+            $OldParent = DB()->getUser('u')->left('user u2 on u.parent_id = u2.id')
+                ->select('u.id, u.name, u2.id as cid, u2.name as zname')
+                ->where(array('u.id' => $iOldPID))
+                ->find();
+            $aData[] = $OldParent->name;
+            $aData[] = $OldParent->zname;
+
+            $aData[] = $User->cid;
+            $Manager = DB()->get('shop_verify_auth')->find(array('user_id' => $User->cid));
+            $aData[] = !MEmpty($Manager) ? implode('|',unserialize($Manager->auth)) : '';//管理省份
+            $aData[] = $User->zname;
+            $aData[] = $Record->apply_time;
+            parent::sendFile('huazhuang.csv', implode(',', $aData));
+        }
+    }
+
 
     /**
      *  拉周玲渠道经理有效活跃数据

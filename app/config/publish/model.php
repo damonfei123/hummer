@@ -9,7 +9,6 @@ return array(
     ),
     'User' => array(
         'table'       => 'user',
-        'db'          => 'slave',
         'item_class'  => 'Item_User',
         'model_class' => 'Model_User'
     ),
