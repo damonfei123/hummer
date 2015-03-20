@@ -25,10 +25,13 @@ class TecLoginLog {
         $aLogin    = array();
         while (!feof($File)){
             $sLine = fgets($File, 1024);
+            if (strpos($sLine, '用户日志') ===  false) {
+                continue;
+            }
             $aLine = explode(':', $sLine);
-            if (!isset($aLine[6]) || !isset($aLine[8])) { continue; }
-            $iID   = (int)$aLine[6];//用户ID
-            $sIP   = trim((string)$aLine[8]);//用户登陆IP
+            if (!isset($aLine[5]) || !isset($aLine[7])) { continue; }
+            $iID   = (int)$aLine[5];//用户ID
+            $sIP   = trim((string)$aLine[7]);//用户登陆IP
             if (!isset($aLogin[$iID][$sIP])) {
                 $aLogin[$iID][$sIP] = 1;
             }else{

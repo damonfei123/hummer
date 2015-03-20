@@ -14,6 +14,44 @@ class C_YQ extends Cli_Base{
     }
 
     /**
+     *  周玲数据
+     **/
+    public function actionZLData()
+    {
+        $aID = CFG('id');
+        $aChunkID = array_chunk($aID, 1000);
+        $aLine = array();
+        foreach ($aChunkID as $aIDs) {
+            $aWeiShiInstall = Arr::changeIndexToKVMap(M('tec_daily_data')
+                ->where([
+                    'user_id in' => $aIDs,
+                    'soft_id' => 1,
+                    'date between' => ['2015-03-01', '2015-03-31']
+                ])
+                ->select('user_id, sum(effect_org) as effect_org')
+                ->group('user_id')
+                ->findCustom(), 'user_id', 'effect_org');
+            $aDianPu = Arr::changeIndex(M('shop_tec_user')
+                ->where(['user_id in' => $aIDs])
+                ->findCustom()
+                , 'user_id');
+
+            foreach($Users=M('User')->where(array('id in' => $aIDs))->findMulti() as $User){
+                $aLine   = array();
+                $aLine[] = $User->id;
+                $aLine[] = $User->parent_id;
+                $aLine[] = isset($aDianPu[$User->id]) ? '是' : '否';//是否关联店铺
+                $aLine[] = $User->province;
+                $aLine[] = $User->city;
+                $aLine[] = $User->county;
+                //3月份卫士安装量
+                $aLine[] = Arr::get($aWeiShiInstall, $User->id, 0);
+                parent::sendFile('zhdata.csv', implode(',', $aLine));
+            }
+        }
+    }
+
+    /**
      *  划转技术
      **/
     public function actionHuazhuang()
@@ -117,6 +155,38 @@ class C_YQ extends Cli_Base{
                         ->findCustom(), 'type')));
                 }
                 $aData[] = isset($aRuleType[$Record->tt]) ? $aRuleType[$Record->tt] : '';
+                parent::sendFile('hao123.csv', implode(',', $aData));
+            }
+        }
+    }
+
+    /**
+     *  hao123数据
+     **/
+    public function actionHao123New()
+    {
+        #预装大区
+        $aUser = Arr::changeIndexToKVMap(DB()->getUser()
+            ->where(array('zone_user_id' => 152019, 'level' => 4))
+            ->select('id')
+            ->findCustom(), 'id', 'id');
+        $i = 0; $iChunk = 1000;
+        while ($aHao123 = DB()->get('hao123_compare')
+            ->where(array(
+                'tn'           => '99223597_hao_pg',
+                'tt in'        => $aUser,
+                'date between' => ['2015-01-01', '2015-01-31'],
+            ))
+            ->limit(($i++) * $iChunk, $iChunk)
+            ->findMulti()
+        ) {
+            foreach ($aHao123 as $Record) {
+                $aData = array();
+                $aData[] = $Record->tt;
+                $aData[] = $Record->tn;
+                $aData[] = $Record->date;
+                $aData[] = $Record->source_hao123;
+                $aData[] = $Record->source_db;
                 parent::sendFile('hao123.csv', implode(',', $aData));
             }
         }
@@ -281,6 +351,17 @@ class C_YQ extends Cli_Base{
         }
     }
 
+    /**
+     *  拉取技术员数据
+     如昨天沟通，现将需求整理如下：
+    2.  拉取范围：附件中的渠道经理下属技术员，并且去除2014年冻结的、网推的、限制自提的并且2015年状态还保持原样的。
+    3.  字段规则说明：
+    a)  技术员自选有3种情况：三级全填、仅填前两级、全未填，通过表格中技术员自选3列的空白字段能区分就行；
+    b)  系统匹配的按照登录IP和注册IP取次数最多的来显示（一样多的取时间最近的那组）
+    © Copyright 2015 如果技术员没有部分渠道经理管理省份如果还没有配置，那么相应的“自选与管理的省是否匹配这1列就显示空白或N/A。
+    4.  期望输出时间：明天14:00前
+    关联店铺，那么店铺关联的三列数据显示空白或N/A，那么相应的“自选与店铺的省是否匹配” “店铺与系统的省是否匹配”这2列就显示空白或N/A。
+     **/
     public function actionJiShuYuan()
     {
         $TecLoginLog = new TecLoginLog();
@@ -290,10 +371,8 @@ class C_YQ extends Cli_Base{
         $i = 0; $iChunk = 1000;
         while ($aRows=DB()->getUser('u', 'slave')->where(array(
             'u.level' => 4,
-            'u.zone_user_id in' =>
-                [ 10007, 10006, 17491, 27562, 87403, 58401, 54294, 60454, 73112, 123596 ]
-            )
-            )->limit(($i++)*$iChunk, $iChunk)
+            'u.channel_user_id in' => $this->getChannelID()
+            ))->limit(($i++)*$iChunk, $iChunk)
             ->select('u.id,u.name,u.province, u.city, u.county, u.promote_way, u.status ,
                      u1.id as cid, u1.name as cname, u2.name as zname')
             ->left('user u1 on u.parent_id = u1.id')
@@ -301,7 +380,12 @@ class C_YQ extends Cli_Base{
             //技术员ID
             foreach ($aRows as $Row) {
                 //防止 MYSQL断线
-                DB()->getUser('', 'slave')->find(1);
+                //DB()->getUser('', 'slave')->find(1);
+                //去除2014年冻结的、网推的、限制自提的并且2015年状态还保持原样的
+                if (!$this->checkUserAuth($Row->id)) {
+                    continue;
+                }
+
                 $aFileLine   = array();
                 $aFileLine[] = $iUserID   = $Row->id;//id
                 $aFileLine[] = $sUserName = $Row->name;//技术员姓名
@@ -324,6 +408,15 @@ class C_YQ extends Cli_Base{
                 //系统匹配省份
                 $aFileLine[] = $sAutoProvince = Arr::get($aAutoPC,'province', '');
                 $aFileLine[] = $sAutoCity     = Arr::get($aAutoPC,'city', '');
+                //店铺关联
+                $Shop = DB()->get('shop_tec_user')->find(array('user_id' => $Row->id));
+                if (!MEmpty($Shop)) {
+                    $ShopInfo = M('shop_verify')->find($Shop->shop_id);
+                }
+                $aFileLine[] = $sDianPuProvince = Arr::get($ShopInfo, 'province', '');
+                $aFileLine[] = $sDianPuCity     = Arr::get($ShopInfo, 'city', '');
+                $aFileLine[] = $sDianPuCounty   = Arr::get($ShopInfo, 'county', '');
+
                 //自选与系统的省是否匹配
                 $aFileLine[] = $Row->province && $sAutoProvince && strpos($Row->province, $sAutoProvince) !== false ? '是' : '否';
                 //管理与自选的省是否匹配
@@ -340,6 +433,10 @@ class C_YQ extends Cli_Base{
                 }
                 $aFileLine[] = $sManagerMatch;
                 $aFileLine[] = $sAuthMatch;
+                //自选与店铺的省是否匹配
+                $aFileLine[] = $Row->province && $sDianPuProvince && strpos($Row->province, $sDianPuProvince) !== false ? '是' : '否';
+                //店铺与系统的省
+                $aFileLine[] = $sDianPuProvince && $sAutoProvince && (strpos($sDianPuProvince, $sAutoProvince) !== false || strpos($sAutoProvince, $sDianPuProvince) !== false )? '是' : '否';
                 //技术员地/网推
                 $aFileLine[] = $Row->promote_way ==  256 ? '地推' : '网推';
                 //冻结
@@ -347,5 +444,238 @@ class C_YQ extends Cli_Base{
                 parent::sendFile('jishuyuan.csv', implode(',', $aFileLine));
             }
         }
+    }
+
+    public function checkUserAuth($iID)
+    {
+        $User = DB()->getUser()->find($iID);
+        if (MEmpty($User)) {
+            return false;
+        }
+        $iTarDate = strtotime('2015-01-01');
+        //冻结
+        if ($User->status > 0 AND strtotime($User->freeze_time) < $iTarDate) {
+            return false;
+        }
+        //网推
+        $Log = DB()->get('user_promote_log')
+            ->select('date')
+            ->order('id desc')
+            ->find(array(
+                'user_id'   => $iID,
+                'to_way >'  => 256
+            ));
+        if ($User->promote_way > 256 AND !MEmpty($Log) AND strtotime($Log->date) < $iTarDate) {
+            return false;
+        }
+        //限制自提
+        $DoubtCheat = DB()->get('doubt_cheat')->find(array(
+            'user_id'   => $iID,
+            'kind'      => 2,
+            'status'    => 0
+        ));
+        if (!MEmpty($DoubtCheat) AND
+            $DoubtCheat->create_time AND
+            strtotime($DoubtCheat->create_time) < $iTarDate
+        ) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getChannelID()
+    {
+        return array(
+            35444,
+            10919,
+            35589,
+            108468,
+            12474,
+            10485,
+            124410,
+            116446,
+            42070,
+            11815,
+            83272,
+            94596,
+            11369,
+            20107,
+            10034,
+            110195,
+            10213,
+            14910,
+            52634,
+            124814,
+            10204,
+            10285,
+            10424,
+            14347,
+            139718,
+            107693,
+            159200,
+            10027,
+            162270,
+            158332,
+            166706,
+            97047,
+            87009,
+            110086,
+            162349,
+            109848,
+            100819,
+            86867,
+            42538,
+            168543,
+            85645,
+            32291,
+            36869,
+            148525,
+            23636,
+            24292,
+            25998,
+            111691,
+            151276,
+            154541,
+            162943,
+            88961,
+            82210,
+            10279,
+            21440,
+            101254,
+            69207,
+            143585,
+            153454,
+            161420,
+            27807,
+            13448,
+            153382,
+            80610,
+            160284,
+            158582,
+            63706,
+            94167,
+            110308,
+            114683,
+            159257,
+            169184,
+            170460,
+            110151,
+            94574,
+            45657,
+            95356,
+            95388,
+            116674,
+            10016,
+            66550,
+            118831,
+            130469,
+            142117,
+            171830,
+            63173,
+            11658,
+            110589,
+            113131,
+            21595,
+            95477,
+            159688,
+            10036,
+            162601,
+            38310,
+            24317,
+            88603,
+            96331,
+            106686,
+            86801,
+            167138,
+            88902,
+            91555,
+            124335,
+            134452,
+            32795,
+            24105,
+            163659,
+            163707,
+            57845,
+            109815,
+            12519,
+            14140,
+            14391,
+            14406,
+            17339,
+            20773,
+            30132,
+            43153,
+            51512,
+            57165,
+            78457,
+            100374,
+            114653,
+            117628,
+            124982,
+            125531,
+            162462,
+            164591,
+            170605,
+            136083,
+            137404,
+            170694,
+            15548,
+            20439,
+            10076,
+            162441,
+            131713,
+            40784,
+            139854,
+            70483,
+            91991,
+            166765,
+            136067,
+            173445,
+            174663,
+            174478,
+            174654,
+            174663,
+            174755,
+            175009,
+            175029,
+            175107,
+            175153,
+            175986,
+            176098,
+            176411,
+            176427,
+            176431,
+            176470,
+            176489,
+            176502,
+            176720,
+            177732,
+            177965,
+            178187,
+            178196,
+            178206,
+            178314,
+            178317,
+            178319,
+            178322,
+            178324,
+            178338,
+            178353,
+            178364,
+            178370,
+            178382,
+            178439,
+            178442,
+            178481,
+            178591,
+            178614,
+            178645,
+            178749,
+            178849,
+            178959,
+            178977,
+            178980,
+            179045,
+        );
     }
 }

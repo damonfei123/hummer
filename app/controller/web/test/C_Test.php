@@ -25,6 +25,17 @@ class C_Test extends Web_Base{
 
     public function actionTest()
     {
+        $Model = D('User');
+        if ($Model->create(array('n' => 'data', 'age' => 12))) {
+            pr($Model->add());
+            echo $Model->getError();
+        }
+        //pr(CFG('id'));
+        //pr(CFG('id.name'));
+        //pr(D('User')->find());
+        //echo 'xxxxxxxx';
+        $this->display(null);
+        return;
         //pr(DB()->getUser()->find()->id);
         echo CTX()->_sControllerName;
         echo '<br />';

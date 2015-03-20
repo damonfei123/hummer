@@ -4,7 +4,7 @@ return array(
     'db' => array(
         #Master
         'default' => array(
-            'dsn'       => 'mysql:host=172.17.181.135;dbname=youqian',
+            'dsn'       => 'mysql:host=172.17.181.135;dbname=damon',
             'username'  => 'root',
             'password'  => 'entsafe',
             'option'    => array(

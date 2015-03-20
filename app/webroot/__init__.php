@@ -22,6 +22,14 @@ function L($sMsg,$sLevel = 'info')
 }
 
 /**
+ *  快速打印错误日志
+ **/
+function Err($sMsg)
+{
+    call_user_func(array(CTX()->Log, warn), $sMsg);
+}
+
+/**
  *  获取DB(PDO)
  **/
 function DB() {
@@ -29,11 +37,27 @@ function DB() {
 }
 
 /**
+ *  数据库基本模型
+ **/
+function M($sTable, $sDB='') {
+    return DB()->get($sTable, $sDB);
+}
+/**
+ *  用户自定义模型
+ **/
+function D($sModel, $sDB='')
+{
+    $sFunc = sprintf('%s%s', 'get', $sModel);
+    return DB()->$sFunc(null, $sDB);
+}
+
+/**
  *  获取Config模块
  **/
-function CFG()
+function CFG($sKey = null)
 {
-    return CTX()->Config;
+    $Config = CTX()->Config;
+    return $sKey ? $Config->get($sKey) : $Config;
 }
 
 function Redis()
@@ -46,23 +70,50 @@ function Lock()
     return CTX()->Lock;
 }
 
+function View()
+{
+    return CTX()->Template;
+}
+
+/**
+ *  获取Cookie
+ **/
 function C($sCookie=null) {
     return CTX()->HttpRequest->getC($sCookie);
 }
+
+/**
+ *  获取$_POST
+ **/
 function P($mKeyOrKeys=null){
     return CTX()->HttpRequest->getP($mKeyOrKeys);
 }
+
+/**
+ *  获取$_GET
+ **/
 function G($mKeyOrKeys=null) {
     return CTX()->HttpRequest->getG($mKeyOrKeys);
 }
+
+/**
+ *  获取$_GET + $_POST
+ **/
 function GP($mKeyOrKeys=null){
     return CTX()->HttpRequest->getGP($mKeyOrKeys);
 }
+
+/**
+ *  获取$_SERVER
+ **/
 function SRV($mKeyOrKeys=null)
 {
     return CTX()->HttpRequest->getSRV($mKeyOrKeys);
 }
 
+/**
+ *  页面跳转
+ **/
 function go($sUrl=null)
 {
     $C = CTX();
@@ -71,11 +122,6 @@ function go($sUrl=null)
         $sUrl     = is_null($sReferer) ? '/' : $sReferer;
     }
     $C->HttpResponse->setHeaderRedirect($sUrl);
-}
-
-function View()
-{
-    return CTX()->Template;
 }
 
 /**

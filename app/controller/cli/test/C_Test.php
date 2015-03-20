@@ -35,6 +35,14 @@ class C_Test extends Cli_Base {
 
     public function actionTest()
     {
+        //pr(M('data')->find());
+        foreach(M('User')->findDamon() as $Damon){
+            echo $Damon->age;
+        }
+        return;
+        //M('data')->where(1)->setInc('age, age2', 1);
+        //M('data')->where(1)->setDec(array('age' => 5, 'age2' => 1));
+        //M('data')->where(1)->setDec('age, age2', 1);
         DB()->getUser()->find();
         $M = DB()->getTest()->select('name,age')->find(array('damon',12));
         if (MEmpty($M)) {

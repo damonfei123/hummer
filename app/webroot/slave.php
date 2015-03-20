@@ -7,7 +7,7 @@ use Hummer\Bundle\Framework\Bootstrap;
 use Hummer\Component\Configure\Configure;
 use Hummer\Component\Route\RouteErrorException;
 
-header('Access-Control-Allow-Origin: *');
+//header('Access-Control-Allow-Origin: *');
 
 define('ROOT_DIR',       dirname(dirname(__DIR__)));
 define('APP_DIR',        ROOT_DIR . '/app/');
