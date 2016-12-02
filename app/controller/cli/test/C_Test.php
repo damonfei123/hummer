@@ -13,7 +13,10 @@ class C_Test extends Cli_Base {
     public function actionLock()
     {
         $Lock = Lock();
-        $Lock->lock();
+        if (!$Lock->locked()) {
+            L('lock 3秒');
+            $Lock->lock(3);
+        }
         //$Lock->unlock();
         if ($Lock->locked()) {
             L('已经lock了');

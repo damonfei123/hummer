@@ -80,10 +80,11 @@ return array(
         'class'  => 'Hummer\\Component\\Cache\\CacheFactory',
         'params' => array(
             '\@File',
-            '/tmp/damon/'
+            '/Users/apple/zhangyinfei/damon_project/logs/'
         )
     ),
     #Lock With Redis
+    /*
     array(
         'module' => 'Lock',
         'class'  => 'Hummer\\Component\\Lock\\LockFactory',
@@ -92,15 +93,14 @@ return array(
             ':Redis'
         )
     ),
+    */
     #Lock With Cache -> File
-    /*
     array(
         'module' => 'Lock',
         'class'  => 'Hummer\\Component\\Lock\\LockFactory',
         'params' => array(
-            '\@Cache',
+            '\@File',
             ':CacheFile'
         )
     ),
-    */
 );
