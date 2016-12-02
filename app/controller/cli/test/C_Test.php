@@ -93,7 +93,6 @@ class C_Test extends Cli_Base {
     {
         //$Cache = CTX()->CacheFile;
         //$Cache->store('arr', array('张银飞',2,'Damon飞'));
-        //$Cache->store('arr', DB()->getUser()->findCustom(1));
         //pr($Cache->fetch('arr'));
         /*
         $aAllID   = unserialize(file_get_contents('id'));
