@@ -32,8 +32,9 @@ class C_Test extends Cli_Base {
 
     public function actionT()
     {
-        $Redis = Redis();
-        $Redis->set('name', 'damon');
+        $Cache = CTX()->Cache;
+        $Cache->store('name', 'damon', 1000);
+        echo $Cache->fetch('name');
     }
 
     public function actionTest()

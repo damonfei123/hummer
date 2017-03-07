@@ -10,14 +10,6 @@
         {
             "type": "git",
             "url": "https://github.com/damonfei123/Core.git"
-        },
-        {
-            "type": "git",
-            "url": "http://gitlab.baidu.com/blueray_web/phpexcel.git"
-        },
-        {
-            "type": "git",
-            "url": "http://gitlab.baidu.com/blueray_web/phpmailer.git"
         }
     ],
     "autoload": {

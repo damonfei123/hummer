@@ -76,11 +76,10 @@ return array(
         ),
     ),
     array(
-        'module' => 'CacheFile',
+        'module' => 'Cache',
         'class'  => 'Hummer\\Component\\Cache\\CacheFactory',
         'params' => array(
-            '\@File',
-            '/Users/apple/zhangyinfei/damon_project/logs/'
+            '\@Apc'
         )
     ),
     #Lock With Redis
