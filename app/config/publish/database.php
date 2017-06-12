@@ -4,9 +4,9 @@ return array(
     'db' => array(
         #Master
         'default' => array(
-            'dsn'       => 'mysql:host=172.17.181.135;dbname=damon',
+            'dsn'       => 'mysql:host=127.0.0.1;dbname=damon',
             'username'  => 'root',
-            'password'  => 'entsafe',
+            'password'  => '',
             'option'    => array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_WARNING,
