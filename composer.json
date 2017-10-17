@@ -2,7 +2,7 @@
     "name": "Hummer",
     "description": "Hummer",
     "require": {
-        "hummer/hummer": "2.2.0",
+        "hummer/hummer": "2.2.8",
         "phpoffice/phpexcel": "1.8.0",
         "phpmailer/phpmailer": "5.2.7"
     },
